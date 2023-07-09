@@ -1,6 +1,6 @@
 import { PermissionsAndroid } from 'react-native'
 import React, { useEffect } from 'react'
-import AppNavigation from './src/navigation'
+import AppNavigation from './src/navigation';
 
 export default function App() {
   const permission = async () => {
@@ -17,7 +17,6 @@ export default function App() {
       console.log('Error while requesting record audio permission:', error);
     }
   };
-  
 
   useEffect(() => {
     permission();
