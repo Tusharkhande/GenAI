@@ -1,3 +1,4 @@
+import { HUGGING_API_KEY } from "../constants";
 import { apiKey } from "../constants";
 import axios from 'axios';
 const client = axios.create({
@@ -49,22 +50,25 @@ const dalleUrl = 'https://api.openai.com/v1/images/generations';
 
 // }
 
+let error = "Error:Sorry server issue! Wait for a bit and try again";
+
 
 export const apiCall = async (prompt, messages) => {
     try {
         const res = await client.post(chatgptUrl, {
             model: "gpt-3.5-turbo",
-            messages: [
-                {
-                    role: 'user',
-                    content: `Does this message want to generate an AI picture, image, art, or anything similar? ${prompt}. Simply answer with yes or no.`,
-                },
-                ...messages,
-            ],
+            messages
+            // : [
+            //     {
+            //         role: 'user',
+            //         content: `Remember I'm going to call you GenAI or Jarvis. Does this message want to generate an AI picture, image, art, or anything similar? ${prompt}. Simply answer with yes or no.`,
+            //     },
+            //     ...messages,
+            // ],
         });
 
         prompt = prompt.toLowerCase();
-        let isArt = prompt.includes(' create a image') || prompt.includes('create an image') || prompt.includes('sketch') || prompt.includes('generate a image') || prompt.includes('picture') || prompt.includes('drawing');
+        let isArt = prompt.includes('create a image') || prompt.includes('image') || prompt.includes('create an image') || prompt.includes('sketch') || prompt.includes('generate a image') || prompt.includes('picture') || prompt.includes('drawing');
         if (isArt) {
             console.log('dalle api call');
             return dalleApiCall(prompt, messages);
@@ -74,11 +78,12 @@ export const apiCall = async (prompt, messages) => {
         }
     } catch (err) {
         console.log('error: ', err);
-        return Promise.resolve({ success: false, msg: err.message });
+        messages.push({ role: 'assistant', content: error.trim() });
+        return Promise.resolve({ success: true, data: messages});
     }
 };
 
-const chatgptApiCall = async (prompt, messages) => {
+export const chatgptApiCall = async (prompt, messages) => {
     try {
         const res = await client.post(chatgptUrl, {
             model: "gpt-3.5-turbo",
@@ -92,11 +97,12 @@ const chatgptApiCall = async (prompt, messages) => {
 
     } catch (err) {
         console.log('error: ', err);
-        return Promise.resolve({ success: false, msg: err.message });
+        messages.push({ role: 'assistant', content: error.trim() });
+        return Promise.resolve({ success: true, data: messages});
     }
 }
 
-const dalleApiCall = async (prompt, messages) => {
+export const dalleApiCall = async (prompt, messages) => {
     try {
         const res = await client.post(dalleUrl, {
             prompt,
@@ -111,6 +117,39 @@ const dalleApiCall = async (prompt, messages) => {
 
     } catch (err) {
         console.log('error: ', err);
-        return Promise.resolve({ success: false, msg: err.message });
+        messages.push({ role: 'assistant', content: error.trim() });
+        return Promise.resolve({ success: true, data: messages});
     }
 }
+
+/* export const huggingFaceApiCall = async (prompt) => {
+    try{
+        
+            // setLoading(true);
+        
+            const response = await fetch(
+              "https://api-inference.huggingface.co/models/prompthero/openjourney",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${HUGGING_API_KEY}`,
+                },
+                body: JSON.stringify({ inputs: prompt }),
+              }
+            );
+            if (!response.ok) {
+                throw new Error("Failed to generate image");
+              }
+          
+              const blob = await response.blob();
+              console.log(URL.createObjectURL(blob));
+        
+    }catch(err){
+        console.log('error: ', err);
+        // messages.push({ role: 'assistant', content: error.trim() });
+        // return Promise.resolve({ success: true, data: messages});
+    }
+}
+ */
+

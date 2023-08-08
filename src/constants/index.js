@@ -1,5 +1,5 @@
 export const apiKey = '';
-
+export const HUGGING_API_KEY = '';
 export const dummyMessages = [
     {
         role: 'user', 
