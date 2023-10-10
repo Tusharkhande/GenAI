@@ -1,4 +1,4 @@
-export const apiKey = '';
+export const apiKey = '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';
 export const HUGGING_API_KEY = '';
 export const dummyMessages = [
     {

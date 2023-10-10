@@ -1,20 +1,29 @@
-import { View, Text, Image, TouchableOpacity, FlatList, BackHandler, StyleSheet, Modal } from 'react-native';
+import { View, Text, Image, TouchableOpacity, FlatList, BackHandler, StyleSheet, Modal, ImageBackground, Appearance } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 import Models from '../constants/Models';
 import Button from '../components/Button';
+import useAuth from '../firebase/useAuth';
+import { select_beep } from '../constants/Sounds';
+
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
   const [model, setModel] = useState([]);
   const [selectedModel, setSelectedModel] = useState([]);
   const [exit, setExit] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     setModel(Models);
     setSelectedModel(Models[1]);
+  }, []);
+  useEffect(() => {
+    console.log(user.photoURL)
+    const colorScheme = Appearance.getColorScheme();
+    colorScheme === 'dark' ? Appearance.setColorScheme('dark') : Appearance.setColorScheme('dark');
   }, []);
 
   const handleBackPress = () => {
@@ -35,17 +44,60 @@ export default function WelcomeScreen() {
   };
 
   return (
-    
-    <SafeAreaView className="flex-1 flex justify-around bg-black">
-      <View className="flex flex-col items-center space-y-2">
-        <Text style={[{ fontSize: wp(10) }, {color:selectedModel.primary}]} className="font-bold text-center">
-          Welcome Sir!
-        </Text>
-        <Text style={[{ fontSize: wp(7) }, {color:selectedModel.primary}] } className="text-center tracking-wider font-semibold">
+    // <ImageBackground
+    //     source={require("../../assets/images/bg1.jpg")}
+    //     style={{ flex: 1 }}
+    //   >
+    <SafeAreaView className="flex-1 flex justify-around bg-slate-950">
+      <View className="flex flex-row justify-between"
+        style={{ width: wp(90), alignSelf: 'center' }}
+      >
+        <View className='mr-3' >
+          <TouchableOpacity
+            onPress={() => [navigation.navigate('Dashboard'), select_beep()]}
+            className="flex top-0 px-2 py-2 my-0 rounded-3xl"
+            style={{ alignSelf: 'flex-start' }}
+          >
+            <Image
+              source={user.photoURL ? user.photoURL : require("../../assets/images/avatars/arc.jpg")}
+              style={{ height: wp(11), width: wp(11) }}
+              className="rounded-full w-14 h-14 mx-auto"
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+        <View className="flex mx-auto justify-center ">
+          <Text style={[{ fontSize: wp(8) },
+            //  {color:selectedModel.primary}
+          ]}
+            className=" font-semibold text-center font-mono mt-1 text-slate-50"
+          >
+            Welcome {user.displayName == undefined ? "Sir" : user.displayName.split(" ")[0]}!
+          </Text>
+        </View>
+        <View>
+          <View className='ml-3'>
+            <TouchableOpacity
+              onPress={() => [navigation.navigate('About'), select_beep()]}
+              className="flex top-0 px-2 py-2 my-0 rounded-xl"
+            >
+              <Image
+                source={require("../../assets/images/about.png")}
+                style={{ height: wp(11), width: wp(11) }}
+                className="rounded-full w-10 h-10 "
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <View className="flex flex-col items-center space-y-2 mt-0 top-0">
+
+        <Text style={[{ fontSize: wp(7) }, { color: selectedModel.primary }]} className="text-center tracking-wider font-semibold  font-mono">
           {/* A Meet with the Future */}
           {selectedModel.name} here.
         </Text>
-        <Text style={[{ fontSize: wp(5) }, {color:selectedModel.primary}] } className="text-center tracking-wider font-semibold">
+        <Text style={[{ fontSize: wp(5) }, { color: selectedModel.primary }]} className="text-center tracking-wider font-semibold font-mono">
           Initialize to have a Meet with the Future
           {"\n"}
           and Explore my features...
@@ -63,15 +115,15 @@ export default function WelcomeScreen() {
           resizeMode="contain"
         />
       </View>
-      <View className="flex flex-col items-center justify-center bg-slate-900 border-r-8 border-l-8 rounded-3xl">
+      <View className="flex flex-col items-center justify-center bg-slate-800 border-r-8 border-l-8 rounded-3xl">
         <FlatList
           data={model}
-          horizontal = {true}
-          renderItem={({ item }) =>(
+          horizontal={true}
+          renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => setSelectedModel(item)}
+              onPress={() => [setSelectedModel(item), select_beep()]}
               className="flex flex-row items-center justify-between px-1 mx-2 py-2 my-2 rounded-3xl"
-              // style={{ backgroundColor: item.primary }}
+            // style={{ backgroundColor: item.primary }}
             >
               <View className="flex flex-row items-center">
                 <Image
@@ -84,83 +136,43 @@ export default function WelcomeScreen() {
             </TouchableOpacity>
           )}
         />
-        <Text className="text-xl font-bold ml-5">Select your preferred Model</Text>
+        <Text className="text-slate-450 text-sm font-bold ml-5">Select your preferred Model</Text>
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Home',{selectedModel : selectedModel})}
-        className="mt-0 mx-24 rounded-3xl p-3 border-r-8 border-l-8" //bg-blue-800
-        style={{backgroundColor:selectedModel.primary}}
+        onPress={() => [navigation.navigate('Home', { selectedModel: selectedModel }), select_beep()]}
+        className="mt-0 mx-24 rounded-3xl p-3 border-r-8 border-l-8 mb-10" //bg-blue-800
+        style={{ backgroundColor: selectedModel.primary }}
       >
-        <Text className="text-center font-bold text-xl" style={{color:selectedModel.secondary}}>Initialize</Text>
-        
+        <Text className="text-center font-bold text-xl" style={{ color: selectedModel.secondary }}>Initialize</Text>
+
       </TouchableOpacity>
       {/* Modal on Exit */}
-      <Modal visible={exit} animationType="slide" transparent>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Are you sure you want to Exit?</Text>
-              <View style={styles.buttonContainer1}>
-              <View style={styles.buttonContainer}>
-                <Button title="      Yes" onPress={() => handleModal()} />
-              </View>
-              <View style={styles.buttonContainer}>
-                <Button title="       No" onPress={() => setExit(false)} />
-              </View>
-              </View>
-            </View>
-          </View>
-        </Modal>
+      <Modal visible={exit} animationType="fade" transparent>
+                <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
+                    <View style={{ width: wp(80), height: wp(40) }}
+                        className="flex flex-col bg-slate-800 p-5 w-96 justify-center rounded-3xl">
+                        <Text className="font-mono text-xl text-center mb-5 mt-0">Are you sure you want to Exit?</Text>
+                        <View className='flex flex-row justify-center self-center gap-8'>
+                            <View style={{ width: wp(20) }}
+                                className="bg-slate-500 rounded-2xl flex justify-center text-center">
+                                <Button title="Yes" onPress={() => handleModal()} />
+                            </View>
+                            <View style={{ width: wp(20) }}
+                                className="bg-slate-500 rounded-2xl flex justify-center text-center">
+                                <Button title="No" onPress={() => setExit(false)} />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
     </SafeAreaView>
+    // </ImageBackground>
   );
 }
 
 
 const styles = StyleSheet.create({
   modalContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-},
-modalContent: {
-  backgroundColor: '#3B96D2',
-  width: '60%',
-  padding: 16,
-  borderRadius: 8,
-  textAlign: 'center',
-  flexDirection: 'column',
-  justifyContent: 'center',
-},
-modalTitle: {
-  fontSize: 22,
-  textAlign: 'center',
-  fontWeight: 'bold',
-  marginBottom: 16,
-  color: '#000',
-},
-buttonContainer: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  backgroundColor: '#003249',
-  width: 80,
-  borderRadius: 8,
-  marginLeft: 20,
-  marginRight: 20,
-},
-buttonContainer1: {
-flexDirection: 'row',
-justifyContent: 'center',
-},
-buttonContainer2: {
-flexDirection: 'row',
-justifyContent: 'center',
-backgroundColor: '#003249',
-width: 200,
-borderRadius: 20,
-paddingTop: 11,
-marginLeft: 20,
-marginRight: 20,
-},
-
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
 });

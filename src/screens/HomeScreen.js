@@ -12,7 +12,9 @@ import {
   Platform,
   Linking,
   Modal,
-  StyleSheet
+  StyleSheet,
+  ImageBackground,
+  BackHandler,
 } from 'react-native';
 // import Voice from '@react-native-community/voice';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -22,6 +24,8 @@ import Tts from 'react-native-tts';
 import { useRoute } from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import Button from '../components/Button';
+import { useNavigation } from '@react-navigation/native';
+import { assistantSpeech, startTextToSpeech } from '../constants/TextToSpeech';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
@@ -31,15 +35,28 @@ const App = () => {
   const [text, setText] = useState('');
   const param = useRoute().params;
   const scrollViewRef = useRef();
-
+  const navigation = useNavigation();
   useEffect(() => {
     console.log(param.selectedModel.name)
   }, [])
 
- /*  const downloadImage = (url) => {
-    //to open the image URL in the device's default browser
-    Linking.openURL(url).catch((err) => console.error('Error while opening URL:', err));
-  }; */
+  const handleBackPress = () => {
+    navigation.goBack(); // works best when the goBack is async
+    Tts.stop();
+    return true; // Return true to prevent the default back button behavior
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+
+  /*  const downloadImage = (url) => {
+     //to open the image URL in the device's default browser
+     Linking.openURL(url).catch((err) => console.error('Error while opening URL:', err));
+   }; */
 
   const generateRandomName = () => {
     const timestamp = new Date().getTime();
@@ -59,9 +76,10 @@ const App = () => {
           description: 'Image',
         },
       }).fetch('GET', url);
+      assistantSpeech("Download Completed Successfully! Kindly check your Gallery!");
       setLoading(false);
       setImageDownloaded(true);
-  
+
       console.log('File saved to: ', response.path());
       // Alert.alert('Download complete', 'Image has been downloaded successfully.');
     } catch (error) {
@@ -182,43 +200,60 @@ const App = () => {
     }, 200)
   }
 
-  const startTextToSpeech = message => {
-    if (!message.content.includes('https')) {
-      // playing response with the voice id and voice speed
-      Tts.speak(message.content, {
-        androidParams: {
-          KEY_PARAM_PAN: -1,
-          KEY_PARAM_VOLUME: 0.5,
-          KEY_PARAM_STREAM: 'STREAM_MUSIC',
-        },
-      });
-    }
-  }
+  // const startTextToSpeech = message => {
+  //   if (!message.content.includes('https')) {
+  //     // playing response with the voice id and voice speed
+  //     Tts.speak(message.content, {
+  //       androidParams: {
+  //         KEY_PARAM_PAN: -1,
+  //         KEY_PARAM_VOLUME: 0.5,
+  //         KEY_PARAM_STREAM: 'STREAM_MUSIC',
+  //       },
+  //     });
+  //   }
+  // }
 
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
-
-  const handleImageError = () => {
-    setIsLoading(false);
-  };
+  // useEffect(() => {
+  //   // text to speech events
+  //   Tts.addEventListener('tts-start', (event) => console.log("start", event));
+  //   Tts.addEventListener('tts-progress', (event) => console.log("progress", event));
+  //   Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
+  //   Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
+  //   // Tts.voices().then(voices => console.log("Voices: " ,voices));e
+  // }, [])
 
   useEffect(() => {
-    // text to speech events
-    Tts.addEventListener('tts-start', (event) => console.log("start", event));
-    Tts.addEventListener('tts-progress', (event) => console.log("progress", event));
-    Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
-    Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
-  }, [])
+    if(param.selectedModel.name == "Jarvis"){
+      Tts.setDefaultLanguage('en-GB');
+      // Tts.setDefaultRate(0.6);
+      Tts.setDefaultPitch(0.5);
+      assistantSpeech("Hello Boss, I'm Jarvis. I'm powered by the latest GPT-4 model by open-AI. Please feel free to ask me anything!");
+    }else if(param.selectedModel.name == "Friday"){
+      Tts.setDefaultLanguage('en-US');
+      // Tts.setDefaultRate(0.6);
+      Tts.setDefaultPitch(1.0);
+      assistantSpeech("Hello Boss, I'm Friday. I'm powered by the latest Dall-E 2.0 model by OPEN-A I. Anything you can imagine, I can create!");
+    }else{
+      Tts.setDefaultLanguage('en-GB');
+      // Tts.setDefaultRate(0.6);
+      Tts.setDefaultPitch(1.1);
+      assistantSpeech(`{Hello Boss, I'm Gen-AI. I'm powered by the latest GPT-4 and DALL -E 2.0 models by open-AI. I'm capable of generating content as well as stunning images. Please feel free to ask me anything!}`);
+    }
+  }
+  ,[])
 
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View className="flex-1 bg-black">
-        <SafeAreaView className="flex-1 flex mx-5">
+      <View className="flex-1 bg-slate-950">
+    {/* <ImageBackground
+      source={require("../../assets/images/bg1.jpg")}
+      style={{ flex: 1 }}
+      > */}
+        <SafeAreaView className="flex-1 flex mx-5 ">
           {/* bot icon */}
           <View className="flex-row justify-center">
             <Image
@@ -252,7 +287,7 @@ const App = () => {
                           <View key={index} className="flex-row justify-start">
                             <View
                               className="p-2 flex rounded-2xl bg-blue-300 rounded-tl-none"
-                              // style={[{backgroundColor:param.selectedModel.primary}]}
+                            // style={[{backgroundColor:param.selectedModel.primary}]}
                             >
                               <Text
                                 className="text-neutral-800"
@@ -261,7 +296,7 @@ const App = () => {
                                 Sure, I'll try to create that!
                               </Text>
                               <Image
-                                source={{ uri: message.content }}
+                                source={message.content? { uri: message.content } : require('../../assets/images/loading2.gif')}
                                 className="rounded-2xl"
                                 resizeMode="contain"
                                 style={{ height: wp(60), width: wp(60) }}
@@ -326,8 +361,8 @@ const App = () => {
             </KeyboardAvoidingView>
           )}
 
-          {/* recording, clear and stop buttons */}
-          <View className="flex bg-black justify-center mb-8">
+          {/* input field and clear button... */}
+          <View className="flex bg-slate-950 justify-center mb-8">
             {loading ? (
               <Image
                 source={require('../../assets/images/loading2.gif')}
@@ -351,7 +386,11 @@ const App = () => {
                       />
                     </TouchableOpacity>
                   )}
-                  <View className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-white dark:border-gray-900/50dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs'>
+                  <View
+                    style = {{width : '60%'}}
+                    // className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-gray-700 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs'
+                    className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 dark:border-gray-700 dark:text-white rounded-xl shadow-xs dark:shadow-xs bg-gray-700'
+                  >
                     <TextInput
                       className="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0"
                       onChangeText={setText}
@@ -376,19 +415,22 @@ const App = () => {
             )}
           </View>
         </SafeAreaView>
+      {/* </ImageBackground> */}
       </View>
-      <Modal visible={imageDownloaded} animationType="slide" transparent>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Download Completed Successfully! {"\n"} Kindly check your Gallery!</Text>
-              <View style={styles.buttonContainer1}>
-              <View style={styles.buttonContainer}>
-                <Button title="       OK" onPress={() => setImageDownloaded(false)} />
-              </View>
-              </View>
+      <Modal visible={imageDownloaded} animationType="fade" transparent>
+            <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
+                <View style={{ width: wp(80), height: wp(50) }}
+                    className="flex flex-col bg-slate-800 p-5 pb-0 w-96 justify-center rounded-3xl">
+                    <Text className="font-mono text-xl text-center mb-5 mt-0">Download Completed Successfully! {"\n"} Kindly check your Gallery!</Text>
+                    <View className='flex justify-center self-center'>
+                        <View style={{ width: wp(20) }}
+                            className="bg-slate-500 rounded-2xl flex justify-center text-center">
+                            <Button title=" OK" onPress={() => setImageDownloaded(false)} />
+                        </View>
+                    </View>
+                </View>
             </View>
-          </View>
-        </Modal>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -397,50 +439,6 @@ export default App;
 
 const styles = StyleSheet.create({
   modalContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-},
-modalContent: {
-  backgroundColor: '#3B96D2',
-  width: '60%',
-  padding: 16,
-  borderRadius: 8,
-  textAlign: 'center',
-  flexDirection: 'column',
-  justifyContent: 'center',
-},
-modalTitle: {
-  fontSize: 22,
-  textAlign: 'center',
-  fontWeight: 'bold',
-  marginBottom: 16,
-  color: '#000',
-},
-buttonContainer: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  backgroundColor: '#003249',
-  width: 80,
-  borderRadius: 8,
-  marginLeft: 20,
-  marginRight: 20,
-},
-buttonContainer1: {
-flexDirection: 'row',
-justifyContent: 'center',
-},
-buttonContainer2: {
-flexDirection: 'row',
-justifyContent: 'center',
-backgroundColor: '#003249',
-width: 200,
-borderRadius: 20,
-paddingTop: 11,
-marginLeft: 20,
-marginRight: 20,
-},
-
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
 });
