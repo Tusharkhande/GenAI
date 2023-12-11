@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import Button from './Button';
+import { select_beep } from '../constants/Sounds';
 
 const ManageAcc = ({ signOut, setDelModalVisible }) => {
     return (
@@ -10,7 +10,7 @@ const ManageAcc = ({ signOut, setDelModalVisible }) => {
             <Text className='self-center' >Logout</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className='flex flex-row gap-0 bg-slate-900 m-2 p-2' onPress={() => setDelModalVisible(true)}>
+        <TouchableOpacity className='flex flex-row gap-0 bg-slate-900 m-2 p-2' onPress={() => [setDelModalVisible(true), select_beep()]}>
             <Image source={require('../../assets/images/delete.png')} className='self-center w-5 h-5' />
             <Text className='self-center'>Delete Account</Text>
         </TouchableOpacity>

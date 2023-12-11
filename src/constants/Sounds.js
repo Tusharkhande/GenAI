@@ -10,39 +10,65 @@ const logout_beep = () => {
         return;
       }
 
-      // loaded successfully
-      // console.log('duration in seconds: ' + select.getDuration() + 'number of channels: ' + select.getNumberOfChannels());
-
-      // Play the sound with an onEnd callback
       select.play((success) => {
         if (success) {
-          console.log('successfully finished playing');
+          // console.log('successfully finished playing');
         } else {
-          console.log('playback failed due to audio decoding errors');
+          // console.log('playback failed due to audio decoding errors');
         }
       });
     });
   }
 
   const select_beep = () => {
-    const select = new Sound(require('../../assets/sounds/select_beep_4.mp3'), (error) => {
+    const select = new Sound(require('../../assets/sounds/select_beep.wav'), (error) => {
       if (error) {
         console.log('failed to load the sound', error);
         return;
       }
 
-      // loaded successfully
-      // console.log('duration in seconds: ' + select.getDuration() + 'number of channels: ' + select.getNumberOfChannels());
-
-      // Play the sound with an onEnd callback
       select.play((success) => {
         if (success) {
-          console.log('successfully finished playing');
+          // console.log('successfully finished playing');
         } else {
-          console.log('playback failed due to audio decoding errors');
+          // console.log('playback failed due to audio decoding errors');
         }
       });
     });
   }
 
-  export {logout_beep, select_beep};
+  const sweep = () => {
+    const select = new Sound(require('../../assets/sounds/clear.wav'), (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+
+      select.play((success) => {
+        if (success) {
+          // console.log('successfully finished playing');
+        } else {
+          // console.log('playback failed due to audio decoding errors');
+        }
+      });
+    });
+  }
+
+  const err_beep = () => {
+    const select = new Sound(require('../../assets/sounds/error.wav'), (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+
+      select.play((success) => {
+        if (success) {
+          // console.log('successfully finished playing');
+        } else {
+          // console.log('playback failed due to audio decoding errors');
+        }
+      });
+    });
+  }
+
+  export {logout_beep, select_beep, sweep, err_beep};

@@ -16,6 +16,7 @@ import {
   ImageBackground,
   BackHandler,
 } from 'react-native';
+
 // import Voice from '@react-native-community/voice';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { apiCall, chatgptApiCall, dalleApiCall } from '../api/openAi';
@@ -26,9 +27,12 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { assistantSpeech, startTextToSpeech } from '../constants/TextToSpeech';
+import { sweep, select_beep } from '../constants/Sounds';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
+  const [words, setWords] = useState([]);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [imageDownloaded, setImageDownloaded] = useState(false);
@@ -53,6 +57,17 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex(prevIndex => prevIndex + 1);
+      // updateScrollView();
+    }, 300);
+  
+    return () => {
+      clearInterval(interval);
+    };
+  }, [words]);
+
   /*  const downloadImage = (url) => {
      //to open the image URL in the device's default browser
      Linking.openURL(url).catch((err) => console.error('Error while opening URL:', err));
@@ -64,6 +79,7 @@ const App = () => {
     return `${timestamp}_${randomNumber}`;
   };
   const downloadImage = async (url) => {
+    select_beep();
     try {
       setLoading(true);
       const imageName = generateRandomName();
@@ -89,6 +105,7 @@ const App = () => {
   };
 
   const clear = () => {
+    sweep();
     Tts.stop();
     setLoading(false);
     setMessages([]);
@@ -98,6 +115,7 @@ const App = () => {
     if (text.trim().length > 0) {
       Tts.stop();
       setLoading(true);
+      select_beep();
       let newMessages = [...messages];
       newMessages.push({ role: 'user', content: text.trim() });
       setMessages([...newMessages]);
@@ -117,6 +135,9 @@ const App = () => {
               setLoading(false);
               if (res.success) {
                 setMessages([...res.data]);
+                setWords(res.data.map(message => message.content.split(' ')));
+                setCurrentWordIndex(0);
+                console.log("res: ", res.data)
                 updateScrollView();
                 startTextToSpeech(res.data[res.data.length - 1]);
                 // const lastMessage = res.data[res.data.length - 1];
@@ -194,6 +215,9 @@ const App = () => {
     }
   };
 
+
+
+
   const updateScrollView = () => {
     setTimeout(() => {
       scrollViewRef?.current?.scrollToEnd({ animated: true });
@@ -223,33 +247,34 @@ const App = () => {
   // }, [])
 
   useEffect(() => {
-    if(param.selectedModel.name == "Jarvis"){
+    if (param.selectedModel.name == "Jarvis") {
       Tts.setDefaultLanguage('en-GB');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(0.5);
       assistantSpeech("Hello Boss, I'm Jarvis. I'm powered by the latest GPT-4 model by open-AI. Please feel free to ask me anything!");
-    }else if(param.selectedModel.name == "Friday"){
+    } else if (param.selectedModel.name == "Friday") {
       Tts.setDefaultLanguage('en-US');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.0);
       assistantSpeech("Hello Boss, I'm Friday. I'm powered by the latest Dall-E 2.0 model by OPEN-A I. Anything you can imagine, I can create!");
-    }else{
+    } else {
       Tts.setDefaultLanguage('en-GB');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.1);
-      assistantSpeech(`{Hello Boss, I'm Gen-AI. I'm powered by the latest GPT-4 and DALL -E 2.0 models by open-AI. I'm capable of generating content as well as stunning images. Please feel free to ask me anything!}`);
+      assistantSpeech(`{Hello Boss, I'm gen*. I'm powered by the latest GPT-4 and DALL -E 2.0 models by open-AI. I'm capable of generating content as well as stunning images. Please feel free to ask me anything!}`);
     }
   }
-  ,[])
+    , [])
+
 
 
   return (
     <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View className="flex-1 bg-slate-950">
-    {/* <ImageBackground
+        {/* <ImageBackground
       source={require("../../assets/images/bg1.jpg")}
       style={{ flex: 1 }}
       > */}
@@ -296,7 +321,7 @@ const App = () => {
                                 Sure, I'll try to create that!
                               </Text>
                               <Image
-                                source={message.content? { uri: message.content } : require('../../assets/images/loading2.gif')}
+                                source={message.content ? { uri: message.content } : require('../../assets/images/loading2.gif')}
                                 className="rounded-2xl"
                                 resizeMode="contain"
                                 style={{ height: wp(60), width: wp(60) }}
@@ -326,6 +351,7 @@ const App = () => {
                               style={{ fontSize: wp(4) }}
                             >
                               {message.content}
+                              {/* {words.slice(0, currentWordIndex + 1).join(' ')} */}
                             </Text>
                           </View>
                         );
@@ -387,7 +413,7 @@ const App = () => {
                     </TouchableOpacity>
                   )}
                   <View
-                    style = {{width : '60%'}}
+                    style={{ width: '60%' }}
                     // className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-gray-700 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs'
                     className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 dark:border-gray-700 dark:text-white rounded-xl shadow-xs dark:shadow-xs bg-gray-700'
                   >
@@ -415,21 +441,21 @@ const App = () => {
             )}
           </View>
         </SafeAreaView>
-      {/* </ImageBackground> */}
+        {/* </ImageBackground> */}
       </View>
       <Modal visible={imageDownloaded} animationType="fade" transparent>
-            <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
-                <View style={{ width: wp(80), height: wp(50) }}
-                    className="flex flex-col bg-slate-800 p-5 pb-0 w-96 justify-center rounded-3xl">
-                    <Text className="font-mono text-xl text-center mb-5 mt-0">Download Completed Successfully! {"\n"} Kindly check your Gallery!</Text>
-                    <View className='flex justify-center self-center'>
-                        <View style={{ width: wp(20) }}
-                            className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                            <Button title=" OK" onPress={() => setImageDownloaded(false)} />
-                        </View>
-                    </View>
-                </View>
+        <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
+          <View style={{ width: wp(80), height: wp(50) }}
+            className="flex flex-col bg-slate-800 p-5 pb-0 w-96 justify-center rounded-3xl">
+            <Text className="font-mono text-xl text-center mb-5 mt-0">Download Completed Successfully! {"\n"} Kindly check your Gallery!</Text>
+            <View className='flex justify-center self-center'>
+              <View style={{ width: wp(20) }}
+                className="bg-slate-500 rounded-2xl flex justify-center text-center">
+                <Button title=" OK" onPress={() => [setImageDownloaded(false), select_beep()]} />
+              </View>
             </View>
+          </View>
+        </View>
       </Modal>
     </KeyboardAvoidingView>
   );

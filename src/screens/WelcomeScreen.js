@@ -40,6 +40,7 @@ export default function WelcomeScreen() {
 
   const handleModal = () => {
     setExit(false);
+    select_beep();
     BackHandler.exitApp();
   };
 
@@ -83,8 +84,8 @@ export default function WelcomeScreen() {
             >
               <Image
                 source={require("../../assets/images/about.png")}
-                style={{ height: wp(11), width: wp(11) }}
-                className="rounded-full w-10 h-10 "
+                style={{ height: wp(11), width: wp(9) }}
+                className="rounded-full mx-auto"
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -159,7 +160,7 @@ export default function WelcomeScreen() {
                             </View>
                             <View style={{ width: wp(20) }}
                                 className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                                <Button title="No" onPress={() => setExit(false)} />
+                                <Button title="No" onPress={() => [setExit(false), select_beep()]} />
                             </View>
                         </View>
                     </View>

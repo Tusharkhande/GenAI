@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AvatarsModal from '../components/AvatarsModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { select_beep } from '../constants/Sounds';
+import { select_beep,err_beep } from '../constants/Sounds';
 import { assistantSpeech } from '../constants/TextToSpeech';
 
 export default function SignUpScreen() {
@@ -24,16 +24,19 @@ export default function SignUpScreen() {
   const createUser = async () => {
     select_beep();
     if (email === '' || password === '' || name === '') {
+      err_beep();
       setErrorMessage('Please fill in all fields.');
       assistantSpeech(errorMessage);
       return;
     }
     if (!email.includes('@')) {
+      err_beep();
       setErrorMessage('Please enter a valid email address.');
       assistantSpeech(errorMessage);
       return;
     }
     if (password.length < 6) {
+      err_beep();
       setErrorMessage('Password must be at least 6 characters.');
       assistantSpeech(errorMessage);
       return;

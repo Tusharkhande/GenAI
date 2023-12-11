@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, Linking, StyleSheet, TouchableOpacity, Image, BackHandler } from 'react-native';
+import { select_beep } from '../constants/Sounds';
+
 const Contact = () => {
 
     // const handleBackButton = () => {
@@ -17,14 +19,17 @@ const Contact = () => {
     // }, []);
 
     const handleMailButtonPress = () => {
+        select_beep();
         Linking.openURL('mailto:khandetushar2001@gmail.com');
     };
 
     const handleWhatsAppButtonPress = () => {
+        select_beep();
         Linking.openURL('https://wa.me/919322392593'); // Replace with the actual WhatsApp number
     };
 
     const handleWebsiteButtonPress = () => {
+        select_beep();
         Linking.openURL('https://www.google.com/'); // Replace with the actual website URL
     };
 

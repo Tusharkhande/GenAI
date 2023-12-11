@@ -16,6 +16,7 @@ import ManageAcc from '../components/ManageAcc';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import Tts from 'react-native-tts';
 import { logout_beep, select_beep } from '../constants/Sounds';
+import { assistantSpeech } from '../constants/TextToSpeech';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -50,32 +51,14 @@ const Dashboard = () => {
 
   }, []);
 
-  useEffect(() => {
-    // text to speech events
-    Tts.addEventListener('tts-start', (event) => console.log("start", event));
-    Tts.addEventListener('tts-progress', (event) => console.log("progress", event));
-    Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
-    Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
-    // Tts.voices().then(voices => console.log("Voices: " ,voices));e
-  }, []);
-
-  const textToSpeech = (msg) => {
-    Tts.speak(msg, {
-      androidParams: {
-        KEY_PARAM_PAN: -1,
-        KEY_PARAM_VOLUME: 0.5,
-        KEY_PARAM_STREAM: 'STREAM_MUSIC',
-      },
-    });
-  };
-
   const signOut = () => {
+    
     auth.signOut()
       .then(() => {
         // Handle successful sign-out
         logout_beep();
         
-        textToSpeech("Logged out successfully");
+        assistantSpeech("Logged out successfully");
         // ToastAndroid.show("Sign out successful", ToastAndroid.SHORT);
         navigation.navigate('Welcome'); // Redirect to the Welcome screen or any other screen
       })
@@ -83,6 +66,7 @@ const Dashboard = () => {
   };
 
   const deleteAccount = async () => {
+    select_beep();
     setDelModalVisible(false);
     setLoading(true);
     try {
@@ -90,7 +74,7 @@ const Dashboard = () => {
       auth.currentUser.delete()
         .then(() => {
           console.log("User deleted successfully");
-          textToSpeech("Account deletion successfull");
+          assistantSpeech("Account deletion successfull");
           // ToastAndroid.show("User deleted successfully", ToastAndroid.SHORT);
           navigation.navigate('Welcome');
         }).catch((error) => {
@@ -113,7 +97,7 @@ const Dashboard = () => {
     }).then(() => {
       // Profile updated!
       console.log("Profile updated")
-      textToSpeech("Profile updation successfull!");
+      assistantSpeech("Profile updation successfull!");
       setModalVisible(false);
     }).catch((error) => {
       // An error occurred
@@ -164,7 +148,9 @@ const Dashboard = () => {
         <ManageAcc signOut={signOut} setDelModalVisible={setDelModalVisible} />
       </View>
 
-      <View style={styles.horizontalLine} />
+      <View className='justify-end self-center mt-8'>
+        <Text>© 2023 @TK Solutions</Text>
+      </View>
 
       <CustomModal setDelModalVisible={setDelModalVisible} delModalVisible={delModalVisible} deleteAccount={deleteAccount} setPassword={setPassword} password={password} />
       <AvatarsModal setModalVisible={setModalVisible} modalVisible={modalVisible} handleProfileImg={handleProfileImg} setSelectedAvatar={setSelectedAvatar} selectedAvatar={selectedAvatar} />

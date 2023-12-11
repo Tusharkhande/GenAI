@@ -41,7 +41,7 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
               </View>
               <View style={{ width: wp(20) }}
                 className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                <Button title="Cancel" onPress={() => setModalVisible(false)} />
+                <Button title="Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
               </View>
             </View>
           </View>

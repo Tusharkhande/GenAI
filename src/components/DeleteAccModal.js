@@ -2,6 +2,7 @@ import { View, Text, TextInput, Modal, StyleSheet, BackHandler, TouchableOpacity
 import Button from './Button';
 import React from 'react';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { select_beep } from '../constants/Sounds';
 
 const CustomModal = ({ setDelModalVisible, delModalVisible, deleteAccount, setPassword, password }) => {
   console.log(password)
@@ -27,7 +28,7 @@ const CustomModal = ({ setDelModalVisible, delModalVisible, deleteAccount, setPa
             </TouchableOpacity>
             <View style={{ width: wp(20) }}
               className="bg-slate-500 rounded-2xl flex justify-center text-center">
-              <Button title="Cancel" onPress={() => setDelModalVisible(false)} />
+              <Button title="Cancel" onPress={() => [setDelModalVisible(false), select_beep()]} />
             </View>
           </View>
         </View>

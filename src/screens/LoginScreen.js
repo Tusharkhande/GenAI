@@ -5,11 +5,9 @@ import { useEffect, useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../firebase/firebase.config';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Button from '../components/Button';
-import { select_beep } from '../constants/Sounds';
+import { select_beep, err_beep } from '../constants/Sounds';
 // import EncryptedStorage from 'react-native-encrypted-storage';
 import { assistantSpeech } from '../constants/TextToSpeech';
-
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,14 +20,17 @@ export default function LoginScreen() {
     select_beep();
     // const auth = getAuth();
     if (email.trim() === '' && password === '') {
+      err_beep();
       setErrorMessage('Please enter email and password.');
       assistantSpeech(errorMessage)
       return;
     } else if (email.trim() === '') {
+      err_beep();
       setErrorMessage('Please enter email.');
       assistantSpeech(errorMessage)
       return;
     } else if (password === '') {
+      err_beep();
       setErrorMessage('Please enter password.');
       assistantSpeech(errorMessage)
       return;
@@ -53,6 +54,8 @@ export default function LoginScreen() {
           const errorCode = error.code;
           const errormessage = error.message;
           setErrorMessage("Invalid email or password")
+          err_beep();
+          assistantSpeech(errorMessage)
           console.log(errorCode, errormessage)
         });
     } catch (error) {

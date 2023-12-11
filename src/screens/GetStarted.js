@@ -6,7 +6,7 @@ import Button from '../components/Button'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { select_beep } from '../constants/Sounds'
 // import EncryptedStorage from 'react-native-encrypted-storage';
-import { assistantSpeech } from '../constants/TextToSpeech'
+import { stop } from '../constants/TextToSpeech'
 // import { auth } from '../firebase/firebase.config';
 import useAuth from '../firebase/useAuth'
 
@@ -41,6 +41,7 @@ export default function GetStarted() {
 
     const handleModal = () => {
         setExit(false);
+        select_beep();
         BackHandler.exitApp();
     };
 
@@ -95,7 +96,7 @@ export default function GetStarted() {
                     </View>
                 </View>
             </View>
-            <Modal visible={exit} animationType="slide" transparent>
+            <Modal visible={exit} animationType="fade" transparent>
                 <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
                     <View style={{ width: wp(80), height: wp(40) }}
                         className="flex flex-col bg-slate-800 p-5 w-96 justify-center rounded-3xl">
@@ -107,7 +108,7 @@ export default function GetStarted() {
                             </View>
                             <View style={{ width: wp(20) }}
                                 className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                                <Button title="No" onPress={() => setExit(false)} />
+                                <Button title="No" onPress={() => [setExit(false), select_beep()]} />
                             </View>
                         </View>
                     </View>

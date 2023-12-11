@@ -1,6 +1,8 @@
-import { HUGGING_API_KEY } from "../constants";
 import { apiKey } from "../constants";
+// import {OPENAI_API_KEY} from '@env';
 import axios from 'axios';
+// const apiKey = apiKey;
+
 const client = axios.create({
     headers: {
         "Authorization": "Bearer " + apiKey,
@@ -10,6 +12,7 @@ const client = axios.create({
 
 const chatgptUrl = 'https://api.openai.com/v1/chat/completions';
 const dalleUrl = 'https://api.openai.com/v1/images/generations';
+const imageVarUrl = 'https://api.openai.com/v1/images/variations';
 
 // export const apiCall = async (prompt, messages) => {
 
@@ -50,11 +53,11 @@ const dalleUrl = 'https://api.openai.com/v1/images/generations';
 
 // }
 
-let error = "Error:Sorry server issue! Wait for a bit and try again";
+let error = "Error! Sorry server issue! Wait for a bit and try again";
 
 
 export const apiCall = async (prompt, messages) => {
-    try {
+    try {console.log(apiKey)
         const res = await client.post(chatgptUrl, {
             model: "gpt-3.5-turbo",
             messages
@@ -122,6 +125,50 @@ export const dalleApiCall = async (prompt, messages) => {
     }
 }
 
+// export const imageVariationApiCall = async (image, messages) => {
+//     try {
+//         const res = await client.post(imageVarUrl, {
+//             image,
+//             n: 1,
+//             size: "512x512"
+//         })
+//         console.log(res)
+//         let url = res?.data?.data[0]?.url;
+//         console.log('got image url: ',url);
+//         // messages.push({ role: 'assistant', content: url });
+//         return Promise.resolve({ success: true, data: messages });
+
+//     } catch (err) {
+//         console.log('error: ', err);
+//         messages.push({ role: 'assistant', content: error.trim() });
+//         return Promise.resolve({ success: true, data: messages});
+//     }
+// }
+
+/* export const imageVariationApiCall = async (image, n = 1, responseFormat = 'url', size = '1024x1024', user = '') => {
+    try {
+        const response = await client.post(imageVarUrl, {
+            image: image,
+            n: n,
+            response_format: responseFormat,
+            size: size,
+            user: user
+        }
+        );
+
+        const generatedImages = response; // Assuming the API response has a property called 'data' containing the generated images
+
+        // Handle the generated images as needed
+        console.log('Generated Images:', generatedImages);
+        return generatedImages;
+
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle the error as needed
+        throw error;
+    }
+};
+ */
 /* export const huggingFaceApiCall = async (prompt) => {
     try{
         
@@ -153,3 +200,4 @@ export const dalleApiCall = async (prompt, messages) => {
 }
  */
 
+// imageVariationApiCall('https://storage.googleapis.com/pai-images/ae74b3002bfe4b538493ca7aedb6a300.jpeg', [])
