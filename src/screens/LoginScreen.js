@@ -1,13 +1,29 @@
-import { View, Text, TouchableOpacity, Image, TextInput, ImageBackground, ToastAndroid, Modal } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../firebase/firebase.config';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { select_beep, err_beep } from '../constants/Sounds';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ImageBackground,
+  ToastAndroid,
+  Modal,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {auth} from '../firebase/firebase.config';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {select_beep, err_beep} from '../constants/Sounds';
 // import EncryptedStorage from 'react-native-encrypted-storage';
-import { assistantSpeech } from '../constants/TextToSpeech';
+import {assistantSpeech} from '../constants/TextToSpeech';
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,6 +31,11 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const [loading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    });
+  }, []);
 
   const login = async () => {
     select_beep();
@@ -22,17 +43,17 @@ export default function LoginScreen() {
     if (email.trim() === '' && password === '') {
       err_beep();
       setErrorMessage('Please enter email and password.');
-      assistantSpeech(errorMessage)
+      assistantSpeech(errorMessage);
       return;
     } else if (email.trim() === '') {
       err_beep();
       setErrorMessage('Please enter email.');
-      assistantSpeech(errorMessage)
+      assistantSpeech(errorMessage);
       return;
     } else if (password === '') {
       err_beep();
       setErrorMessage('Please enter password.');
-      assistantSpeech(errorMessage)
+      assistantSpeech(errorMessage);
       return;
     }
     setErrorMessage('');
@@ -40,31 +61,54 @@ export default function LoginScreen() {
     try {
       setIsLoading(true);
       await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in 
+        .then(userCredential => {
+          // Signed in
           // ToastAndroid.show("Logged in successfully!", ToastAndroid.SHORT);
           // assistantSpeech("Logged in successfully");
-          console.log("Logged in successfully");
+          console.log('Logged in successfully');
           // EncryptedStorage.setItem('user_session', JSON.stringify(userCredential.user));
           // navigation.navigate('Welcome');
           const user = userCredential.user;
-          console.log(user)
+          console.log(user);
         })
-        .catch((error) => {
+        .catch(error => {
           const errorCode = error.code;
           const errormessage = error.message;
-          setErrorMessage("Invalid email or password")
+          setErrorMessage('Invalid email or password');
           err_beep();
-          assistantSpeech(errorMessage)
-          console.log(errorCode, errormessage)
+          assistantSpeech(errorMessage);
+          console.log(errorCode, errormessage);
         });
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
+  };
 
-  }
+  const loginWithGoogle = async () => {
+    // setIsLoading(true);
+    try {
+      console.log('Checking Play Services...');
+      await GoogleSignin.hasPlayServices();
+      console.log('Signing in...');
+      const userInfo = await GoogleSignin.signIn();
+      navigation.navigate('Welcome');
+      // navigation.navigate('Welcome');
+      console.log('Signed in. User info:', userInfo);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <View className="flex flex-1 bg-slate-900 ">
@@ -82,18 +126,20 @@ export default function LoginScreen() {
             </TouchableOpacity>
         </View> */}
         <View className="flex-row justify-center mt-6">
-          <Image source={require('../../assets/images/bot4.png')}
-            style={{ width: wp(30), height: wp(30) }}
+          <Image
+            source={require('../../assets/images/bot4.png')}
+            style={{width: wp(30), height: wp(30)}}
           />
         </View>
       </SafeAreaView>
-      <View className="flex-1 px-8 pt-5 mt-10"
-        style={{ borderTopLeftRadius: 50, borderTopRightRadius: 50 }}
-      >
+      <View
+        className="flex-1 px-8 pt-5 mt-10"
+        style={{borderTopLeftRadius: 50, borderTopRightRadius: 50}}>
         <View className="form space-y-8">
           <View className="flex flex-row justify-start">
-            <Image source={require('../../assets/images/email.png')}
-              style={{ width: wp(8), height: wp(8) }}
+            <Image
+              source={require('../../assets/images/email.png')}
+              style={{width: wp(8), height: wp(8)}}
               className="w-10 h-10  pt-4 m-2"
             />
             <TextInput
@@ -102,13 +148,14 @@ export default function LoginScreen() {
               placeholderTextColor="#000"
               placeholder="Enter your email"
               onChangeText={text => setEmail(text)}
-              style={{ width: wp(70), height: wp(14) }}
+              style={{width: wp(70), height: wp(14)}}
             />
           </View>
           {/* <Text className="text-blue-200 ml-4 font-mono text-lg ">Password</Text> */}
           <View className="flex flex-row">
-            <Image source={require('../../assets/images/password.png')}
-              style={{ width: wp(8), height: wp(8) }}
+            <Image
+              source={require('../../assets/images/password.png')}
+              style={{width: wp(8), height: wp(8)}}
               className="w-10 h-10 pt-4 m-2"
             />
             <TextInput
@@ -117,19 +164,20 @@ export default function LoginScreen() {
               placeholderTextColor="#000"
               placeholder="Enter your password"
               onChangeText={text => setPassword(text)}
-              style={{ width: wp(70), height: wp(14) }}
+              style={{width: wp(70), height: wp(14)}}
             />
           </View>
 
           {errorMessage !== '' && (
-            <Text className="text-red-300 mt-0 mb-2 ml-4 text-base">{errorMessage}</Text>
+            <Text className="text-red-300 mt-0 mb-2 ml-4 text-base">
+              {errorMessage}
+            </Text>
           )}
 
           <View className="flex-row justify-center">
             <TouchableOpacity
               className="py-3 w-52 bg-blue-400 rounded-xl"
-              onPress={login}
-            >
+              onPress={login}>
               <Text className="text-base font-bold text-center text-gray-700">
                 Sign In
               </Text>
@@ -139,41 +187,54 @@ export default function LoginScreen() {
         <Text className="text-xl text-blue-200 font-bold text-center py-5">
           Or
         </Text>
-        {/* <View className="flex-row justify-center space-x-12">
-          <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-            <Image source={require('../assets/icons/google.png')}
-              className="w-10 h-10" />
+        <View className="flex-row justify-center space-x-12">
+          <TouchableOpacity
+            className="p-2 bg-blue-200 rounded-2xl"
+            onPress={loginWithGoogle}>
+            <Image
+              source={require('../../assets/images/google.png')}
+              className="w-10 h-10"
+            />
           </TouchableOpacity>
-          <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-            <Image source={require('../assets/icons/apple.png')}
-              className="w-10 h-10" />
+          <TouchableOpacity className="p-2 bg-blue-200 rounded-2xl">
+            <Image
+              source={require('../../assets/images/apple.png')}
+              className="w-10 h-10"
+            />
           </TouchableOpacity>
-          <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-            <Image source={require('../assets/icons/facebook.png')}
-              className="w-10 h-10" />
+          <TouchableOpacity className="p-2 bg-blue-200 rounded-2xl">
+            <Image
+              source={require('../../assets/images/facebook.png')}
+              className="w-10 h-10"
+            />
           </TouchableOpacity>
-        </View> */}
+        </View>
         <View className="flex-row justify-center mt-3">
-          <Text className="text-blue-200 text-base font-semibold">Don't have an account?</Text>
-          <TouchableOpacity onPress={() => [navigation.navigate('Register'), select_beep()]}>
-            <Text className="font-semibold text-base text-blue-500"> Create One!</Text>
+          <Text className="text-blue-200 text-base font-semibold">
+            Don't have an account?
+          </Text>
+          <TouchableOpacity
+            onPress={() => [navigation.navigate('Register'), select_beep()]}>
+            <Text className="font-semibold text-base text-blue-500">
+              {' '}
+              Create One!
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
       <Modal visible={loading} animationType="fade" transparent>
-        <View className='flex flex-1 items-center bg-transparent w-full'>
-          <View style={{ width: wp(100) }}
+        <View className="flex flex-1 items-center bg-transparent w-full">
+          <View
+            style={{width: wp(100)}}
             className="flex flex-1  flex-col bg-slate-500 opacity-50 w-auto justify-center">
             <Image
               source={require('../../assets/images/loading2.gif')}
-              style={{ width: hp(10), height: hp(10) }}
+              style={{width: hp(10), height: hp(10)}}
               className="mx-auto"
             />
           </View>
         </View>
       </Modal>
     </View>
-  )
-
+  );
 }
-

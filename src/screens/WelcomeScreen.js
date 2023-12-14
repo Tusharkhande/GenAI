@@ -6,22 +6,60 @@ import { useNavigation } from '@react-navigation/native';
 import Models from '../constants/Models';
 import Button from '../components/Button';
 import useAuth from '../firebase/useAuth';
+// import { getCurrentUser } from '../firebase/isSignedin';
 import { select_beep } from '../constants/Sounds';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 
-export default function WelcomeScreen() {
+
+export default function WelcomeScreen () {
   const navigation = useNavigation();
   const [model, setModel] = useState([]);
   const [selectedModel, setSelectedModel] = useState([]);
   const [exit, setExit] = useState(false);
+  const [name, setName] = useState('Sir');
+  const [avatar, setAvatar] = useState('1');
   const { user } = useAuth();
+  const [googleUser, setGoogleUser] = useState('');
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    });
+  }, []);
+
+  const getCurrentUser = async () => {
+    const currentUser = await GoogleSignin.getCurrentUser();
+    return currentUser.user;
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const googleUser = await getCurrentUser();
+        console.log(googleUser);
+        setGoogleUser(googleUser);
+        if (user) {
+          setName(user.displayName);
+          setAvatar(user.photoURL);
+        } else {
+          setName(googleUser.name);
+        }
+      } catch (error) {
+        console.log(error)
+        
+      }
+    };
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     setModel(Models);
     setSelectedModel(Models[1]);
   }, []);
+
   useEffect(() => {
-    console.log(user.photoURL)
+    // console.log(user)
     const colorScheme = Appearance.getColorScheme();
     colorScheme === 'dark' ? Appearance.setColorScheme('dark') : Appearance.setColorScheme('dark');
   }, []);
@@ -44,6 +82,7 @@ export default function WelcomeScreen() {
     BackHandler.exitApp();
   };
 
+
   return (
     // <ImageBackground
     //     source={require("../../assets/images/bg1.jpg")}
@@ -60,7 +99,8 @@ export default function WelcomeScreen() {
             style={{ alignSelf: 'flex-start' }}
           >
             <Image
-              source={user.photoURL ? user.photoURL : require("../../assets/images/avatars/arc.jpg")}
+              source={user ? user.photoURL : require("../../assets/images/avatars/thor.jpeg")}
+              // source={avatar ? avatar : require("../../assets/images/avatars/arc.jpg")}
               style={{ height: wp(11), width: wp(11) }}
               className="rounded-full w-14 h-14 mx-auto"
               resizeMode="contain"
@@ -73,7 +113,10 @@ export default function WelcomeScreen() {
           ]}
             className=" font-semibold text-center font-mono mt-1 text-slate-50"
           >
-            Welcome {user.displayName == undefined ? "Sir" : user.displayName.split(" ")[0]}!
+            {/* Welcome {user.displayName == undefined || googleUser.name==undefined ? "Sir" : user.displayName.split(" ")[0]}! */}
+            {/* Welcome {user.displayName ? user.displayName.split(" ")[0] : googleUser.name ? googleUser.name.split(" ")[0] : "Sir"} */}
+
+            Welcome {user ? user.displayName.split(" ")[0] : "Sir"}!
           </Text>
         </View>
         <View>

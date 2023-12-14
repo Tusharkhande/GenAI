@@ -14,7 +14,7 @@ const HorizontalLine = ({text}) => {
 const styles = StyleSheet.create({
     
   horizontalLine: {
-    width: '100%',
+    width: '90%',
     flexDirection: 'row', // To align text horizontally
     alignItems: 'center', // To center text vertically
     marginVertical: 10, // Adjust as needed

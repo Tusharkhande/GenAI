@@ -17,6 +17,7 @@ import ManageAcc from '../components/ManageAcc';
 import Tts from 'react-native-tts';
 import { logout_beep, select_beep } from '../constants/Sounds';
 import { assistantSpeech } from '../constants/TextToSpeech';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -28,6 +29,34 @@ const Dashboard = () => {
   const [delModalVisible, setDelModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentUser = auth.currentUser;
+  const [googleUser, setGoogleUser] = useState('');
+  const [photo, setPhoto] = useState(require("../../assets/images/avatars/thor.jpeg"));
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    });
+  }, []);
+
+  const getCurrentUser = async () => {
+    const currentUser = await GoogleSignin.getCurrentUser();
+    return currentUser.user;
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const googleUser = await getCurrentUser();
+        console.log(googleUser);
+        setGoogleUser(googleUser);
+      } catch (error) {
+        console.log(error)
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  
 
   const handleBackPress = () => {
     select_beep();
@@ -43,26 +72,38 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    setDisplayName(currentUser ? currentUser.displayName: googleUser ? googleUser.name: "Sir");
     if (currentUser) {
-      setDisplayName(currentUser.displayName);
       setEmail(currentUser.email);
+      setPhoto(currentUser.photoURL);
+    }else if(googleUser){
+      setEmail(googleUser.email)
     }
     console.log(avatar)
 
-  }, []);
+  }, [currentUser, googleUser]);
 
-  const signOut = () => {
-    
-    auth.signOut()
+  const signOut = async() => {
+    if(googleUser){
+      try {
+        console.log("hokjhgfdsdfghj")
+        //  GoogleSignin.signOut();
+        await GoogleSignin.revokeAccess();
+        navigation.navigate('Begin');
+      } catch (error) {
+        console.error(error);
+      }
+    }else if(currentUser){
+      auth.signOut()
       .then(() => {
-        // Handle successful sign-out
         logout_beep();
         
         assistantSpeech("Logged out successfully");
         // ToastAndroid.show("Sign out successful", ToastAndroid.SHORT);
-        navigation.navigate('Welcome'); // Redirect to the Welcome screen or any other screen
+        // navigation.navigate('Welcome');
       })
       .catch(error => console.log(error.message));
+    }
   };
 
   const deleteAccount = async () => {
@@ -76,7 +117,7 @@ const Dashboard = () => {
           console.log("User deleted successfully");
           assistantSpeech("Account deletion successfull");
           // ToastAndroid.show("User deleted successfully", ToastAndroid.SHORT);
-          navigation.navigate('Welcome');
+          navigation.navigate('Begin');
         }).catch((error) => {
           console.log("Error deleting user", error);
           Alert.alert("Error deleting user try again: " + error.message);
@@ -92,21 +133,27 @@ const Dashboard = () => {
 
   const handleProfileImg = () => {
     select_beep();
-    updateProfile(auth.currentUser, {
-      photoURL: selectedAvatar
-    }).then(() => {
-      // Profile updated!
-      console.log("Profile updated")
+    if(googleUser){
+      setPhoto(selectedAvatar)
       assistantSpeech("Profile updation successfull!");
       setModalVisible(false);
-    }).catch((error) => {
-      // An error occurred
-      console.log("Error updating profile");
-      Alert.alert("Error updating profile try again");
-      setModalVisible(false);
+    }else{
+      updateProfile(auth.currentUser, {
+        photoURL: selectedAvatar
+      }).then(() => {
+        // Profile updated!
+        console.log("Profile updated")
+        setModalVisible(false);
+      }).catch((error) => {
+        // An error occurred
+        console.log("Error updating profile");
+        Alert.alert("Error updating profile try again");
+        setModalVisible(false);
+      })
     }
-    )
   }
+
+
 
   return (
     <View style={styles.container}
@@ -123,8 +170,9 @@ const Dashboard = () => {
       <TouchableOpacity onPress={() => [setModalVisible(true), select_beep()]} className=' mb-5'>
         <Image
           // source={(selectedAvatar || currentUser.photoURL) ? { uri: currentUser.photoURL } : require('../../assets/images/user.png')}
-          source={currentUser.photoURL}
+          // source={currentUser.photoURL ? currentUser.photoURL : googleUser.photo ? googleUser.photo : require("../../assets/images/avatars/arc.jpg")}
           // style={styles.profileImage}
+          source={currentUser ? currentUser.photoURL : photo}
           className="rounded-full w-20 h-20 m-5 mb-0 mx-auto"
         />
         <Text className='text-center text-sm text-slate-200'>Change Avatar</Text>
@@ -145,7 +193,7 @@ const Dashboard = () => {
       <HorizontalLine text='Manage Account' />
 
       <View className='self-start'>
-        <ManageAcc signOut={signOut} setDelModalVisible={setDelModalVisible} />
+        <ManageAcc signOut={signOut} setDelModalVisible={setDelModalVisible} googleUser={googleUser}/>
       </View>
 
       <View className='justify-end self-center mt-8'>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import Button from '../components/Button';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -9,6 +9,7 @@ const About = () => {
     const navigation = useNavigation();
   return (
     <View className='flex bg-slate-950 flex-1 justify-normal p-10'>
+      <ScrollView>
         <View className="flex flex-row self-end m-0">
           <Button
             image={require('../../assets/images/close.png')}
@@ -31,6 +32,7 @@ const About = () => {
       <View className='justify-end mb-0 self-center mt-5'>
         <Text>© 2023 @TK Solutions</Text>
       </View>
+    </ScrollView>
     </View>
   );
 };

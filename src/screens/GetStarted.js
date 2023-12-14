@@ -19,7 +19,7 @@ export default function GetStarted() {
     };
 
     // const user = auth.currentUser;
-    const { user } = useAuth();
+    // const { user } = useAuth();
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', handleBackPress);

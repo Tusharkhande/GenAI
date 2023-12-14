@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import useAuth from '../firebase/useAuth';
+import googleAuth from '../firebase/googleAuth';
+// import googleStatus from '../firebase/isSignedin';
 
 import UserStack from './userStack';
 import AuthStack from './authStack';
 
 export default function AppNavigation() {
-    const { user } = useAuth();
+    const  {user}  = useAuth();
+    const googleUser = googleAuth();
+    console.log(googleUser);
+
     return user ? <UserStack /> : <AuthStack />;
 }
 
@@ -35,52 +40,58 @@ export default function AppNavigation() {
 // }
 
 // export default AppNavigation;
-
-/* import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+/* 
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/SignUpScreen';
 import GetStarted from '../screens/GetStarted';
 import useAuth from '../firebase/useAuth';
+import Dashboard from '../screens/DashBoard';
+import About from '../screens/About';
 
 const Stack = createNativeStackNavigator();
 
 function AppNavigation() {
-  const { user } = useAuth();
-  
+  const {user} = useAuth();
+
   return (
     <NavigationContainer>
-        {user ? (
-          <>
-          {console.log("if")}
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Welcome'>
+      {user ? (
+        <>
+          {console.log('if')}
+          <Stack.Navigator
+            screenOptions={{headerShown: false}}
+            initialRouteName="Welcome">
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-          </>
-        ) : (
-          <>
-          {console.log("else")}
-          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Begin'>
+            <Stack.Screen name="Dashboard" component={Dashboard} />
+            <Stack.Screen name="About" component={About} />
+          </Stack.Navigator>
+        </>
+      ) : (
+        <>
+          {console.log('else')}
+          <Stack.Navigator
+            screenOptions={{headerShown: false}}
+            initialRouteName="Begin">
             <Stack.Screen name="Begin" component={GetStarted} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-          </>
-        )}
+          </Stack.Navigator>
+        </>
+      )}
     </NavigationContainer>
   );
 }
 
 export default AppNavigation;
  */
-
-
 // import * as React from 'react';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -120,7 +131,6 @@ export default AppNavigation;
 //     </NavigationContainer>
 //     );
 //   }
-
 
 // }
 

@@ -34,8 +34,8 @@ const Contact = () => {
     };
 
     return (
-        <View className='flex justify-start bg-slate-950 self-start'>
-            <TouchableOpacity className='flex flex-row gap-0 w-80 bg-slate-900 m-2 p-2' onPress={handleMailButtonPress}>
+        <View className='flex justify-center bg-slate-950 w-80 self-center'>
+            <TouchableOpacity className='flex flex-row gap-0 bg-slate-900 m-2 p-2' onPress={handleMailButtonPress}>
                 <Image source={require('../../assets/images/mail.png')} className='self-center w-5 h-5' />
                 <Text className='self-center' >Mail</Text>
             </TouchableOpacity>

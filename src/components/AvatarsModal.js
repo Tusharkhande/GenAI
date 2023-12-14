@@ -9,8 +9,8 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
     
     <Modal visible={modalVisible} animationType="fade" transparent>
         <View style={styles.modalContainer}>
-          <View style={{ width: wp(80), height: wp(120) }}
-            className="flex flex-col bg-slate-800 p-5 pb-0 w-96">
+          <View style={{ width: wp(80)}}
+            className="flex flex-col bg-transparent">
             <Image
               // source={require('../../assets/images/loki1.jpg')}
               // source={selectedAvatar ? { uri: selectedAvatar } : require('../../assets/images/user.png')}
@@ -18,7 +18,7 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
               // style={styles.profileImage}
               className="rounded-full w-16 h-16 mx-auto"
             />
-            <Text className="font-mono text-2xl text-center mb-5 mt-0">Select an Avatar!!!</Text>
+            <Text className="font-mono text-xl text-center mb-5 mt-0">Select an Avatar!!!</Text>
             <View
               className="flex flex-row flex-wrap justify-center gap-5 "
             >
@@ -36,12 +36,12 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
             </View>
             <View className='flex flex-row justify-center gap-8'>
               <View style={{ width: wp(20) }}
-                className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                <Button title="Confirm" onPress={() => handleProfileImg()} />
+                className="bg-slate-500 rounded-3xl flex justify-center text-center">
+                <Button title="  Confirm" onPress={() => handleProfileImg()} />
               </View>
               <View style={{ width: wp(20) }}
-                className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                <Button title="Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
+                className="bg-slate-500 rounded-3xl flex justify-center text-center">
+                <Button title="  Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
               </View>
             </View>
           </View>
@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       width: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      
     },
     modalTitle: {
       fontSize: 22,

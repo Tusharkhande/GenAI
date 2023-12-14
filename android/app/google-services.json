@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1095480992319",
+    "project_id": "genai-fcb66",
+    "storage_bucket": "genai-fcb66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095480992319:android:45e821cc009d44ac43ce8a",
+        "android_client_info": {
+          "package_name": "com.genai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095480992319-j2qgabask0g2i4v7dr7vb4cqoaqg0c46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.genai",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAraXDmTA96PIA33Hiecfn_m4kQN8oHmbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095480992319-r0qeumop9am2jk6kmkth662680g1p7gc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
