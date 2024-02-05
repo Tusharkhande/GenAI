@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       width: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       
     },
     modalTitle: {

@@ -62,12 +62,8 @@ export function Context({children}) {
       setIsLoading(true);
       await signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
-          // Signed in
-          // ToastAndroid.show("Logged in successfully!", ToastAndroid.SHORT);
-          // assistantSpeech("Logged in successfully");
           console.log('Logged in successfully');
           // EncryptedStorage.setItem('user_session', JSON.stringify(userCredential.user));
-          // navigation.navigate('Welcome');
           const user = userCredential.user;
           setIsLoggedin(true);
           setUser(user);
@@ -89,34 +85,6 @@ export function Context({children}) {
     }
   };
 
-/*   const loginWithGoogle = async (navigation) => {
-    // setIsLoading(true);
-    try {
-      console.log('Checking Play Services...');
-      await GoogleSignin.hasPlayServices();
-      console.log('Signing in...');
-      const userInfo = await GoogleSignin.signIn();
-      setIsLoggedin(true);
-      setGuser(userInfo.user);
-      navigation.navigate('Welcome');
-      // navigation.navigate('Welcome');
-      console.log('Signed in. User info:', userInfo);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-        console.log(error);
-      }
-    }
-  };
-
-*/
-
 const loginWithGoogle = async (navigation, setIsLoading) => {
   try {
     setIsLoading(true);
@@ -135,8 +103,12 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
         console.log('Firebase Auth successful, user:', firebaseUserCredential.user);
         setIsLoggedin(true);
         setGuser(firebaseUserCredential.user); // You might want to update this to handle Firebase user object
-        setGUserAvatar(firebaseUserCredential.user.photoURL);
-        navigation.navigate('Welcome');
+        if(firebaseUserCredential.user.photoURL.includes('https')){
+          setGUserAvatar(require('../../assets/images/avatars/arc.jpg'));
+        }else{
+          setGUserAvatar(firebaseUserCredential.user.photoURL);
+        }
+        // navigation.navigate('Welcome');
       })
       .catch((error) => {
         console.error('Firebase Auth with Google failed:', error);
@@ -185,15 +157,8 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
       setIsLoading(true);
       await createUserWithEmailAndPassword(auth, email, password)
         .then(result => {
-          // console.log('User account created & signed in!');
-          // console.log(result)
-          // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
-          // updateCurrentUser(auth.currentUser, {
-          //   displayName: name,
-          // });
-          // navigation.navigate('Welcome')
           setCurrentUser(result.user);
-          setGuser(result.user);
+          // setGuser(result.user);
           updateProfile(result.user, {
             displayName: name,
             photoURL: selectedAvatar,
@@ -202,8 +167,6 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
               console.log('User account created & signed in!');
               console.log(result);
               assistantSpeech('Account Created successfully');
-              // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
-              // navigation.navigate('Welcome')
             })
             .catch(updateError => {
               console.error('Error updating displayName:', updateError);
@@ -247,7 +210,7 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
       // }else{
         try {
           const guser = (await GoogleSignin.signInSilently()).user;
-          setGuser(guser);
+          guser?setGuser(guser):setGuser(null);
         } catch (error) {
           console.error('Error getting current user:', error);
         }
@@ -268,28 +231,6 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
 
   const signOut = async (setLoading) => {
     setLoading(true);
-    // if (guser) {
-    //   try {
-    //     //  GoogleSignin.signOut();
-    //     await GoogleSignin.revokeAccess();
-    //     console.log('Signed out Successfully');
-    //     assistantSpeech('Logged out successfully');
-    //     navigation.navigate('Begin');
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // } else if (user) {
-    //   auth
-    //     .signOut()
-    //     .then(() => {
-    //       logout_beep();
-
-    //       assistantSpeech('Logged out successfully');
-    //       // ToastAndroid.show("Sign out successful", ToastAndroid.SHORT);
-    //       // navigation.navigate('Welcome');
-    //     })
-    //     .catch(error => console.log(error.message));
-    // }
     auth
         .signOut()
         .then(() => {
@@ -331,7 +272,7 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
   };
 
   return (
-    <UserContext.Provider value={{user, setUser, guser, setGuser, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
+    <UserContext.Provider value={{user, setUser, guser, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
       {children}
     </UserContext.Provider>
   );

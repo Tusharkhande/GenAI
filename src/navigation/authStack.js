@@ -19,10 +19,10 @@ export default function AuthStack() {
                 <Stack.Screen name='Begin' component={GetStarted} />
                 <Stack.Screen name='Login' component={LoginScreen} />
                 <Stack.Screen name='Register' component={RegisterScreen} />
-                <Stack.Screen name='Welcome' component={WelcomeScreen} />
+                {/* <Stack.Screen name='Welcome' component={WelcomeScreen} />
                 <Stack.Screen name='Home' component={HomeScreen} />
                 <Stack.Screen name='Dashboard' component={Dashboard} />
-                <Stack.Screen name='About' component={About} />
+                <Stack.Screen name='About' component={About} /> */}
             </Stack.Navigator>
         </NavigationContainer>
     );

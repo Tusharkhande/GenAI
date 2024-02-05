@@ -10,7 +10,7 @@ const ManageAcc = ({ signOut, setDelModalVisible, guser }) => {
             <Text className='self-center' >Logout</Text>
         </TouchableOpacity>
 
-        {!guser && <TouchableOpacity className='flex flex-row gap-0 bg-slate-900 m-2 p-2' onPress={() => [setDelModalVisible(true), select_beep()]}>
+        {guser==null && <TouchableOpacity className='flex flex-row gap-0 bg-slate-900 m-2 p-2' onPress={() => [setDelModalVisible(true), select_beep()]}>
             <Image source={require('../../assets/images/delete.png')} className='self-center w-5 h-5' />
             <Text className='self-center'>Delete Account</Text>
         </TouchableOpacity>}

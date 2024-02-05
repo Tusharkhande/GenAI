@@ -6,9 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import Models from '../constants/Models';
 import Button from '../components/Button';
 import useAuth from '../firebase/useAuth';
-// import { getCurrentUser } from '../firebase/isSignedin';
 import { select_beep } from '../constants/Sounds';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { useUser } from '../context/userContext';
 
 export default function WelcomeScreen () {
@@ -23,24 +21,6 @@ export default function WelcomeScreen () {
   const { guser, gUserAvatar } = useUser();
   const selectedAvatar = route.params?.selectedAvatar || gUserAvatar;
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-        
-  //       if (user) {
-  //         setName(user.displayName);
-  //         setAvatar(user.photoURL);
-  //       } else {
-  //         console.log("Wlcome...........", guser);
-  //         setName(guser.name);
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-        
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, []);
 
   useEffect(() => {
     setModel(Models);

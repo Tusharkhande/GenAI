@@ -89,16 +89,8 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    // console.log('dashboard.....', user, guser);
-    // setDisplayName(user ? user.displayName : 'Sir');
-    // if (user) {
-    //   setEmail(user.email);
-    //   setPhoto(user.photoURL);
-    // } else if (guser) {
-    //   setEmail(guser.email);
-    // }
     try{
-      setGUserAvatar(user.photoURL);
+      // setGUserAvatar(user.photoURL);
       setDisplayName(user.displayName);
       setEmail(user.email);
       setPhoto(gUserAvatar);
@@ -107,62 +99,9 @@ const Dashboard = () => {
     }
   }, [user, guser]);
 
-  // const signOut = async () => {
-  //   setLoading(true);
-  //   if (guser) {
-  //     try {
-  //       //  GoogleSignin.signOut();
-  //       await GoogleSignin.revokeAccess();
-  //       console.log('Signed out Successfully');
-  //       assistantSpeech('Logged out successfully');
-  //       navigation.navigate('Begin');
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   } else if (user) {
-  //     auth
-  //       .signOut()
-  //       .then(() => {
-  //         logout_beep();
-
-  //         assistantSpeech('Logged out successfully');
-  //         // ToastAndroid.show("Sign out successful", ToastAndroid.SHORT);
-  //         // navigation.navigate('Welcome');
-  //       })
-  //       .catch(error => console.log(error.message));
-  //   }
-  //   setLoading(false);
-  // };
-
-  // const deleteAccount = async () => {
-  //   select_beep();
-  //   setDelModalVisible(false);
-  //   setLoading(true);
-  //   try {
-  //     await signInWithEmailAndPassword(auth, email, password);
-  //     auth.currentUser
-  //       .delete()
-  //       .then(() => {
-  //         console.log('User deleted successfully');
-  //         assistantSpeech('Account deletion successfull');
-  //         // ToastAndroid.show("User deleted successfully", ToastAndroid.SHORT);
-  //         navigation.navigate('Begin');
-  //       })
-  //       .catch(error => {
-  //         console.log('Error deleting user', error);
-  //         Alert.alert('Error deleting user try again: ' + error.message);
-  //       });
-  //   } catch (e) {
-  //     console.log(e);
-  //     Alert.alert('Error deleting user try again: ' + e.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleProfileImg = () => {
-    select_beep();
     setLoading(true);
+    select_beep();
     updateProfile(user, {
       photoURL: selectedAvatar,
     })
@@ -172,6 +111,7 @@ const Dashboard = () => {
         setGUserAvatar(selectedAvatar);
     setPhoto(selectedAvatar);
         setModalVisible(false);
+        setLoading(false);
       })
       .catch(error => {
         // An error occurred
@@ -179,7 +119,6 @@ const Dashboard = () => {
         Alert.alert('Error updating profile try again');
         setModalVisible(false);
       });
-    setLoading(false);
   };
 
   return (
@@ -196,11 +135,7 @@ const Dashboard = () => {
         onPress={() => [setModalVisible(true), select_beep()]}
         className=" mb-5">
         <Image
-          // source={(selectedAvatar || currentUser.photoURL) ? { uri: currentUser.photoURL } : require('../../assets/images/user.png')}
-          // source={currentUser.photoURL ? currentUser.photoURL : googleUser.photo ? googleUser.photo : require("../../assets/images/avatars/arc.jpg")}
-          // style={styles.profileImage}
-          // source={user ? user.photoURL : guser ? gUserAvatar : photo}
-          source={user?user.photoURL : guser?gUserAvatar : photo}
+          source={ gUserAvatar}
           className="rounded-full w-20 h-20 m-5 mb-0 mx-auto"
         />
         <Text className="text-center text-sm text-slate-200">
@@ -271,7 +206,6 @@ const Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center',
     padding: 35,
   },
@@ -283,7 +217,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 100,
     height: 100,
-    borderRadius: 50, // To make it a circular image
+    borderRadius: 50,
     marginBottom: 20,
   },
   buttonContainer: {
@@ -306,7 +240,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 60,
     height: 60,
-    borderRadius: 50, // To make it a circular image
+    borderRadius: 50,
     marginBottom: 20,
   },
 });
