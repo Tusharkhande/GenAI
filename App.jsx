@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import AppNavigation from './src/navigation';
 import { getAuth } from 'firebase/auth';
 import { assistantSpeech } from './src/constants/TextToSpeech';
+import { Context } from './src/context/userContext';
 
 export default function App() {
   const permission = async () => {
@@ -38,6 +39,8 @@ export default function App() {
 
 
   return (
-    <AppNavigation />
+    <Context>
+      <AppNavigation />
+    </Context>
   )
 }

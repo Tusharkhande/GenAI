@@ -2,56 +2,45 @@ import { View, Text, Image, TouchableOpacity, FlatList, BackHandler, StyleSheet,
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Models from '../constants/Models';
 import Button from '../components/Button';
 import useAuth from '../firebase/useAuth';
 // import { getCurrentUser } from '../firebase/isSignedin';
 import { select_beep } from '../constants/Sounds';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
-
+import { useUser } from '../context/userContext';
 
 export default function WelcomeScreen () {
   const navigation = useNavigation();
+  const route = useRoute();
   const [model, setModel] = useState([]);
   const [selectedModel, setSelectedModel] = useState([]);
   const [exit, setExit] = useState(false);
   const [name, setName] = useState('Sir');
   const [avatar, setAvatar] = useState('1');
   const { user } = useAuth();
-  const [googleUser, setGoogleUser] = useState('');
+  const { guser, gUserAvatar } = useUser();
+  const selectedAvatar = route.params?.selectedAvatar || gUserAvatar;
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-    });
-  }, []);
-
-  const getCurrentUser = async () => {
-    const currentUser = await GoogleSignin.getCurrentUser();
-    return currentUser.user;
-  };
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const googleUser = await getCurrentUser();
-        console.log(googleUser);
-        setGoogleUser(googleUser);
-        if (user) {
-          setName(user.displayName);
-          setAvatar(user.photoURL);
-        } else {
-          setName(googleUser.name);
-        }
-      } catch (error) {
-        console.log(error)
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
         
-      }
-    };
-    fetchUserData();
-  }, []);
+  //       if (user) {
+  //         setName(user.displayName);
+  //         setAvatar(user.photoURL);
+  //       } else {
+  //         console.log("Wlcome...........", guser);
+  //         setName(guser.name);
+  //       }
+  //     } catch (error) {
+  //       console.log(error)
+        
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, []);
 
   useEffect(() => {
     setModel(Models);
@@ -99,7 +88,8 @@ export default function WelcomeScreen () {
             style={{ alignSelf: 'flex-start' }}
           >
             <Image
-              source={user ? user.photoURL : require("../../assets/images/avatars/thor.jpeg")}
+            source={selectedAvatar}
+              // source={user ? user.photoURL : guser ? gUserAvatar : require("../../assets/images/avatars/thor.jpeg")}
               // source={avatar ? avatar : require("../../assets/images/avatars/arc.jpg")}
               style={{ height: wp(11), width: wp(11) }}
               className="rounded-full w-14 h-14 mx-auto"
@@ -116,7 +106,7 @@ export default function WelcomeScreen () {
             {/* Welcome {user.displayName == undefined || googleUser.name==undefined ? "Sir" : user.displayName.split(" ")[0]}! */}
             {/* Welcome {user.displayName ? user.displayName.split(" ")[0] : googleUser.name ? googleUser.name.split(" ")[0] : "Sir"} */}
 
-            Welcome {user ? user.displayName.split(" ")[0] : "Sir"}!
+            Welcome {user ? user.displayName.split(" ")[0] : guser ? guser.displayName.split(" ")[0] : "Sir"}!
           </Text>
         </View>
         <View>

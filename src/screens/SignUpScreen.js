@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { select_beep,err_beep } from '../constants/Sounds';
 import { assistantSpeech } from '../constants/TextToSpeech';
 
+
 export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,81 +22,81 @@ export default function SignUpScreen() {
   const [loading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
-  const createUser = async () => {
-    select_beep();
-    if (email === '' || password === '' || name === '') {
-      err_beep();
-      setErrorMessage('Please fill in all fields.');
-      assistantSpeech(errorMessage);
-      return;
-    }
-    if (!email.includes('@')) {
-      err_beep();
-      setErrorMessage('Please enter a valid email address.');
-      assistantSpeech(errorMessage);
-      return;
-    }
-    if (password.length < 6) {
-      err_beep();
-      setErrorMessage('Password must be at least 6 characters.');
-      assistantSpeech(errorMessage);
-      return;
-    }
-    setErrorMessage('');
-    setEmail(email.toLowerCase());
-    try {
-      setIsLoading(true);
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then((result) => {
+  // const createUser = async () => {
+  //   select_beep();
+  //   if (email === '' || password === '' || name === '') {
+  //     err_beep();
+  //     setErrorMessage('Please fill in all fields.');
+  //     assistantSpeech(errorMessage);
+  //     return;
+  //   }
+  //   if (!email.includes('@')) {
+  //     err_beep();
+  //     setErrorMessage('Please enter a valid email address.');
+  //     assistantSpeech(errorMessage);
+  //     return;
+  //   }
+  //   if (password.length < 6) {
+  //     err_beep();
+  //     setErrorMessage('Password must be at least 6 characters.');
+  //     assistantSpeech(errorMessage);
+  //     return;
+  //   }
+  //   setErrorMessage('');
+  //   setEmail(email.toLowerCase());
+  //   try {
+  //     setIsLoading(true);
+  //     await createUserWithEmailAndPassword(auth, email, password)
+  //       .then((result) => {
 
-          // console.log('User account created & signed in!');
-          // console.log(result)
-          // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
-          // updateCurrentUser(auth.currentUser, {
-          //   displayName: name,
-          // });
-          // navigation.navigate('Welcome')
-          setCurrentUser(result.user);
-          updateProfile(result.user, {
-            displayName: name,
-            photoURL: selectedAvatar
-          })
-            .then(() => {
+  //         // console.log('User account created & signed in!');
+  //         // console.log(result)
+  //         // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
+  //         // updateCurrentUser(auth.currentUser, {
+  //         //   displayName: name,
+  //         // });
+  //         // navigation.navigate('Welcome')
+  //         setCurrentUser(result.user);
+  //         updateProfile(result.user, {
+  //           displayName: name,
+  //           photoURL: selectedAvatar
+  //         })
+  //           .then(() => {
 
-              console.log('User account created & signed in!');
-              console.log(result);
-              assistantSpeech("Account Created successfully")
-              // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
-              // navigation.navigate('Welcome')
-            })
-            .catch((updateError) => {
-              console.error('Error updating displayName:', updateError);
-            });
-          // storeData();
-        })
-        .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
-            console.log('Entered email address is already in use!');
-            setErrorMessage('Entered email address is already in use!');
-          } else if (error.code === 'auth/invalid-email') {
-            console.log('Entered email address is invalid!');
-            setErrorMessage('Entered email address is invalid!');
-          } else if (error.code === 'auth/weak-password') {
-            console.log('Password should be at least 6 characters!');
-            setErrorMessage('Password should be at least 6 characters!');
-          } else if (error.code === 'auth/wrong-password') {
-            console.log('Wrong password!');
-            setErrorMessage('Wrong password!');
-          }
-          console.error(error);
-        });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+  //             console.log('User account created & signed in!');
+  //             console.log(result);
+  //             assistantSpeech("Account Created successfully")
+  //             // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
+  //             // navigation.navigate('Welcome')
+  //           })
+  //           .catch((updateError) => {
+  //             console.error('Error updating displayName:', updateError);
+  //           });
+  //         // storeData();
+  //       })
+  //       .catch(error => {
+  //         if (error.code === 'auth/email-already-in-use') {
+  //           console.log('Entered email address is already in use!');
+  //           setErrorMessage('Entered email address is already in use!');
+  //         } else if (error.code === 'auth/invalid-email') {
+  //           console.log('Entered email address is invalid!');
+  //           setErrorMessage('Entered email address is invalid!');
+  //         } else if (error.code === 'auth/weak-password') {
+  //           console.log('Password should be at least 6 characters!');
+  //           setErrorMessage('Password should be at least 6 characters!');
+  //         } else if (error.code === 'auth/wrong-password') {
+  //           console.log('Wrong password!');
+  //           setErrorMessage('Wrong password!');
+  //         }
+  //         console.error(error);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
 
-  }
+  // }
   // const storeData = async (value) => {
   //   try {
   //     await AsyncStorage.setItem('email', email);
@@ -200,7 +201,7 @@ export default function SignUpScreen() {
             <View className="flex-row justify-center">
               <TouchableOpacity
                 className="py-3 w-52 bg-blue-400 rounded-xl"
-                onPress={createUser}
+                onPress={() => createUser(email, password, name, setErrorMessage,errorMessage, setIsLoading, setCurrentUser)}
               >
                 <Text className="text-base font-bold text-center text-gray-700">
                   Sign Up

@@ -24,91 +24,94 @@ import {
 import {select_beep, err_beep} from '../constants/Sounds';
 // import EncryptedStorage from 'react-native-encrypted-storage';
 import {assistantSpeech} from '../constants/TextToSpeech';
+import { useUser } from '../context/userContext';
+
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
   const [loading, setIsLoading] = useState(false);
+  const {user, guser,login, loginWithGoogle} = useUser();
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-    });
-  }, []);
+  // useEffect(() => {
+  //   GoogleSignin.configure({
+  //     webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  //   });
+  // }, []);
 
-  const login = async () => {
-    select_beep();
-    // const auth = getAuth();
-    if (email.trim() === '' && password === '') {
-      err_beep();
-      setErrorMessage('Please enter email and password.');
-      assistantSpeech(errorMessage);
-      return;
-    } else if (email.trim() === '') {
-      err_beep();
-      setErrorMessage('Please enter email.');
-      assistantSpeech(errorMessage);
-      return;
-    } else if (password === '') {
-      err_beep();
-      setErrorMessage('Please enter password.');
-      assistantSpeech(errorMessage);
-      return;
-    }
-    setErrorMessage('');
-    setEmail(email.toLowerCase());
-    try {
-      setIsLoading(true);
-      await signInWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          // Signed in
-          // ToastAndroid.show("Logged in successfully!", ToastAndroid.SHORT);
-          // assistantSpeech("Logged in successfully");
-          console.log('Logged in successfully');
-          // EncryptedStorage.setItem('user_session', JSON.stringify(userCredential.user));
-          // navigation.navigate('Welcome');
-          const user = userCredential.user;
-          console.log(user);
-        })
-        .catch(error => {
-          const errorCode = error.code;
-          const errormessage = error.message;
-          setErrorMessage('Invalid email or password');
-          err_beep();
-          assistantSpeech(errorMessage);
-          console.log(errorCode, errormessage);
-        });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const login = async () => {
+  //   select_beep();
+  //   // const auth = getAuth();
+  //   if (email.trim() === '' && password === '') {
+  //     err_beep();
+  //     setErrorMessage('Please enter email and password.');
+  //     assistantSpeech(errorMessage);
+  //     return;
+  //   } else if (email.trim() === '') {
+  //     err_beep();
+  //     setErrorMessage('Please enter email.');
+  //     assistantSpeech(errorMessage);
+  //     return;
+  //   } else if (password === '') {
+  //     err_beep();
+  //     setErrorMessage('Please enter password.');
+  //     assistantSpeech(errorMessage);
+  //     return;
+  //   }
+  //   setErrorMessage('');
+  //   setEmail(email.toLowerCase());
+  //   try {
+  //     setIsLoading(true);
+  //     await signInWithEmailAndPassword(auth, email, password)
+  //       .then(userCredential => {
+  //         // Signed in
+  //         // ToastAndroid.show("Logged in successfully!", ToastAndroid.SHORT);
+  //         // assistantSpeech("Logged in successfully");
+  //         console.log('Logged in successfully');
+  //         // EncryptedStorage.setItem('user_session', JSON.stringify(userCredential.user));
+  //         // navigation.navigate('Welcome');
+  //         const user = userCredential.user;
+  //         console.log(user);
+  //       })
+  //       .catch(error => {
+  //         const errorCode = error.code;
+  //         const errormessage = error.message;
+  //         setErrorMessage('Invalid email or password');
+  //         err_beep();
+  //         assistantSpeech(errorMessage);
+  //         console.log(errorCode, errormessage);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  const loginWithGoogle = async () => {
-    // setIsLoading(true);
-    try {
-      console.log('Checking Play Services...');
-      await GoogleSignin.hasPlayServices();
-      console.log('Signing in...');
-      const userInfo = await GoogleSignin.signIn();
-      navigation.navigate('Welcome');
-      // navigation.navigate('Welcome');
-      console.log('Signed in. User info:', userInfo);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-        console.log(error);
-      }
-    }
-  };
+  // const loginWithGoogle = async (navigation) => {
+  //   // setIsLoading(true);
+  //   try {
+  //     console.log('Checking Play Services...');
+  //     await GoogleSignin.hasPlayServices();
+  //     console.log('Signing in...');
+  //     const userInfo = await GoogleSignin.signIn();
+  //     navigation.navigate('Welcome');
+  //     // navigation.navigate('Welcome');
+  //     console.log('Signed in. User info:', userInfo);
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //       console.log(error);
+  //     }
+  //   }
+  // };
 
   return (
     <View className="flex flex-1 bg-slate-900 ">
@@ -147,7 +150,7 @@ export default function LoginScreen() {
               // className={`p-4 ${email ? 'text-base' : 'text-sm'} bg-blue-200 text-gray-700 rounded-2xl mb-3`}
               placeholderTextColor="#000"
               placeholder="Enter your email"
-              onChangeText={text => setEmail(text)}
+              onChangeText={text => setEmail(text.toLowerCase().trim())}
               style={{width: wp(70), height: wp(14)}}
             />
           </View>
@@ -177,7 +180,7 @@ export default function LoginScreen() {
           <View className="flex-row justify-center">
             <TouchableOpacity
               className="py-3 w-52 bg-blue-400 rounded-xl"
-              onPress={login}>
+              onPress={() => login(email, password, setErrorMessage, errorMessage, setIsLoading)}>
               <Text className="text-base font-bold text-center text-gray-700">
                 Sign In
               </Text>
@@ -190,7 +193,7 @@ export default function LoginScreen() {
         <View className="flex-row justify-center space-x-12">
           <TouchableOpacity
             className="p-2 bg-blue-200 rounded-2xl"
-            onPress={loginWithGoogle}>
+            onPress={() => loginWithGoogle(navigation, setIsLoading)}>
             <Image
               source={require('../../assets/images/google.png')}
               className="w-10 h-10"
