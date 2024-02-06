@@ -4,11 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import Button from '../components/Button'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { select_beep } from '../constants/Sounds'
-// import EncryptedStorage from 'react-native-encrypted-storage';
-import { stop } from '../constants/TextToSpeech'
-// import { auth } from '../firebase/firebase.config';
-import useAuth from '../firebase/useAuth'
+import { select_beep } from '../constants/Sounds';
 
 export default function GetStarted() {
     const navigation = useNavigation();
@@ -18,9 +14,6 @@ export default function GetStarted() {
         return true; // Return true to prevent the default back button behavior
     };
 
-    // const user = auth.currentUser;
-    // const { user } = useAuth();
-
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', handleBackPress);
         return () => {
@@ -28,34 +21,11 @@ export default function GetStarted() {
         };
     }, []);
 
-    // useEffect(() => {
-    //     const checkLoginStatus = async () => {
-    //         const token = await EncryptedStorage.getItem('user_session');
-    //         console.log('User', token);
-    //         if (token) {
-    //             navigation.navigate('Welcome');
-    //         }
-    //     }
-    //     // checkLoginStatus();
-    // }, []);
-
     const handleModal = () => {
         setExit(false);
         select_beep();
         BackHandler.exitApp();
     };
-
-    // useEffect(() => {
-    //     assistantSpeech(`{Initializing startup sequence. Loading Custom Components. Fetching user data.}`);
-    //     setTimeout(() => {
-    //         if (user != '') {
-    //             assistantSpeech("Logged in Successfully!");
-    //         } else {
-    //             assistantSpeech(" No user data found. Kindly create a new account or log in.");
-    //         }
-    //     }, 6000);
-
-    // }, []);
 
     return (
         // <ImageBackground

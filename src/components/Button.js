@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 export default function Button({ title, onPress, image, isize }) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.button}>
-      {image && <Image source={image} className={`${isize ? isize : 'w-8 h-8'}`} />}
+      {image && <Image source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
@@ -24,13 +24,6 @@ const styles = StyleSheet.create({
     marginRight: 15,
     alignSelf:'center',
     textAlign: 'center',
-  },
-  image: {
-    width: 30,
-    height: 30,
-    // marginLeft: 15,
-    // justifyContent: 'center'
-    // padding: 20
   },
 
 });

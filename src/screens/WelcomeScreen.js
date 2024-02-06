@@ -57,7 +57,7 @@ export default function WelcomeScreen () {
     //     source={require("../../assets/images/bg1.jpg")}
     //     style={{ flex: 1 }}
     //   >
-    <SafeAreaView className="flex-1 flex justify-around bg-slate-950">
+    <SafeAreaView className="flex-1 flex justify-around bg-slate-950" style={{ width: wp(100), height: wp(100)}}>
       <View className="flex flex-row justify-between"
         style={{ width: wp(90), alignSelf: 'center' }}
       >
@@ -129,7 +129,17 @@ export default function WelcomeScreen () {
           resizeMode="contain"
         />
       </View>
-      <View className="flex flex-col items-center justify-center bg-slate-800 border-r-8 border-l-8 rounded-3xl">
+      <View className=" self-center">
+        <View className="">
+          <Button
+            title={"Explore AI"}
+            image={require('../../assets/images/explore.gif')}
+            onPress={() => navigation.navigate('ExploreAI')}
+            isize={"w-10 h-10"}
+          />
+        </View>
+      </View>
+      <View className="flex items-center justify-center bg-slate-800 border-r-8 border-l-8 rounded-3xl">
         <FlatList
           data={model}
           horizontal={true}

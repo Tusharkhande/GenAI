@@ -4,9 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  StyleSheet,
-  ActivityIndicator,
-  ToastAndroid,
   TextInput,
   BackHandler,
 } from 'react-native';
@@ -16,8 +13,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {assistantSpeech} from '../constants/TextToSpeech';
 import {select_beep} from '../constants/Sounds';
 import {Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
+import {downloadBase64Image} from '../constants/DownloadImage';
 
 const GenerateByPromptNative = () => {
   const [prompt, setPrompt] = useState('');
@@ -25,8 +23,9 @@ const GenerateByPromptNative = () => {
   const [loading, setLoading] = useState(false);
   const [base64Image, setBase64Image] = useState('');
   const navigation = useNavigation();
-
-  const apiKey = '';
+  const param = useRoute().params;
+  console.log(param);
+  const apiKey = 'sk-NYfV2eswA4loIRQuKnZtpXPb31mKTLmgQKy2nBL8yXW4shxe';
 
   const handleBackPress = () => {
     select_beep();
@@ -42,8 +41,8 @@ const GenerateByPromptNative = () => {
   }, []);
 
   const generateImage = async para => {
+    setLoading(true);
     try {
-      setLoading(true);
       if (!apiKey) {
         throw new Error('Missing Stability API key.');
       }
@@ -75,23 +74,44 @@ const GenerateByPromptNative = () => {
     } catch (error) {
       console.error('Error generating image:', error.message);
     }
-  };
-
-  const createPromptAndRun = () => {
-    // const para = `Create an avatar of a ${prompt} and a futuristic costume with a cyberpunk city in the background`;
-    const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
-    setLoading(true);
-    generateImage(para);
     setLoading(false);
   };
 
-  const generateRandomName = () => {
+  const initiate = () => {
+    let para = '';
+    if(param.imageModel.name ==='Cyberpunk Avatars'){
+      // para = `Create an avatar of a ${prompt} and a futuristic costume with a cyberpunk city in the background`;
+      para = `Candid portrait of  ${prompt} in the year 2330, cyberpunk, neon lighting, 35mm f/2.8`;
+    }else if(param.imageModel.name === "Pop Art"){
+      para = `Create an Andy Warhol style illustration of ${prompt}`;
+    }else if(param.imageModel.name === "Anime Avatars"){
+      para = `Create an image of a digital anime avatar. The avatar should feature a ${prompt}`;
+    }else if(param.imageModel.name === "3D Toy Art"){
+      para = `Generate a cute and childlike 3D ${prompt}, incorporating elements of fantasy, adventure or romantic. digital art. high resolution. smooth and curved lines. bright and saturated colors.`;
+    }else if(param.imageModel.name === "Time Travel"){
+      para = `Create a picture of  ${prompt}. Time travel to Ancient Rome. High resolution. 4K.`;
+    }else if(param.imageModel.name === "Miniature paintings"){
+      para = `Create a photo of ${prompt} in the style of miniature photography.`;
+    }else if(param.imageModel.name === "Pet under fisheye lens"){
+      para = `Generate a photo of ${prompt}. Use the Sigma fisheye lens, f/3.5.`;
+    }else if(param.imageModel.name === "Modern Architectural Design"){
+      para = `Generate an architectural design of  ${prompt}, using the modern style. The result is a photorealistic rendering.`;
+    }else{
+      para = `${prompt}`;
+    }
+    // const para = `${param.imageModel.p1} ${prompt} ${param.imageModel.p2}`;
+    // const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
+    console.log(para);
+    generateImage(para);
+  };
+
+  /*  const generateRandomName = () => {
     const timestamp = new Date().getTime();
     const randomNumber = Math.floor(Math.random() * 100000);
     return `${timestamp}_${randomNumber}`;
   };
 
-  const downloadBase64Image = async () => {
+   const downloadBase64Image = async () => {
     select_beep();
     try {
       const imageName = generateRandomName(base64Image);
@@ -119,7 +139,7 @@ const GenerateByPromptNative = () => {
       console.error('Error while saving the image:', error);
       Alert.alert('Error', 'Something went wrong while saving the image.');
     }
-  };
+  }; */
 
   useEffect(() => {
     // setImage(require('../../assets/images/avatars/catavt.jpeg'));
@@ -138,10 +158,12 @@ const GenerateByPromptNative = () => {
       </View>
       <View className="flex mt-1 self-start p-5">
         <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
-          Cyberpunk Avatars
+          {/* Cyberpunk Avatars */}
+          {param.imageModel.name}
         </Text>
         <Text className="font-semibold text-left font-mono mt-1 text-sm text-slate-200">
-          Design futuristic, edgy avatars in the Cyberpunk Genre
+          {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
+          {param.imageModel.desc}
         </Text>
       </View>
       <View className="flex">
@@ -149,16 +171,22 @@ const GenerateByPromptNative = () => {
           <TextInput
             className="h-16 w-3/4 rounded-xl border-solid border-2 border-indigo-800"
             onChangeText={setPrompt}
-            placeholder="Send a message"
+            placeholder={param.imageModel.demo}
             multiline={true}
             numberOfLines={1}
             style={{color: 'white'}}
           />
         </View>
         <TouchableOpacity
-          onPress={createPromptAndRun}
-          className="mt-0 mx-24 rounded-3xl p-2 bg-indigo-800">
-          <Text className="text-center font-bold text-base">Generate</Text>
+          onPress={initiate}
+          disabled={loading || !prompt}
+          aria-disabled={loading || !prompt}
+          className="flex-row mt-0 mx-24 rounded-3xl p-2 justify-center bg-indigo-800">
+          <Image
+            source={require('../../assets/images/send-icon.png')}
+            className="h-6 w-6"
+          />
+          <Text className="text-center font-bold text-base text-slate-50">Generate</Text>
         </TouchableOpacity>
         <View className="flex mx-auto justify-center mt-6">
           <View
@@ -168,7 +196,7 @@ const GenerateByPromptNative = () => {
             {image && !loading ? (
               <Image
                 source={{
-                  uri: image ? image : 'https://via.placeholder.com/150',
+                  uri: image,
                 }}
                 className="rounded-2xl"
                 resizeMode="contain"
@@ -178,9 +206,7 @@ const GenerateByPromptNative = () => {
               !loading && (
                 <Image
                   //   source={require('../../assets/images/loading.gif')}
-                  source={{
-                    uri: 'https://via.placeholder.com/150',
-                  }}
+                  source={param.imageModel.image}
                   className="rounded-2xl"
                   resizeMode="contain"
                   style={{height: wp(60), width: wp(60)}}
@@ -198,7 +224,7 @@ const GenerateByPromptNative = () => {
             {image && (
               <TouchableOpacity
                 style={{alignItems: 'center', marginTop: 10}}
-                onPress={() => downloadBase64Image()}>
+                onPress={() => downloadBase64Image(base64Image)}>
                 <Text
                   style={{color: 'blue', textDecorationLine: 'none'}}
                   className="">
@@ -212,21 +238,5 @@ const GenerateByPromptNative = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  textInputStyle: {
-    height: 40, // Set the height
-    borderColor: 'gray', // Set the border color
-    borderWidth: 1, // Set the border width
-    borderRadius: 5, // Optional: set the border radius to make it rounded
-    paddingHorizontal: 10, // Add some padding on the sides
-    color: '#fff', // Set the text color
-    backgroundColor: '#333', // Set the background color
-    fontSize: 16, // Set the font size
-    marginHorizontal: 20, // Add some margin on the sides
-    marginTop: 10, // Add some margin at the top
-  },
-  // Add other styles as needed
-});
 
 export default GenerateByPromptNative;

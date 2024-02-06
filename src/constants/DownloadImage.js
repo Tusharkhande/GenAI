@@ -36,7 +36,7 @@ const downloadImage = async (url) => {
   }
 };
 
-const downloadBase64Image = async () => {
+const downloadBase64Image = async (base64Image) => {
   select_beep();
   try {
     const imageName = generateRandomName(base64Image);
