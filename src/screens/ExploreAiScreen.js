@@ -1,14 +1,42 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, BackHandler, View} from 'react-native';
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  BackHandler,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Card from '../components/Card';
 import imageModels from '../constants/ImageGenModels';
 import {useNavigation} from '@react-navigation/native';
 import {select_beep} from '../constants/Sounds';
 import Button from '../components/Button';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+
+const AIPainting = ({imageModel, initiate}) => (
+  <ScrollView className="flex bg-slate-950">
+    <View className="flex flex-row flex-wrap justify-around mt-2">
+      {imageModel.map(imageModel => (
+        <TouchableOpacity key={imageModel.id} className="mx-1 my-2">
+          <Card
+            imageSource={imageModel.image}
+            text={imageModel.name}
+            color={imageModel.color}
+            onPress={() => initiate(imageModel)}
+          />
+        </TouchableOpacity>
+      ))}
+    </View>
+  </ScrollView>
+);
+
+const SecondRoute = () => (
+  <View style={{flex: 1, backgroundColor: '#673ab7'}} />
+);
 
 const ExploreAiScreen = () => {
   const [imageModel, setImageModels] = useState([]);
-  const [selectedModel, setSelectedModel] = useState('');
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -17,7 +45,7 @@ const ExploreAiScreen = () => {
 
   const handleBackPress = () => {
     select_beep();
-    navigation.goBack(); 
+    navigation.goBack();
     return true; // Return true to prevent the default back button behavior
   };
 
@@ -29,13 +57,18 @@ const ExploreAiScreen = () => {
   }, []);
 
   const initiate = imageModel => {
-    // console.log(imageModel);
     navigation.navigate('StabilityImageGen', {imageModel: imageModel});
   };
 
+  const Tab = createMaterialTopTabNavigator();
+  const AIPaintingScreen = () => (
+    <AIPainting imageModel={imageModel} initiate={initiate} />
+  );
+  const WritingScreen = () => <SecondRoute />;
+
   return (
     <View className="flex bg-slate-950 w-full h-full">
-        <View className="flex self-end m-0 absolute">
+      <View className="flex self-end m-0 absolute">
         <View className="">
           <Button
             image={require('../../assets/images/close.png')}
@@ -50,20 +83,23 @@ const ExploreAiScreen = () => {
           Explore AI
         </Text>
       </View>
-      <ScrollView className="flex bg-slate-950">
-        <View className="flex flex-row flex-wrap justify-around mt-2">
-          {imageModel.map(imageModel => (
-            <TouchableOpacity key={imageModel.id} className="mx-1 my-2">
-              <Card
-                imageSource={imageModel.image}
-                text={imageModel.name}
-                color={imageModel.color}
-                onPress={() => initiate(imageModel)}
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: '#e91e63', // Color of the text for the selected tab
+          tabBarInactiveTintColor: 'gray', // Color of the text for the unselected tabs
+          tabBarLabelStyle: {fontSize: 12}, // Style object for the tab label
+          tabBarStyle: {backgroundColor: 'rgb(2 6 23)'}, // Style object for the tab bar itself
+          tabBarIndicatorStyle: {backgroundColor: '#e91e63'}, // Style for the indicator (underline) of the active tab
+        }}>
+        <Tab.Screen name="AI Painting">{AIPaintingScreen}</Tab.Screen>
+        <Tab.Screen name="Writing">{WritingScreen}</Tab.Screen>
+      </Tab.Navigator>
+      {/* <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    /> */}
     </View>
   );
 };
