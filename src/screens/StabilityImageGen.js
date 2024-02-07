@@ -25,7 +25,7 @@ const GenerateByPromptNative = () => {
   const navigation = useNavigation();
   const param = useRoute().params;
   console.log(param);
-  const apiKey = 'sk-NYfV2eswA4loIRQuKnZtpXPb31mKTLmgQKy2nBL8yXW4shxe';
+  const apiKey = '';
 
   const handleBackPress = () => {
     select_beep();
@@ -104,42 +104,6 @@ const GenerateByPromptNative = () => {
     console.log(para);
     generateImage(para);
   };
-
-  /*  const generateRandomName = () => {
-    const timestamp = new Date().getTime();
-    const randomNumber = Math.floor(Math.random() * 100000);
-    return `${timestamp}_${randomNumber}`;
-  };
-
-   const downloadBase64Image = async () => {
-    select_beep();
-    try {
-      const imageName = generateRandomName(base64Image);
-      const filePath = RNFetchBlob.fs.dirs.DownloadDir + `/${imageName}.jpg`;
-      await RNFetchBlob.fs
-        .writeFile(filePath, base64Image, 'base64')
-        .then(res => {
-          console.log('File : ', res);
-        });
-      assistantSpeech(
-        'Download Completed Successfully! Kindly check your Gallery!',
-      );
-      ToastAndroid.show('Download Completed', ToastAndroid.SHORT);
-      RNFetchBlob.fs
-        .scanFile([{path: filePath, mime: 'image/png'}])
-        .then(() => {
-          console.log('Scan file success');
-        })
-        .catch(err => {
-          console.error('Scan file error:', err);
-        });
-
-      console.log('File saved to: ', filePath);
-    } catch (error) {
-      console.error('Error while saving the image:', error);
-      Alert.alert('Error', 'Something went wrong while saving the image.');
-    }
-  }; */
 
   useEffect(() => {
     // setImage(require('../../assets/images/avatars/catavt.jpeg'));

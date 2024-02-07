@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import Card from '../components/Card';
 import imageModels from '../constants/ImageGenModels';
+import writingModels from '../constants/WritingModels';
 import {useNavigation} from '@react-navigation/native';
 import {select_beep} from '../constants/Sounds';
 import Button from '../components/Button';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import TextCard from '../components/TextCard';
 
 const AIPainting = ({imageModel, initiate}) => (
   <ScrollView className="flex bg-slate-950">
@@ -31,16 +33,32 @@ const AIPainting = ({imageModel, initiate}) => (
   </ScrollView>
 );
 
-const SecondRoute = () => (
-  <View style={{flex: 1, backgroundColor: '#673ab7'}} />
+const Writing = ({writingModel, navigation}) => (
+  // <View style={{flex: 1, backgroundColor: '#673ab7'}} />
+  <ScrollView className="flex bg-slate-950">
+    <View className="flex flex-row flex-wrap justify-around mt-2">
+    {writingModel.map(writingModel => (
+        <TouchableOpacity key={writingModel.id} className="mx-1 my-2">
+          <TextCard
+            imageSource={writingModel.image}
+            text={writingModel.name}
+            // color={writingModel.color}
+            onPress={() => navigation.navigate('Writing', {writingModel: writingModel})}
+          />
+        </TouchableOpacity>
+      ))}
+    </View>
+  </ScrollView>
 );
 
 const ExploreAiScreen = () => {
   const [imageModel, setImageModels] = useState([]);
+  const [writingModel, setWritingModels] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
     setImageModels(imageModels);
+    setWritingModels(writingModels);
   }, []);
 
   const handleBackPress = () => {
@@ -56,7 +74,7 @@ const ExploreAiScreen = () => {
     };
   }, []);
 
-  const initiate = imageModel => {
+  const initiate = (imageModel) => {
     navigation.navigate('StabilityImageGen', {imageModel: imageModel});
   };
 
@@ -64,7 +82,9 @@ const ExploreAiScreen = () => {
   const AIPaintingScreen = () => (
     <AIPainting imageModel={imageModel} initiate={initiate} />
   );
-  const WritingScreen = () => <SecondRoute />;
+  const WritingScreen = () => (
+    <Writing writingModel={writingModel} navigation={navigation} />
+  );
 
   return (
     <View className="flex bg-slate-950 w-full h-full">

@@ -1,0 +1,122 @@
+import cyberpunk from '../../assets/images/imageModels/cyberpunk.jpeg';
+import anime from '../../assets/images/imageModels/anime.jpg';
+import popArt from '../../assets/images/imageModels/pop.jpg';
+import toyart from '../../assets/images/imageModels/toyart.jpg';
+import timeTravel from '../../assets/images/imageModels/timetravel.jpg';
+import miniature from '../../assets/images/imageModels/miniature.jpg';
+import petunderlens from '../../assets/images/imageModels/petunderlens.jpg';
+import modernArch from '../../assets/images/imageModels/modernarch.jpg';
+
+export default writingModels=[
+    {
+        id:1,
+        name:'Rewrite text into another genre',
+        image:cyberpunk,
+        options:['a novel', 'a poem', 'an academic essay', 'an email', 'a work report', 'a speech', 'a blog post'],
+        optionsDesc:'Your role is to rewrite this text into',
+        demo:'Social media is a popular platform for sharing information and connecting with others. It is a great way to... ',
+        textInputDesc:'The content you want to rewrite is',
+        desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
+    },
+    {
+        id:2,
+        name:'Whimsical quotes',
+        image:popArt,
+        options:[],
+        optionsDesc:'',
+        demo:'courage and bravery',
+        textInputDesc:'Generate amusing quotes that revolve around the theme of',
+        desc:'Create amusing and inspiring AI-generated quotes',
+    },
+    {
+        id:3,
+        name:'Instagram post captions',
+        image:popArt,
+        options:[],
+        optionsDesc:'',
+        demo:'My OOTD',
+        textInputDesc:'Write a post about',
+        desc:'Wrrite instagram post captions in just one click',
+    },
+    {
+        id:4,
+        name:'Rewrite text in different tones',
+        image:timeTravel,
+        options:['formal', 'informal', 'optimistic', 'pessimistic', 'humorous', 'conversational', 'persuasive', 'informative', 'critical', 'creative'],
+        optionsDesc:'Please rewrite the content into',
+        demo:'Om is a detective who solves crimes and today is not going his way. There have been a...',
+        textInputDesc:'The content needs to be rewritten is',
+        desc:'Rewrite your content in different tones',
+    },
+    {
+        id:5,
+        name:'Write like a famous author',
+        image:timeTravel,
+        options:[],
+        optionsDesc:'',
+        demo:'Rabindranath Tagore',
+        textInputDesc:'The famous author you want the AI to imitate is',
+        desc:'Craft a compellling short story in the style of a renowned author',
+    },
+    {
+        id:6,
+        name:'YouTube posts',
+        image:miniature,
+        options:[],
+        optionsDesc:'',
+        demo:'Bing',
+        textInputDesc:'Write a post about',
+        desc:'Craft engaging YouTube posts',
+    },
+    {
+        id:7,
+        name:'Generate novel ideas',
+        image:petunderlens,
+        options:['Science Fiction', 'Mystery', 'Romance', 'Young Adult Literature', 'Historical Fiction'],
+        optionsDesc:'Novel genre',
+        demo:'Time Machine',
+        textInputDesc:'This novel is about',
+        desc:'Come up with ideas and writing prompts for your next novel',
+    },
+    {
+        id:8,
+        name:'Create catchy slogans',
+        image:modernArch,
+        options:[],
+        optionsDesc:'',
+        demo:'The new ChatGPT',
+        textInputDesc:'The brand is',
+        desc:'Come up with catchy slogans for your brand or product',
+    },
+    {
+        id:9,
+        name:'Twitter posts',
+        image:petunderlens,
+        options:[],
+        optionsDesc:'',
+        demo:'Bitcoin',
+        textInputDesc:'Write a post about',
+        desc:'Craft compelling Twitter posts in seconds',
+    },
+    // {
+    //     id:10,
+    //     name:'Pet under fisheye lens',
+    //     image:petunderlens,
+    //     demo:'a bike racing on a tree-ring bread',
+    //     desc:'Create photos in miniature photography',
+    // },
+    // {
+    //     id:11,
+    //     name:'Pet under fisheye lens',
+    //     image:petunderlens,
+    //     demo:'a bike racing on a tree-ring bread',
+    //     desc:'Create photos in miniature photography',
+    // },
+    // {
+    //     id:12,
+    //     name:'Pet under fisheye lens',
+    //     image:petunderlens,
+    //     demo:'a bike racing on a tree-ring bread',
+    //     desc:'Create photos in miniature photography',
+    // },
+]

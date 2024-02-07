@@ -10,6 +10,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/SignUpScreen";
 import StabilityImageGen from "../screens/StabilityImageGen";
 import ExploreAiScreen from "../screens/ExploreAiScreen";
+import WritingScreen from "../screens/WritingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function UserStack() {
             {console.log("user")}
             <Stack.Navigator initialRouteName='Welcome' screenOptions={{headerShown:false}}>
                 <Stack.Screen name='Welcome' component={WelcomeScreen} />
+                <Stack.Screen name='Writing' component={WritingScreen} />
                 <Stack.Screen name='Home' component={HomeScreen} />
                 <Stack.Screen name='Dashboard' component={Dashboard} />
                 <Stack.Screen name='About' component={About} />
