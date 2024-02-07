@@ -133,13 +133,13 @@ const GenerateByPromptNative = () => {
       <View className="flex">
         <View className="flex-row mt-4 mb-4 justify-around">
           <TextInput
-            className="h-16 w-3/4 rounded-xl border-solid border-2 border-indigo-800"
+            className="h-24 rounded-xl border-solid border-2 border-indigo-800"
             onChangeText={setPrompt}
             placeholder={param.imageModel.demo}
             multiline={true}
-            numberOfLines={1}
-            style={{color: 'white'}}
-          />
+            // numberOfLines={1}
+            style={{color: 'white', textAlignVertical: 'top', width: wp(90)}}
+            />
         </View>
         <TouchableOpacity
           onPress={initiate}

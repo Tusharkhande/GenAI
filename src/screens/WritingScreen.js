@@ -8,24 +8,28 @@ import {
   TextInput,
   BackHandler,
   ScrollView,
+  KeyboardAvoidingView,
+    Modal,
+    ToastAndroid,
 } from 'react-native';
-import axios from 'axios';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import RNFetchBlob from 'rn-fetch-blob';
 import {assistantSpeech} from '../constants/TextToSpeech';
 import {select_beep} from '../constants/Sounds';
 import {Alert} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
-import {downloadBase64Image} from '../constants/DownloadImage';
+import Clipboard from '@react-native-clipboard/clipboard';
+import gemini from '../api/gemini';
 
 const GenerateByPromptNative = () => {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [displayedMessage, setDisplayedMessage] = useState('');
   const navigation = useNavigation();
   const param = useRoute().params;
   const [selectedOption, setSelectedOption] = useState('');
@@ -36,11 +40,18 @@ const GenerateByPromptNative = () => {
       scrollViewRef?.current?.scrollToEnd({animated: true});
     }, 200);
   };
+  console.log(message);
 
   const onOptionSelect = option => {
     setSelectedOption(option);
     console.log('Selected option:', option);
   };
+
+  const copyToClipboard = () => {
+    Clipboard.setString(message);
+    ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
+  };
+
   console.log(param);
 
   const handleBackPress = () => {
@@ -56,72 +67,41 @@ const GenerateByPromptNative = () => {
     };
   }, []);
 
-  const API_KEY = '';
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+  useEffect(() => {
+    if (message) {
+      // Check if the message is not empty
+      const words = message.split(' '); // Split message into words
+      setDisplayedMessage(''); // Clear previous displayed message
+      let index = 0;
+      const intervalId = setInterval(() => {
+        if (index < words.length) {
+          setDisplayedMessage(prev => `${prev}${words[index]} `);
+          index++;
+          updateScrollView();
+        } else {
+          clearInterval(intervalId); // Stop the interval when all words have been displayed
+        }
+      }, 150); // Adjust this value to control the speed of the "typing"
 
-  const apicall = async prompt => {
-    try {
-      const data = {
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-      };
-
-      const headers = {
-        'Content-Type': 'application/json',
-      };
-
-      axios
-        .post(endpoint, data, {headers})
-        .then(response => {
-          console.log(
-            'Response from the API: ',
-            response.data.candidates[0].content.parts[0].text,
-          );
-          setMessage(response.data.candidates[0].content.parts[0].text);
-        })
-        .catch(error => {
-          console.error('Error calling the API: ', error);
-        });
-    } catch (e) {
-      console.log(e);
+      return () => clearInterval(intervalId); // Cleanup interval on component unmount or message change
     }
-  };
+  }, [message]); // Effect runs whenever `message` changes
 
   const initiate = () => {
-    // let para = '';
-    // if (param.imageModel.name === 'Cyberpunk Avatars') {
-    //   // para = `Create an avatar of a ${prompt} and a futuristic costume with a cyberpunk city in the background`;
-    //   para = `Candid portrait of  ${prompt} in the year 2330, cyberpunk, neon lighting, 35mm f/2.8`;
-    // } else if (param.imageModel.name === 'Pop Art') {
-    //   para = `Create an Andy Warhol style illustration of ${prompt}`;
-    // } else if (param.imageModel.name === 'Anime Avatars') {
-    //   para = `Create an image of a digital anime avatar. The avatar should feature a ${prompt}`;
-    // } else if (param.imageModel.name === '3D Toy Art') {
-    //   para = `Generate a cute and childlike 3D ${prompt}, incorporating elements of fantasy, adventure or romantic. digital art. high resolution. smooth and curved lines. bright and saturated colors.`;
-    // } else if (param.imageModel.name === 'Time Travel') {
-    //   para = `Create a picture of  ${prompt}. Time travel to Ancient Rome. High resolution. 4K.`;
-    // } else if (param.imageModel.name === 'Miniature paintings') {
-    //   para = `Create a photo of ${prompt} in the style of miniature photography.`;
-    // } else if (param.imageModel.name === 'Pet under fisheye lens') {
-    //   para = `Generate a photo of ${prompt}. Use the Sigma fisheye lens, f/3.5.`;
-    // } else if (param.imageModel.name === 'Modern Architectural Design') {
-    //   para = `Generate an architectural design of  ${prompt}, using the modern style. The result is a photorealistic rendering.`;
-    // } else {
-    //   para = `${prompt}`;
-    // }
-    // const para = `${param.imageModel.p1} ${prompt} ${param.imageModel.p2}`;
-    // const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
-    // console.log(para);
-    // generateImage(para);
-    apicall(
-      'Please act as a rewriting expert in different tones. Your role is to rewrite my content into the specific tone I have chosen. Remember to maintain the original meaning. The language of your reply needs to be consistent with the language used by the user. Now, let’s start. Please rewrite the content into the formal tone. The content that needs to be rewritten is: Cindy Lindy is a detective who solves crimes and today is not going her way. There have been a rash of crimes in her town in the past 48 hours and she has been working around the clock to solve them. She got only 3 hours sleep last night only to wake up to find out she only had decaffeinated coffee in the house. Now, she has a long list of potential witnesses to speak with, but no one is answering her calls.',
+    
+    let p='';
+    if(param.writingModel.options.length > 0) {
+        p=param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt;
+    } else if(param.writingModel.id == 2 ) {
+        p=param.writingModel.p1 + prompt + param.writingModel.p2;
+    }else{
+        p=param.writingModel.p1 + prompt;
+    }
+    console.log(param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt)
+    gemini(
+        p,
+        setLoading,
+        setMessage
     );
   };
 
@@ -195,9 +175,10 @@ const GenerateByPromptNative = () => {
               multiline={true}
               // numberOfLines={3}
               style={{color: 'white', textAlignVertical: 'top', width: wp(90)}}
-            />
+              />
           </View>
 
+              <KeyboardAvoidingView>
           <TouchableOpacity
             onPress={initiate}
             disabled={loading || !prompt}
@@ -210,27 +191,37 @@ const GenerateByPromptNative = () => {
               Generate
             </Text>
           </TouchableOpacity>
-
+          </KeyboardAvoidingView>
           {message.length > 0 && (
-            <View className="p-5">
-              <View
-                style={{height: hp(40)}}
-                className="bg-gray-300 rounded-3xl p-4">
-                {/* <ScrollView
-                ref={scrollViewRef}
-                bounces={false}
-                className="space-y-4"
-                showsVerticalScrollIndicator={false}> */}
-                <View
-                  style={[{width: wp(90)}]}
-                  className="bg-blue-300 p-2 rounded-xl rounded-tl-none">
-                  <Text className="text-neutral-800">{message.content}</Text>
-                </View>
+            <View className=" p-5 mt-5">
+              <View className="mr-1 self-end">
+                {/* <TouchableOpacity onPress={copyToClipboard}>
+                  <Text style={{color: 'white'}}>Copy</Text>
+                </TouchableOpacity> */}
+                <Button
+                    image={require('../../assets/images/copy.png')}
+                    title={'Copy'}
+                    onPress={copyToClipboard}
+                />
               </View>
+              <Text className="text-neutral-100">{displayedMessage}</Text>
             </View>
           )}
         </View>
       </ScrollView>
+      <Modal visible={loading} animationType="fade" transparent>
+        <View className="flex flex-1 items-center bg-transparent w-full">
+          <View
+            style={{width: wp(100)}}
+            className="flex flex-1  flex-col bg-slate-500 opacity-50 w-auto justify-center">
+            <Image
+              source={require('../../assets/images/loading2.gif')}
+              style={{width: hp(10), height: hp(10)}}
+              className="mx-auto"
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
