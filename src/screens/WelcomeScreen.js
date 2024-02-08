@@ -160,7 +160,7 @@ export default function WelcomeScreen () {
             </TouchableOpacity>
           )}
         />
-        <Text className="text-slate-450 text-sm font-bold ml-5">Select your preferred Model</Text>
+        <Text className="text-slate-450 text-sm font-bold ml-5">Select your preferred interative Assistant</Text>
       </View>
       <TouchableOpacity
         onPress={() => [navigation.navigate('Home', { selectedModel: selectedModel }), select_beep()]}

@@ -7,15 +7,12 @@ import {
   TextInput,
   BackHandler,
 } from 'react-native';
-import axios from 'axios';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import RNFetchBlob from 'rn-fetch-blob';
-import {assistantSpeech} from '../constants/TextToSpeech';
 import {select_beep} from '../constants/Sounds';
-import {Alert} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
 import {downloadBase64Image} from '../constants/DownloadImage';
+import generateImage from '../api/stability';
 
 const GenerateByPromptNative = () => {
   const [prompt, setPrompt] = useState('');
@@ -25,7 +22,6 @@ const GenerateByPromptNative = () => {
   const navigation = useNavigation();
   const param = useRoute().params;
   console.log(param);
-  const apiKey = '';
 
   const handleBackPress = () => {
     select_beep();
@@ -40,42 +36,42 @@ const GenerateByPromptNative = () => {
     };
   }, []);
 
-  const generateImage = async para => {
-    setLoading(true);
-    try {
-      if (!apiKey) {
-        throw new Error('Missing Stability API key.');
-      }
+  // const generateImage = async para => {
+  //   setLoading(true);
+  //   try {
+  //     if (!apiKey) {
+  //       throw new Error('Missing Stability API key.');
+  //     }
 
-      const response = await axios.post(
-        `https://api.stability.ai/v1/generation/stable-diffusion-v1-6/text-to-image`,
-        {
-          text_prompts: [
-            {
-              text: para,
-            },
-          ],
-          cfg_scale: 7,
-          height: 512,
-          width: 512,
-          steps: 30,
-          samples: 1,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-        },
-      );
-      setImage(`data:image/png;base64,${response.data.artifacts[0].base64}`);
-      setBase64Image(response.data.artifacts[0].base64);
-    } catch (error) {
-      console.error('Error generating image:', error.message);
-    }
-    setLoading(false);
-  };
+  //     const response = await axios.post(
+  //       `https://api.stability.ai/v1/generation/stable-diffusion-v1-6/text-to-image`,
+  //       {
+  //         text_prompts: [
+  //           {
+  //             text: para,
+  //           },
+  //         ],
+  //         cfg_scale: 7,
+  //         height: 512,
+  //         width: 512,
+  //         steps: 30,
+  //         samples: 1,
+  //       },
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Accept: 'application/json',
+  //           Authorization: `Bearer ${apiKey}`,
+  //         },
+  //       },
+  //     );
+  //     setImage(`data:image/png;base64,${response.data.artifacts[0].base64}`);
+  //     setBase64Image(response.data.artifacts[0].base64);
+  //   } catch (error) {
+  //     console.error('Error generating image:', error.message);
+  //   }
+  //   setLoading(false);
+  // };
 
   const initiate = () => {
     let para = '';
@@ -102,7 +98,7 @@ const GenerateByPromptNative = () => {
     // const para = `${param.imageModel.p1} ${prompt} ${param.imageModel.p2}`;
     // const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
     console.log(para);
-    generateImage(para);
+    generateImage(para, setLoading, setImage, setBase64Image);
   };
 
   useEffect(() => {

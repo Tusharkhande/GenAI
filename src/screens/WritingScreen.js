@@ -8,9 +8,8 @@ import {
   TextInput,
   BackHandler,
   ScrollView,
-  KeyboardAvoidingView,
-    Modal,
-    ToastAndroid,
+  Modal,
+  ToastAndroid,
 } from 'react-native';
 
 import {
@@ -40,7 +39,7 @@ const GenerateByPromptNative = () => {
       scrollViewRef?.current?.scrollToEnd({animated: true});
     }, 200);
   };
-  console.log(message);
+  // console.log(message);
 
   const onOptionSelect = option => {
     setSelectedOption(option);
@@ -52,7 +51,7 @@ const GenerateByPromptNative = () => {
     ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
   };
 
-  console.log(param);
+  // console.log(param);
 
   const handleBackPress = () => {
     select_beep();
@@ -88,21 +87,21 @@ const GenerateByPromptNative = () => {
   }, [message]); // Effect runs whenever `message` changes
 
   const initiate = () => {
-    
-    let p='';
-    if(param.writingModel.options.length > 0) {
-        p=param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt;
-    } else if(param.writingModel.id == 2 ) {
-        p=param.writingModel.p1 + prompt + param.writingModel.p2;
-    }else{
-        p=param.writingModel.p1 + prompt;
+    setMessage('');
+    let p = '';
+    if (param.writingModel.options.length > 0) {
+      p =
+        param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt;
+    } else if (param.writingModel.id == 2) {
+      p = param.writingModel.p1 + prompt + param.writingModel.p2;
+    } else {
+      p = param.writingModel.p1 + prompt;
     }
-    console.log(param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt)
-    gemini(
-        p,
-        setLoading,
-        setMessage
+    console.log(
+      param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt,
     );
+    gemini(p, setLoading, setMessage);
+    
   };
 
   return (
@@ -175,10 +174,9 @@ const GenerateByPromptNative = () => {
               multiline={true}
               // numberOfLines={3}
               style={{color: 'white', textAlignVertical: 'top', width: wp(90)}}
-              />
+            />
           </View>
 
-              <KeyboardAvoidingView>
           <TouchableOpacity
             onPress={initiate}
             disabled={loading || !prompt}
@@ -191,17 +189,13 @@ const GenerateByPromptNative = () => {
               Generate
             </Text>
           </TouchableOpacity>
-          </KeyboardAvoidingView>
           {message.length > 0 && (
             <View className=" p-5 mt-5">
               <View className="mr-1 self-end">
-                {/* <TouchableOpacity onPress={copyToClipboard}>
-                  <Text style={{color: 'white'}}>Copy</Text>
-                </TouchableOpacity> */}
                 <Button
-                    image={require('../../assets/images/copy.png')}
-                    title={'Copy'}
-                    onPress={copyToClipboard}
+                  image={require('../../assets/images/copy.png')}
+                  title={'Copy'}
+                  onPress={copyToClipboard}
                 />
               </View>
               <Text className="text-neutral-100">{displayedMessage}</Text>

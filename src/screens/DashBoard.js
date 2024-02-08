@@ -45,40 +45,14 @@ const Dashboard = () => {
   const {guser, setGUserAvatar, gUserAvatar, signOut, deleteAccount} = useUser();
   const user = auth.currentUser;
 
-  // const [googleUser, setGoogleUser] = useState('');
   const [photo, setPhoto] = useState(
     require('../../assets/images/avatars/thor.jpeg'),
   );
 
-  // useEffect(() => {
-  //   GoogleSignin.configure({
-  //     webClientId:
-  //       '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-  //   });
-  // }, []);
-
-  // const getCurrentUser = async () => {
-  //   const currentUser = await GoogleSignin.getCurrentUser();
-  //   return currentUser.user;
-  // };
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const googleUser = await getCurrentUser();
-  //       console.log(googleUser);
-  //       setGoogleUser(googleUser);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, []);
-
   const handleBackPress = () => {
     select_beep();
-    navigation.navigate('Welcome', {selectedAvatar: selectedAvatar}); // works best when the goBack is async
-    return true; // Return true to prevent the default back button behavior
+    navigation.navigate('Welcome', {selectedAvatar: selectedAvatar}); 
+    return true; 
   };
 
   useEffect(() => {
@@ -123,7 +97,7 @@ const Dashboard = () => {
 
   return (
     <View style={styles.container} className="flex-1 bg-slate-950">
-      <View className="flex flex-row self-end m-0">
+      <View className="flex absolute flex-row self-end m-0">
         <View className="">
           <Button
             image={require('../../assets/images/close.png')}
@@ -136,7 +110,7 @@ const Dashboard = () => {
         className=" mb-5">
         <Image
           source={ gUserAvatar}
-          className="rounded-full w-20 h-20 m-5 mb-0 mx-auto"
+          className="rounded-full w-20 h-20 m-12 mb-0 mx-auto"
         />
         <Text className="text-center text-sm text-slate-200">
           Change Avatar

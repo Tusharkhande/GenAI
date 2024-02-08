@@ -1,12 +1,4 @@
-import cyberpunk from '../../assets/images/imageModels/cyberpunk.jpeg';
-import anime from '../../assets/images/imageModels/anime.jpg';
-import popArt from '../../assets/images/imageModels/pop.jpg';
-import toyart from '../../assets/images/imageModels/toyart.jpg';
-import timeTravel from '../../assets/images/imageModels/timetravel.jpg';
-import miniature from '../../assets/images/imageModels/miniature.jpg';
-import petunderlens from '../../assets/images/imageModels/petunderlens.jpg';
-import modernArch from '../../assets/images/imageModels/modernarch.jpg';
-import rewrite from '../../assets/images/writeModels/rewrite1.png';
+import rewrite from '../../assets/images/writeModels/rewrite.png';
 import quote from '../../assets/images/writeModels/quote.png';
 import insta from '../../assets/images/writeModels/insta.png';
 import author from '../../assets/images/writeModels/author.png';
@@ -15,10 +7,36 @@ import idea from '../../assets/images/writeModels/idea.png';
 import slogan from '../../assets/images/writeModels/slogan.png';
 import x from '../../assets/images/writeModels/x.png';
 import pg from '../../assets/images/writeModels/pg.png';
+import gemini from '../../assets/images/writeModels/gemini.png';
+import code from '../../assets/images/writeModels/code.png';
 
 export default writingModels=[
     {
         id:1,
+        name:"Explore Google's Gemini!",
+        image:gemini,
+        options:[],
+        optionsDesc:'',
+        demo:'What do cats dream about?',
+        textInputDesc:'Ask me anything...',
+        desc:"Explore the capabilities of Google's Gemini...",
+        p1:"",
+        p2:""
+    },
+    {
+        id:2,
+        name:'Code Generator',
+        image:code,
+        options:['Java', 'C', 'C++', 'Python', 'JavaScript', 'C#', 'Ruby', 'Swift', 'Go', 'Rust', 'Kotlin'],
+        optionsDesc:'Select your preferred programming language',
+        demo:'Implement addFirst function of LinkedList',
+        textInputDesc:'The code you want to generate is',
+        desc:'Generate code in your preferred programming language',
+        p1:"Please generate the code for the following problem statement in ",
+        p2:". The problem statement is:"
+    },
+    {
+        id:3,
         name:'Rewrite text into another genre',
         image:rewrite,
         options:['a novel', 'a poem', 'an academic essay', 'an email', 'a work report', 'a speech', 'a blog post'],
@@ -30,7 +48,7 @@ export default writingModels=[
         p2:" genre. Remember to maintain the original meaning. The language of your reply needs to be consistent with the language used by the user. Now, let's start. The content that needs to be rewritten is:"
     },
     {
-        id:2,
+        id:4,
         name:'Whimsical quotes',
         image:quote,
         options:[],
@@ -42,7 +60,7 @@ export default writingModels=[
         p2:". These quotes should inspire us to boldness while also bringing a smile to our face!"
     },
     {
-        id:3,
+        id:5,
         name:'Instagram post captions',
         image:insta,
         options:[],
@@ -53,7 +71,7 @@ export default writingModels=[
         p1:"Compose a captivating Instagram caption for my post featuring "
     },
     {
-        id:4,
+        id:6,
         name:'Rewrite text in different tones',
         image:rewrite,
         options:['formal', 'informal', 'optimistic', 'pessimistic', 'humorous', 'conversational', 'persuasive', 'informative', 'critical', 'creative'],
@@ -65,7 +83,7 @@ export default writingModels=[
         p2:" tone. The content that needs to be rewritten is:"
     },
     {
-        id:5,
+        id:7,
         name:'Write like a famous author',
         image:author,
         options:[],
@@ -76,7 +94,7 @@ export default writingModels=[
         p1:"Write a short story of about one paragraph in the style of ",
     },
     {
-        id:6,
+        id:8,
         name:'YouTube posts',
         image:yt,
         options:[],
@@ -87,7 +105,7 @@ export default writingModels=[
         p1:"Compose a YouTube post about the brand ",
     },
     {
-        id:7,
+        id:9,
         name:'Generate novel ideas',
         image:idea,
         options:['Science Fiction', 'Mystery', 'Romance', 'Young Adult Literature', 'Historical Fiction'],
@@ -99,7 +117,7 @@ export default writingModels=[
         p2: " novel. Include a compelling title, concise story summary, and detailed chapter outline. Ensure the narrative showcases the craft of a bestselling author, with vivid characters, an immersive plot, and a masterful storytelling style. The topic for the novel is: "
     },
     {
-        id:8,
+        id:10,
         name:'Create catchy slogans',
         image:slogan,
         options:[],
@@ -111,7 +129,7 @@ export default writingModels=[
         p2:" that effectively communicate its mission, while also inspiring others to use and enjoy it. Tag lines should be short and snappy."
     },
     {
-        id:9,
+        id:11,
         name:'Twitter posts',
         image:x,
         options:[],
@@ -123,7 +141,7 @@ export default writingModels=[
         p2:" in typical Twitter style that is short and intriguing"
     },
     {
-        id:10,
+        id:12,
         name:'Prompt Generator',
         image:pg,
         demo:'a bike racing on a tree-ring bread',
