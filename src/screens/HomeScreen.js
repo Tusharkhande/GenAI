@@ -431,7 +431,7 @@ const App = () => {
                       disabled={!text.trim()}
                     >
                       <Image
-                        source={require('../../assets/images/send-icon.png')}
+                        source={require('../../assets/images/send-2.png')}
                         className="h-6 w-6"
                       />
                     </TouchableOpacity>

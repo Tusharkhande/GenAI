@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
   ToastAndroid,
+  StyleSheet
 } from 'react-native';
 
 import {
@@ -23,12 +24,16 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
 import Clipboard from '@react-native-clipboard/clipboard';
 import gemini from '../api/gemini';
+// import Markdown from 'markdown-to-jsx';
+import MarkdownRenderer from 'react-native-markdown-renderer';
+import TypeWriterEffect from 'react-native-typewriter-effect';
 
-const GenerateByPromptNative = () => {
+const WritingScreen = () => {
   const [prompt, setPrompt] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [displayedMessage, setDisplayedMessage] = useState('');
+  const [finishedTyping, setFinishedTyping] = useState(false);
   const navigation = useNavigation();
   const param = useRoute().params;
   const [selectedOption, setSelectedOption] = useState('');
@@ -39,7 +44,6 @@ const GenerateByPromptNative = () => {
       scrollViewRef?.current?.scrollToEnd({animated: true});
     }, 200);
   };
-  // console.log(message);
 
   const onOptionSelect = option => {
     setSelectedOption(option);
@@ -48,15 +52,15 @@ const GenerateByPromptNative = () => {
 
   const copyToClipboard = () => {
     Clipboard.setString(message);
+    clearInterval();
     ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
   };
 
-  // console.log(param);
-
   const handleBackPress = () => {
     select_beep();
-    navigation.goBack(); // works best when the goBack is async
-    return true; // Return true to prevent the default back button behavior
+    setIsLoading(false);
+    navigation.goBack(); 
+    return true;
   };
 
   useEffect(() => {
@@ -66,27 +70,7 @@ const GenerateByPromptNative = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (message) {
-      // Check if the message is not empty
-      const words = message.split(' '); // Split message into words
-      setDisplayedMessage(''); // Clear previous displayed message
-      let index = 0;
-      const intervalId = setInterval(() => {
-        if (index < words.length) {
-          setDisplayedMessage(prev => `${prev}${words[index]} `);
-          index++;
-          updateScrollView();
-        } else {
-          clearInterval(intervalId); // Stop the interval when all words have been displayed
-        }
-      }, 150); // Adjust this value to control the speed of the "typing"
-
-      return () => clearInterval(intervalId); // Cleanup interval on component unmount or message change
-    }
-  }, [message]); // Effect runs whenever `message` changes
-
-  const initiate = () => {
+  const initiate = async () => {
     setMessage('');
     let p = '';
     if (param.writingModel.options.length > 0) {
@@ -100,8 +84,23 @@ const GenerateByPromptNative = () => {
     console.log(
       param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt,
     );
-    gemini(p, setLoading, setMessage);
-    
+    try {
+      // setIsLoading(true);
+      setFinishedTyping(false);
+      const message = await gemini(p,setIsLoading);
+      if (message) {
+        console.log(message);
+        setMessage(message);
+        // setIsLoading(false);
+      }
+    } catch (e) {
+      console.log(e);
+      // setIsLoading(false);
+      ToastAndroid.show(
+        'Some Error occured please try later',
+        ToastAndroid.SHORT,
+      );
+    }
   };
 
   return (
@@ -116,10 +115,10 @@ const GenerateByPromptNative = () => {
       </View>
       <ScrollView
         ref={scrollViewRef}
-        bounces={false}
+        // bounces={false}
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
-        <View className="flex mt-1 self-start p-5">
+        <View className="flex mt-1 self-start p-5 pb-0">
           <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
             {param.writingModel.name}
           </Text>
@@ -179,7 +178,8 @@ const GenerateByPromptNative = () => {
 
           <TouchableOpacity
             onPress={initiate}
-            disabled={loading || !prompt}
+            disabled={isLoading || !prompt}
+            aria-disabled={isLoading || !prompt}
             className="flex-row mt-0 mx-24 rounded-3xl p-2 justify-center bg-indigo-800">
             <Image
               source={require('../../assets/images/send-2.png')}
@@ -191,19 +191,28 @@ const GenerateByPromptNative = () => {
           </TouchableOpacity>
           {message.length > 0 && (
             <View className=" p-5 mt-5">
-              <View className="mr-1 self-end">
+              <View className="mr-1 flex-row self-end">
+                <Button
+                  image={require('../../assets/images/speed.png')}
+                  // title={'Copy'}
+                  onPress={() => setFinishedTyping(true)}
+                />
                 <Button
                   image={require('../../assets/images/copy.png')}
-                  title={'Copy'}
+                  // title={'Copy'}
                   onPress={copyToClipboard}
                 />
               </View>
-              <Text className="text-neutral-100">{displayedMessage}</Text>
+              {!finishedTyping ? (
+                <TypeWriterEffect content={message} vibration={false} onTypingEnd={() => setFinishedTyping(true)} mindelay={-20} maxdelay={-1}/>
+              ) : (
+                <MarkdownRenderer>{message}</MarkdownRenderer>
+              )}
             </View>
           )}
         </View>
       </ScrollView>
-      <Modal visible={loading} animationType="fade" transparent>
+      <Modal visible={isLoading} animationType="fade" transparent>
         <View className="flex flex-1 items-center bg-transparent w-full">
           <View
             style={{width: wp(100)}}
@@ -220,4 +229,11 @@ const GenerateByPromptNative = () => {
   );
 };
 
-export default GenerateByPromptNative;
+const styles = StyleSheet.create({
+  code: {
+    backgroundColor: 'transparent',
+    color: 'white',
+  },
+});
+
+export default WritingScreen;
