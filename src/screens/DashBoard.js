@@ -142,7 +142,7 @@ const Dashboard = () => {
       </View>
 
       <View className="justify-end self-center mt-8">
-        <Text>© 2023 @TK Solutions</Text>
+        <Text>© 2023 @ktushar</Text>
       </View>
 
       <CustomModal

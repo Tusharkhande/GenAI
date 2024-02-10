@@ -10,6 +10,7 @@ const client = axios.create({
 })
 
 const chatgptUrl = 'https://api.openai.com/v1/chat/completions';
+const chatCompletionUrl = 'https://api.openai.com/v1/completions';
 const dalleUrl = 'https://api.openai.com/v1/images/generations';
 const imageVarUrl = 'https://api.openai.com/v1/images/variations';
 
@@ -94,6 +95,7 @@ export const chatgptApiCall = async (prompt, messages) => {
 
         let answer = res.data?.choices[0]?.message?.content;
         messages.push({ role: 'assistant', content: answer.trim() });
+        chatCompletion('Write a code in java to print 5 table')
         // console.log('got chat response', answer);
         return Promise.resolve({ success: true, data: messages });
 
@@ -107,7 +109,8 @@ export const chatgptApiCall = async (prompt, messages) => {
 export const dalleApiCall = async (prompt, messages) => {
     try {
         const res = await client.post(dalleUrl, {
-            prompt,
+            model: "dall-e-2",
+            prompt: prompt,
             n: 1,
             size: "512x512"
         })
@@ -121,6 +124,24 @@ export const dalleApiCall = async (prompt, messages) => {
         console.log('error: ', err);
         messages.push({ role: 'assistant', content: error.trim() });
         return Promise.resolve({ success: true, data: messages});
+    }
+}
+
+export const chatCompletion = async (prompt) => {
+    try{
+        const res = await client.post(chatCompletionUrl, {
+            model: "gpt-3.5-turbo-instruct",
+            prompt: prompt,
+            max_tokens: 7,
+            temperature: 0,
+        })
+
+        let answer = res.data?.choices[0]?.text;
+        console.log(answer);
+        return answer;
+
+    }catch(e){
+        console.log("chatcompletion error: " ,e);
     }
 }
 

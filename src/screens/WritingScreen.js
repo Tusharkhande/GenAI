@@ -10,7 +10,7 @@ import {
   ScrollView,
   Modal,
   ToastAndroid,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 
 import {
@@ -24,16 +24,19 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
 import Clipboard from '@react-native-clipboard/clipboard';
 import gemini from '../api/gemini';
+import Tts from 'react-native-tts';
 // import Markdown from 'markdown-to-jsx';
-import MarkdownRenderer from 'react-native-markdown-renderer';
+// import MarkdownRenderer from 'react-native-markdown-renderer';
+import Markdown from 'react-native-markdown-display';
+
 import TypeWriterEffect from 'react-native-typewriter-effect';
 
 const WritingScreen = () => {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [displayedMessage, setDisplayedMessage] = useState('');
   const [finishedTyping, setFinishedTyping] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const navigation = useNavigation();
   const param = useRoute().params;
   const [selectedOption, setSelectedOption] = useState('');
@@ -56,10 +59,15 @@ const WritingScreen = () => {
     ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
   };
 
+  const speakCurrResponse = msg => {
+    setIsSpeaking(true);
+    assistantSpeech(msg);
+  };
+
   const handleBackPress = () => {
     select_beep();
     setIsLoading(false);
-    navigation.goBack(); 
+    navigation.goBack();
     return true;
   };
 
@@ -68,6 +76,13 @@ const WritingScreen = () => {
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
+  }, []);
+
+  useEffect(() => {
+    Tts.addEventListener('tts-finish', event => [
+      console.log('finish', event),
+      setIsSpeaking(false),
+    ]);
   }, []);
 
   const initiate = async () => {
@@ -85,13 +100,13 @@ const WritingScreen = () => {
       param.writingModel.p1 + selectedOption + param.writingModel.p2 + prompt,
     );
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       setFinishedTyping(false);
-      const message = await gemini(p,setIsLoading);
+      const message = await gemini(p);
       if (message) {
         console.log(message);
         setMessage(message);
-        // setIsLoading(false);
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -100,7 +115,16 @@ const WritingScreen = () => {
         'Some Error occured please try later',
         ToastAndroid.SHORT,
       );
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const styles = {
+    code_block: {
+      backgroundColor: 'transparent',
+      color: 'white',
+    },
   };
 
   return (
@@ -192,6 +216,19 @@ const WritingScreen = () => {
           {message.length > 0 && (
             <View className=" p-5 mt-5">
               <View className="mr-1 flex-row self-end">
+                {isSpeaking ? (
+                  <Button
+                    image={require('../../assets/images/speaking.gif')}
+                    // title={'Copy'}
+                    onPress={() => Tts.stop()}
+                  />
+                ) : (
+                  <Button
+                    image={require('../../assets/images/sound.png')}
+                    // title={'Copy'}
+                    onPress={() => speakCurrResponse(message)}
+                  />
+                )}
                 <Button
                   image={require('../../assets/images/speed.png')}
                   // title={'Copy'}
@@ -204,9 +241,16 @@ const WritingScreen = () => {
                 />
               </View>
               {!finishedTyping ? (
-                <TypeWriterEffect content={message} vibration={false} onTypingEnd={() => setFinishedTyping(true)} mindelay={-20} maxdelay={-1}/>
+                <TypeWriterEffect
+                  content={message}
+                  vibration={false}
+                  onTypingEnd={() => setFinishedTyping(true)}
+                  mindelay={-20}
+                  maxdelay={-1}
+                />
               ) : (
-                <MarkdownRenderer>{message}</MarkdownRenderer>
+                // <MarkdownRenderer>{}</MarkdownRenderer>
+                <Markdown style={markdownStyles}>{message}</Markdown>
               )}
             </View>
           )}
@@ -229,10 +273,18 @@ const WritingScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  code: {
-    backgroundColor: 'transparent',
-    color: 'white',
+const markdownStyles = StyleSheet.create({
+  body: {
+    color: '#fff',
+    backgroundColor: '#rgb(2 6 23)',
+  },
+  fence: {
+    color: '#fff',
+    fontSize: 10,
+    backgroundColor: '#000',
+    overflow: 'hidden',
+    padding: 10,
+    borderRadius: 5,
   },
 });
 

@@ -32,8 +32,8 @@ export default writingModels=[
         demo:'Implement addFirst function of LinkedList',
         textInputDesc:'The code you want to generate is',
         desc:'Generate code in your preferred programming language',
-        p1:"Please generate the code for the following problem statement in ",
-        p2:". The problem statement is:"
+        p1:"For the following problem statement, please write a ",
+        p2:"code. The problem statement is: "
     },
     {
         id:3,
@@ -68,7 +68,8 @@ export default writingModels=[
         demo:'My OOTD',
         textInputDesc:'Write a post about',
         desc:'Write instagram post captions in just one click',
-        p1:"Compose a captivating Instagram caption for my post featuring "
+        p1:"Compose a captivating Instagram caption for my post featuring ",
+        p2:''
     },
     {
         id:6,
@@ -80,7 +81,7 @@ export default writingModels=[
         textInputDesc:'The content needs to be rewritten is',
         desc:'Rewrite your content in different tones',
         p1:"Please act as a rewriting expert in different tones. Your role is to rewrite my content into the specific tone I have chosen. Remember to maintain the original meaning. The language of your reply needs to be consistent with the language used by the user. Now, let’s start. Please rewrite the content into the ",
-        p2:" tone. The content that needs to be rewritten is:"
+        p2:" tone. The content that needs to be rewritten is: "
     },
     {
         id:7,

@@ -37,7 +37,7 @@ const About = () => {
           cutting-edge AI functionalities.{'\n\n'}
         </Text>
         <View className="justify-end mb-0 self-center p-10">
-          <Text>© 2023 @TK Solutions</Text>
+          <Text>© 2023 @ktushar</Text>
         </View>
       </ScrollView>
     </View>
