@@ -16,14 +16,15 @@ const About = () => {
           />
         </View>
       <ScrollView className="space-y-4 mt-8" showsVerticalScrollIndicator={false}>
-        <View className="flex-row justify-center mt-6 ">
+        <View className="flex-row justify-center mt-6">
           <Image
-            source={require('../../assets/images/bot4.png')}
+            source={require('../../assets/images/genAI2.jpeg')}
             style={{width: wp(20), height: wp(20)}}
+            className=' rounded-full'
           />
         </View>
         <Text className="text-xl text-center m-5">About GenAI</Text>
-        <Text className="text-justify text-sm p-10 pb-3">
+        <Text className="text-justify text-sm p-10 pt-2 pb-3">
           {'\u2022'} "GenAI" is an innovative AI-powered assistant that engages
           users in interactive conversations and generates captivating AI images
           and artwork using OpenAI's GPT3.5 and DALL·E 2.0.{'\n\n'}• The app
@@ -36,7 +37,7 @@ const About = () => {
           constantly evolving with updates and improvements to deliver
           cutting-edge AI functionalities.{'\n\n'}
         </Text>
-        <View className="justify-end mb-0 self-center p-10">
+        <View className="justify-end mb-0 self-center p-10 pt-2">
           <Text>© 2023 @ktushar</Text>
         </View>
       </ScrollView>
@@ -49,18 +50,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#ffffff', // Adjust the background color as needed
+    backgroundColor: '#ffffff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333333', // Adjust the text color as needed
+    color: '#333333', 
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#666666', // Adjust the text color as needed
+    color: '#666666',
   },
 });
 

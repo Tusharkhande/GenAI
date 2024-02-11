@@ -1,7 +1,7 @@
-import bot from '../../assets/images/bot4.png';
+import bot from '../../assets/images/genAI2.jpeg';
 import palm from '../../assets/images/palm.png';
 import dalle from '../../assets/images/dalle2.png';
-import chatgptIcon from '../../assets/images/chatgptIcon.png';
+import chatgptIcon from '../../assets/images/chatgpt.png';
 export default model=[
     {
         id:1,

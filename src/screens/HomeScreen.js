@@ -257,7 +257,7 @@ const App = () => {
   };
 
   useEffect(() => {
-	Tts.addEventListener('tts-finish', (event) => [console.log("finish", event), setIsSpeaking(false)]);
+	Tts.addEventListener('tts-finish', (event) => [setIsSpeaking(false)]);
   }, [])
 
   useEffect(() => {
@@ -296,7 +296,7 @@ const App = () => {
       > */}
         <SafeAreaView className="flex-1 flex mx-5 ">
           {/* bot icon */}
-          <View className="flex-row justify-center">
+          <View className="flex-row justify-center pt-2">
             <Image
               // source={require('../../assets/images/bot1.png')}
               source={
@@ -305,6 +305,7 @@ const App = () => {
                   : require('../../assets/images/bot3.png')
               }
               style={{height: hp(15), width: hp(15)}}
+              className='rounded-full'
             />
           </View>
 

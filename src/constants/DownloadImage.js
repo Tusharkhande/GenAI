@@ -25,6 +25,7 @@ const downloadImage = async (url) => {
     assistantSpeech(
       'Download Completed Successfully! Kindly check your Gallery!',
     );
+    ToastAndroid.show('Download Completed', ToastAndroid.SHORT);
     setLoading(false);
     setImageDownloaded(true);
 
@@ -32,7 +33,6 @@ const downloadImage = async (url) => {
     // Alert.alert('Download complete', 'Image has been downloaded successfully.');
   } catch (error) {
     console.error('Error while downloading image:', error);
-    Alert.alert('Error', 'Something went wrong while downloading the image.');
   }
 };
 
@@ -62,8 +62,36 @@ const downloadBase64Image = async (base64Image) => {
     console.log('File saved to: ', filePath);
   } catch (error) {
     console.error('Error while saving the image:', error);
-    Alert.alert('Error', 'Something went wrong while saving the image.');
+    ToastAndroid.show('Error while saving the image', ToastAndroid.SHORT);
   }
 };
 
-export {downloadImage, downloadBase64Image};
+const downloadBlobImage = async (tempPath) => {
+  try {
+    const imageName = generateRandomName();
+    const filePath = RNFetchBlob.fs.dirs.DownloadDir + `/${imageName}.jpg`;
+    await RNFetchBlob.fs.cp(tempPath, filePath).then((resp) => {
+      console.log("success", resp)
+    })
+    await RNFetchBlob.fs.unlink(tempPath);
+    assistantSpeech(
+      'Download Completed Successfully! Kindly check your Gallery!',
+    );
+    ToastAndroid.show('Download Completed', ToastAndroid.SHORT);
+    RNFetchBlob.fs
+      .scanFile([{path: filePath, mime: 'image/png'}])
+      .then(() => {
+        console.log('Scan file success');
+      })
+      .catch(err => {
+        console.error('Scan file error:', err);
+      });
+
+    console.log('File saved to: ', filePath);
+  } catch (error) {
+    console.error('Error while saving the image:', error);
+    ToastAndroid.show('Error while saving the image', ToastAndroid.SHORT);
+  }
+};
+
+export {downloadImage, downloadBase64Image, downloadBlobImage};

@@ -65,6 +65,7 @@ const WritingScreen = () => {
   };
 
   const handleBackPress = () => {
+    Tts.stop()
     select_beep();
     setIsLoading(false);
     navigation.goBack();
@@ -220,7 +221,7 @@ const WritingScreen = () => {
                   <Button
                     image={require('../../assets/images/speaking.gif')}
                     // title={'Copy'}
-                    onPress={() => Tts.stop()}
+                    onPress={() => [Tts.stop(), setIsSpeaking(false)]}
                   />
                 ) : (
                   <Button
@@ -279,6 +280,14 @@ const markdownStyles = StyleSheet.create({
     backgroundColor: '#rgb(2 6 23)',
   },
   fence: {
+    color: '#fff',
+    fontSize: 10,
+    backgroundColor: '#000',
+    overflow: 'hidden',
+    padding: 10,
+    borderRadius: 5,
+  },
+  code_block: {
     color: '#fff',
     fontSize: 10,
     backgroundColor: '#000',

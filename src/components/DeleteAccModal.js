@@ -4,7 +4,7 @@ import React from 'react';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { select_beep } from '../constants/Sounds';
 
-const CustomModal = ({ setDelModalVisible, delModalVisible, deleteAccount, setPassword, password }) => {
+const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, setPassword, password }) => {
   console.log(password)
   return (
     <Modal visible={delModalVisible} animationType="fade" transparent>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomModal;
+export default DeleteAccModal;

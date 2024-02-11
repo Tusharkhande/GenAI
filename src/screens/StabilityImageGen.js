@@ -11,14 +11,15 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {select_beep} from '../constants/Sounds';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
-import {downloadBase64Image} from '../constants/DownloadImage';
-import generateImage from '../api/stability';
+import {downloadBase64Image, downloadBlobImage} from '../constants/DownloadImage';
+import generateImage, {stableDiffusionXL} from '../api/stability';
 
 const GenerateByPromptNative = () => {
   const [prompt, setPrompt] = useState('');
   const [image, setImage] = useState('');
   const [loading, setLoading] = useState(false);
   const [base64Image, setBase64Image] = useState('');
+  const [blobImage, setBlobImage] = useState('');
   const navigation = useNavigation();
   const param = useRoute().params;
   console.log(param);
@@ -36,44 +37,7 @@ const GenerateByPromptNative = () => {
     };
   }, []);
 
-  // const generateImage = async para => {
-  //   setLoading(true);
-  //   try {
-  //     if (!apiKey) {
-  //       throw new Error('Missing Stability API key.');
-  //     }
-
-  //     const response = await axios.post(
-  //       `https://api.stability.ai/v1/generation/stable-diffusion-v1-6/text-to-image`,
-  //       {
-  //         text_prompts: [
-  //           {
-  //             text: para,
-  //           },
-  //         ],
-  //         cfg_scale: 7,
-  //         height: 512,
-  //         width: 512,
-  //         steps: 30,
-  //         samples: 1,
-  //       },
-  //       {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Accept: 'application/json',
-  //           Authorization: `Bearer ${apiKey}`,
-  //         },
-  //       },
-  //     );
-  //     setImage(`data:image/png;base64,${response.data.artifacts[0].base64}`);
-  //     setBase64Image(response.data.artifacts[0].base64);
-  //   } catch (error) {
-  //     console.error('Error generating image:', error.message);
-  //   }
-  //   setLoading(false);
-  // };
-
-  const initiate = () => {
+  const initiate = async () => {
     let para = '';
     if(param.imageModel.name ==='Cyberpunk Avatars'){
       // para = `Create an avatar of a ${prompt} and a futuristic costume with a cyberpunk city in the background`;
@@ -98,14 +62,10 @@ const GenerateByPromptNative = () => {
     // const para = `${param.imageModel.p1} ${prompt} ${param.imageModel.p2}`;
     // const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
     console.log(para);
-    generateImage(para, setLoading, setImage, setBase64Image);
+    // generateImage(para, setLoading, setImage, setBase64Image);
+    stableDiffusionXL({"inputs": para}, setLoading, setImage, setBlobImage);
   };
 
-  useEffect(() => {
-    // setImage(require('../../assets/images/avatars/catavt.jpeg'));
-  }, []);
-  // Other component functions and useEffect hook remain unchanged
-  //   console.log("image", image)
   return (
     <View className="flex-1 bg-slate-950 justify-normal">
       <View className="flex flex-row self-end m-0">
@@ -184,7 +144,7 @@ const GenerateByPromptNative = () => {
             {image && (
               <TouchableOpacity
                 style={{alignItems: 'center', marginTop: 10}}
-                onPress={() => downloadBase64Image(base64Image)}>
+                onPress={() => blobImage? downloadBlobImage(blobImage) : downloadBase64Image(base64Image)}>
                 <Text
                   style={{color: 'blue', textDecorationLine: 'none'}}
                   className="">

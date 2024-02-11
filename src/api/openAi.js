@@ -129,19 +129,37 @@ export const dalleApiCall = async (prompt, messages) => {
 
 export const chatCompletion = async (prompt) => {
     try{
-        const res = await client.post(chatCompletionUrl, {
-            model: "gpt-3.5-turbo-instruct",
-            prompt: prompt,
-            max_tokens: 7,
-            temperature: 0,
+
+        const res = await client.post(chatgptUrl, {
+            model: "gpt-3.5-turbo",
+            messages: [{"role": "user", "content": prompt}]
+
         })
 
-        let answer = res.data?.choices[0]?.text;
+        let answer = res.data?.choices[0]?.message?.content;
         console.log(answer);
         return answer;
 
     }catch(e){
         console.log("chatcompletion error: " ,e);
+    }
+}
+const API_TOKEN = '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';
+export async function gpt2(data) {
+    try {
+        const response = await axios.post(
+            "https://api-inference.huggingface.co/models/openai-community/gpt2",
+            data, 
+            {
+                headers: { Authorization: "Bearer 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" }
+            }
+        );
+        console.log("response is", response.data);
+        
+        return response.data[0].generated_text;
+    } catch (error) {
+        console.error("An error occurred while querying the API:", error);
+        throw error; 
     }
 }
 

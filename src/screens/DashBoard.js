@@ -9,6 +9,7 @@ import {
   Modal,
   Alert,
   ToastAndroid,
+  ScrollView
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {auth} from '../firebase/firebase.config';
@@ -22,8 +23,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AvatarsModal from '../components/AvatarsModal';
-import CustomModal from '../components/DeleteAccModal';
 import Contact from '../components/Contact';
+import DeleteAccModal from '../components/DeleteAccModal';
 import HorizontalLine from '../components/HorizontalLine';
 import ManageAcc from '../components/ManageAcc';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -96,7 +97,7 @@ const Dashboard = () => {
   };
 
   return (
-    <View style={styles.container} className="flex-1 bg-slate-950">
+    <View style={styles.container} className="flex-1 bg-slate-950 p-7">
       <View className="flex absolute flex-row self-end m-0">
         <View className="">
           <Button
@@ -105,9 +106,10 @@ const Dashboard = () => {
           />
         </View>
       </View>
+      <ScrollView className=" mt-8" showsVerticalScrollIndicator={false}>
       <TouchableOpacity
         onPress={() => [setModalVisible(true), select_beep()]}
-        className=" mb-5">
+        className="self-center flex justify-center mt-0 mb-5">
         <Image
           source={ gUserAvatar}
           className="rounded-full w-20 h-20 m-12 mb-0 mx-auto"
@@ -127,13 +129,13 @@ const Dashboard = () => {
 
       <HorizontalLine text="Contact" />
 
-      <View className="self-start">
+      <View className="self-center">
         <Contact />
       </View>
 
       <HorizontalLine text="Manage Account" />
 
-      <View className="self-start">
+      <View className="self-center">
         <ManageAcc
           signOut={() => signOut(setDelModalVisible,navigation, setLoading)}
           setDelModalVisible={setDelModalVisible}
@@ -141,11 +143,11 @@ const Dashboard = () => {
         />
       </View>
 
-      <View className="justify-end self-center mt-8">
-        <Text>© 2023 @ktushar</Text>
+      <View className="self-center mt-8">
+        <Text>© 2024 @ktushar</Text>
       </View>
 
-      <CustomModal
+      <DeleteAccModal
         setDelModalVisible={setDelModalVisible}
         delModalVisible={delModalVisible}
         deleteAccount={() => deleteAccount(setDelModalVisible,navigation, setLoading)}
@@ -158,7 +160,7 @@ const Dashboard = () => {
         handleProfileImg={handleProfileImg}
         setSelectedAvatar={setSelectedAvatar}
         selectedAvatar={selectedAvatar}
-      />
+        />
 
       <Modal visible={loading} animationType="fade" transparent>
         <View className="flex flex-1 items-center bg-transparent w-full">
@@ -173,16 +175,13 @@ const Dashboard = () => {
           </View>
         </View>
       </Modal>
+        </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 35,
-  },
+  
   textStyle: {
     fontSize: 18,
     marginBottom: 20,

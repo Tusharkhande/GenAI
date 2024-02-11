@@ -127,6 +127,7 @@ export default function WelcomeScreen () {
           source={selectedModel ? selectedModel.image : require('../../assets/images/bot3.png')}
           style={{ height: wp(30), width: wp(30) }}
           resizeMode="contain"
+          className='rounded-full'
         />
       </View>
       <View className=" self-center">
@@ -146,14 +147,18 @@ export default function WelcomeScreen () {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
-              className="flex flex-row items-center justify-between px-1 mx-2 py-2 my-2 rounded-3xl"
+              className="flex flex-row items-center justify-between px-1 mx-4
+              
+              
+              py-2 my-2 rounded-full"
             // style={{ backgroundColor: item.primary }}
             >
               <View className="flex flex-row items-center">
                 <Image
                   source={item.image}
-                  style={{ height: wp(15), width: wp(20) }}
+                  style={{ height: wp(15), width: wp(15) }}
                   resizeMode="contain"
+                  className='rounded-full'
                 />
                 {/* <Text className="text-white text-xl font-bold ml-5">{item.name}</Text> */}
               </View>

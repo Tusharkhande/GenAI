@@ -1,14 +1,15 @@
 
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
 import React from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function Features({ model }) {
     return (
-        <View style={{ height: hp(60) }} className="space-y-4">
+        
+        <View style={{ height: hp(68) }} className="space-y-4 pt-0">
             <Text style={{ fontSize: wp(6.5) }} className="font-semibold text-neutral-100">Features</Text>
             {model === "Jarvis" ? (
-                <View className="space-y-4">
+                <ScrollView className="space-y-4">
                     <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
                         <View className='flex-row items-center space-x-1'>
                             <Image source={require('../../assets/images/chatgptIcon.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -32,9 +33,9 @@ export default function Features({ model }) {
                         <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
                             Multilingual Support: Jarvis supports multiple languages, broadening its accessibility to users around the world.            </Text>
                     </View>
-                </View>
+                </ScrollView>
             ) : model === "Friday" ? (
-                <View className="space-y-4">
+                <ScrollView className="space-y-4" showsVerticalScrollIndicator={false}>
                 <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
                     <View className='flex-row items-center space-x-1'>
                         <Image source={require('../../assets/images/dalleIcon.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -59,9 +60,9 @@ export default function Features({ model }) {
                     Fine-Grained Control: Users can provide specific instructions and control over the generated images, enabling precise adjustments to the visual output.
                     </Text>
                 </View>
-                </View>
+                </ScrollView>
             ) : model === "GenAI" ? (
-                <View style={{ height: hp(60) }} className="space-y-4">
+                <ScrollView style={{ height: hp(60) }} className="space-y-4">
                     <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
                         <View className='flex-row items-center space-x-1'>
                             <Image source={require('../../assets/images/chatgptIcon.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -89,7 +90,8 @@ export default function Features({ model }) {
                             A powerful assistant with the abilities of ChatGPT and Dall-E, providing you the best of both worlds.
                         </Text>
                     </View>
-                </View>
+
+                </ScrollView>
             ) : null}
         </View>
     );
