@@ -72,13 +72,13 @@ export default imageModels=[
         demo:'An art gallery in the suburban area',
         desc:'Generate architectural designs in modern style',
     },
-    // {
-    //     id:9,
-    //     name:'Pet under fisheye lens',
-    //     image:petunderlens,
-    //     demo:'a bike racing on a tree-ring bread',
-    //     desc:'Create photos in miniature photography',
-    // },
+    {
+        id:9,
+        name:'Wish',
+        image:petunderlens,
+        demo:'a bike racing on a tree-ring bread',
+        desc:'Create photos in miniature photography',
+    },
     // {
     //     id:10,
     //     name:'Pet under fisheye lens',

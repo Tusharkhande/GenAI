@@ -48,14 +48,26 @@ export default generateImage = async (
 };
 
 
-export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage) => {
+export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage, blobImage) => {
   setLoading(true);
   try {
+    // const cacheDirPath = RNFetchBlob.fs.dirs.CacheDir;
+    // console.log("cacheDirPath", cacheDirPath);
+    if(blobImage.length>0){
+      await RNFetchBlob.fs.unlink(blobImage).then(() => {
+        console.log("Cache cleaned successfully!");
+      })
+    }
     const response = await RNFetchBlob.config({
       fileCache: true,
     }).fetch(
       'POST',
-      'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0',
+      // 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0',
+      'https://api-inference.huggingface.co/models/kviai/Paint-Diffuion-V2',
+      // 'https://api-inference.huggingface.co/models/h94/IP-Adapter-FaceID',
+      // 'https://api-inference.huggingface.co/models/briaai/BRIA-2.2',
+      // 'https://api-inference.huggingface.co/models/playgroundai/playground-v2-1024px-aesthetic',
+      // 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0',
       {
         Authorization: 'Bearer ' + HUGGING_API_KEY,
       },
@@ -63,6 +75,7 @@ export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage
     );
     const imagePath =
       Platform.OS === 'android' ? `file://${response.path()}` : response.path();
+      console.log(imagePath)
       setImage(imagePath);
       setBlobImage(imagePath);
     return imagePath;

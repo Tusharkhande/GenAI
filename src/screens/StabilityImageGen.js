@@ -11,6 +11,7 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {select_beep} from '../constants/Sounds';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
+import RNFetchBlob from 'rn-fetch-blob';
 import {downloadBase64Image, downloadBlobImage} from '../constants/DownloadImage';
 import generateImage, {stableDiffusionXL} from '../api/stability';
 
@@ -56,6 +57,8 @@ const GenerateByPromptNative = () => {
       para = `Generate a photo of ${prompt}. Use the Sigma fisheye lens, f/3.5.`;
     }else if(param.imageModel.name === "Modern Architectural Design"){
       para = `Generate an architectural design of  ${prompt}, using the modern style. The result is a photorealistic rendering.`;
+    }else if(param.imageModel.name === "Wish"){
+      para = `${prompt}`;
     }else{
       para = `${prompt}`;
     }
@@ -63,7 +66,15 @@ const GenerateByPromptNative = () => {
     // const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
     console.log(para);
     // generateImage(para, setLoading, setImage, setBase64Image);
-    stableDiffusionXL({"inputs": para}, setLoading, setImage, setBlobImage);
+
+    // if(image.includes('file:///data')){
+    //   await RNFetchBlob.fs.unlink(`file:///${blobImage}`).then(() => {
+    //     console.log("deletion successful");
+    //   })
+    // }
+    setImage('');
+    setLoading(true);
+    await stableDiffusionXL({"inputs": para}, setLoading, setImage, setBlobImage, blobImage);
   };
 
   return (
@@ -103,10 +114,12 @@ const GenerateByPromptNative = () => {
           aria-disabled={loading || !prompt}
           className="flex-row mt-0 mx-24 rounded-3xl p-2 justify-center bg-indigo-800">
           <Image
-            source={require('../../assets/images/send-icon.png')}
-            className="h-6 w-6"
-          />
-          <Text className="text-center font-bold text-base text-slate-50">Generate</Text>
+              source={require('../../assets/images/send-2.png')}
+              className="h-6 w-6 mr-1"
+            />
+            <Text className="text-center font-bold text-base ml-1 text-slate-50">
+              Generate
+            </Text>
         </TouchableOpacity>
         <View className="flex mx-auto justify-center mt-6">
           <View
@@ -144,7 +157,7 @@ const GenerateByPromptNative = () => {
             {image && (
               <TouchableOpacity
                 style={{alignItems: 'center', marginTop: 10}}
-                onPress={() => blobImage? downloadBlobImage(blobImage) : downloadBase64Image(base64Image)}>
+                onPress={() => blobImage? downloadBlobImage(blobImage, setImage, setBlobImage) : downloadBase64Image(base64Image)}>
                 <Text
                   style={{color: 'blue', textDecorationLine: 'none'}}
                   className="">

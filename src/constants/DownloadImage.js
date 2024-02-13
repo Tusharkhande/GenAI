@@ -66,17 +66,20 @@ const downloadBase64Image = async (base64Image) => {
   }
 };
 
-const downloadBlobImage = async (tempPath) => {
+const downloadBlobImage = async (tempPath, setImage, setBlobImage) => {
   try {
     const imageName = generateRandomName();
     const filePath = RNFetchBlob.fs.dirs.DownloadDir + `/${imageName}.jpg`;
     await RNFetchBlob.fs.cp(tempPath, filePath).then((resp) => {
-      console.log("success", resp)
+      console.log("success", resp);
+      setImage("file:///"+filePath);
+      setBlobImage('');
     })
     await RNFetchBlob.fs.unlink(tempPath);
     assistantSpeech(
       'Download Completed Successfully! Kindly check your Gallery!',
     );
+      
     ToastAndroid.show('Download Completed', ToastAndroid.SHORT);
     RNFetchBlob.fs
       .scanFile([{path: filePath, mime: 'image/png'}])
