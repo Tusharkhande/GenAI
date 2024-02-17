@@ -144,7 +144,7 @@ const Dashboard = () => {
       </View>
 
       <View className="self-center mt-8">
-        <Text>© 2024 @ktushar</Text>
+        <Text className=' text-slate-400'>© 2024 @ktushar</Text>
       </View>
 
       <DeleteAccModal

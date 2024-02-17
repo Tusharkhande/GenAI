@@ -17,6 +17,22 @@ export default imageModels=[
         desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
     },
     {
+        id:1,
+        name:'Cyberpunk Avatars',
+        image:cyberpunk,
+        color:'text-slate-50',
+        demo:'a funny cat wearing sunglasses',
+        desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
+    },
+    {
+        id:1,
+        name:'Cyberpunk Avatars',
+        image:cyberpunk,
+        color:'text-slate-50',
+        demo:'a funny cat wearing sunglasses',
+        desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
+    },
+    {
         id:2,
         name:'Pop Art',
         image:popArt,

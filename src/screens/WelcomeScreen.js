@@ -57,7 +57,7 @@ export default function WelcomeScreen () {
     //     source={require("../../assets/images/bg1.jpg")}
     //     style={{ flex: 1 }}
     //   >
-    <SafeAreaView className="flex-1 flex justify-around bg-slate-950" style={{ width: wp(100), height: wp(100)}}>
+    <SafeAreaView className="flex-1 font-mono flex justify-around bg-slate-950" style={{ width: wp(100), height: wp(100)}}>
       <View className="flex flex-row justify-between"
         style={{ width: wp(90), alignSelf: 'center' }}
       >
@@ -105,7 +105,7 @@ export default function WelcomeScreen () {
           </View>
         </View>
       </View>
-      <View className="flex flex-col items-center space-y-2 mt-0 top-0">
+      <View className="flex flex-col items-center  mt-0 top-0">
 
         <Text style={[{ fontSize: wp(7) }, { color: selectedModel.primary }]} className="text-center tracking-wider font-semibold  font-mono">
           {/* A Meet with the Future */}
@@ -140,32 +140,34 @@ export default function WelcomeScreen () {
           />
         </View>
       </View>
-      <View className="flex items-center justify-center bg-slate-800 border-r-8 border-l-8 rounded-3xl">
-        <FlatList
+      <View className="flex items-center self-center justify-center bg-slate-900 rounded-3xl" style={{width: wp(100) }}>
+        {/* <FlatList
           data={model}
-          horizontal={true}
-          renderItem={({ item }) => (
+          // horizontal={true}
+          numColumns={3}
+          renderItem={({ item }) => ( */}
+          <View className='flex flex-wrap flex-row justify-center'>
+          {Models.map((item) => (
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
-              className="flex flex-row items-center justify-between px-1 mx-4
-              
-              
-              py-2 my-2 rounded-full"
+              className="flex flex-row items-center justify-between px-1 mx-4 py-2 my-2 rounded-full"
             // style={{ backgroundColor: item.primary }}
             >
-              <View className="flex flex-row items-center">
+              <View className="">
                 <Image
                   source={item.image}
-                  style={{ height: wp(15), width: wp(15) }}
+                  style={{ height: wp(12), width: wp(12) }}
                   resizeMode="contain"
                   className='rounded-full'
                 />
                 {/* <Text className="text-white text-xl font-bold ml-5">{item.name}</Text> */}
               </View>
             </TouchableOpacity>
-          )}
-        />
-        <Text className="text-slate-450 text-sm font-bold ml-5">Select your preferred interative Assistant</Text>
+          ))}
+          </View>
+          {/* )}
+        /> */}
+        <Text className="text-slate-100 text-sm font-bold ml-5 pb-2">Select your interative Assistant</Text>
       </View>
       <TouchableOpacity
         onPress={() => [navigation.navigate('Home', { selectedModel: selectedModel }), select_beep()]}
@@ -177,10 +179,10 @@ export default function WelcomeScreen () {
       </TouchableOpacity>
       {/* Modal on Exit */}
       <Modal visible={exit} animationType="fade" transparent>
-                <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
+                <View className='flex flex-1 bg-black/50 items-center justify-center self-center w-full'>
                     <View style={{ width: wp(80), height: wp(40) }}
                         className="flex flex-col bg-slate-800 p-5 w-96 justify-center rounded-3xl">
-                        <Text className="font-mono text-xl text-center mb-5 mt-0">Are you sure you want to Exit?</Text>
+                        <Text className="font-mono text-xl text-center text-slate-100 mb-5 mt-0">Are you sure you want to Exit?</Text>
                         <View className='flex flex-row justify-center self-center gap-8'>
                             <View style={{ width: wp(20) }}
                                 className="bg-slate-500 rounded-2xl flex justify-center text-center">
@@ -199,9 +201,3 @@ export default function WelcomeScreen () {
   );
 }
 
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-});

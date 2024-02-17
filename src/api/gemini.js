@@ -1,8 +1,8 @@
 import axios from 'axios';
 // import api from '.';
 import {GEMINI_API_KEY} from '@env';
-import { ToastAndroid } from 'react-native';
-import { chatCompletion, gpt2 } from './openAi';
+import {ToastAndroid} from 'react-native';
+import {chatCompletion, gpt2} from './openAi';
 
 const API_KEY = GEMINI_API_KEY;
 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
@@ -28,13 +28,20 @@ export default geminiApi = async (prompt, setIsLoading) => {
       'Content-Type': 'application/json',
     };
 
-    const response = await axios.post(endpoint, data, { headers });
-    if (response.data && response.data.candidates && response.data.candidates.length > 0 && response.data.candidates[0].content && response.data.candidates[0].content.parts && response.data.candidates[0].content.parts.length > 0) {
+    const response = await axios.post(endpoint, data, {headers});
+    if (
+      response.data &&
+      response.data.candidates &&
+      response.data.candidates.length > 0 &&
+      response.data.candidates[0].content &&
+      response.data.candidates[0].content.parts &&
+      response.data.candidates[0].content.parts.length > 0
+    ) {
       const message = response.data.candidates[0].content.parts[0].text;
       console.log('Response from the API: ', message);
       return message;
     }
-    
+
     // return axios
     //   .post(endpoint, data, {headers})
     //   .then(response => {
@@ -63,21 +70,65 @@ export default geminiApi = async (prompt, setIsLoading) => {
     // const fallbackMessage = await gpt2({"inputs": "Define cloud computing"});
     // console.log(fallbackMessage)
     // return fallbackMessage;
-    
-} catch (e) {
-  console.error('Error calling the API: ', e);
-  ToastAndroid.show('Some Error occurred, trying again...', ToastAndroid.SHORT);
-  try {
-    const fallbackMessage = await chatCompletion(prompt);
-    console.log(fallbackMessage)
-    return fallbackMessage;
-  } catch (fallbackError) {
-    console.error('Fallback error: ', fallbackError);
-    ToastAndroid.show('Our Servers are really busy. Please try later.', ToastAndroid.SHORT);
-    return null;
+  } catch (e) {
+    console.error('Error calling the API: ', e);
+    ToastAndroid.show(
+      'Some Error occurred, trying again...',
+      ToastAndroid.SHORT,
+    );
+    try {
+      const fallbackMessage = await chatCompletion(prompt);
+      console.log(fallbackMessage);
+      return fallbackMessage;
+    } catch (fallbackError) {
+      console.error('Fallback error: ', fallbackError);
+      ToastAndroid.show(
+        'Our Servers are really busy. Please try later.',
+        ToastAndroid.SHORT,
+      );
+      return null;
+    }
+  } finally {
+    // setIsLoading(false);
   }
-}finally{
-  // setIsLoading(false);
-}
+};
 
+let error = 'Error! Please select an image to proceed!';
+
+export const vision = async (text, imageBase64) => {
+  console.log(text)
+  try {
+    const requestData = {
+      contents: [
+        {
+          parts: [
+            {text: text},
+            {
+              inline_data: {
+                mime_type: 'image/jpeg',
+                data: imageBase64,
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    const API_KEY = GEMINI_API_KEY; // Replace 'YOUR_API_KEY_HERE' with your actual API key
+    const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`;
+
+    const response = await axios.post(API_ENDPOINT, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const res = response.data.candidates[0].content.parts[0].text;
+    // messages.push({role: 'assistant', content: res});
+    console.log('Response:', response.data.candidates[0].content.parts[0].text);
+    return Promise.resolve({success: true, data: res});
+  } catch (err) {
+    console.error('Error:', err);
+    // messages.push({role: 'assistant', content: error.trim()});
+    return Promise.resolve({success: true, data: error});
+  }
 };

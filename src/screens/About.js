@@ -23,8 +23,8 @@ const About = () => {
             className=' rounded-full'
           />
         </View>
-        <Text className="text-xl text-center m-5">About GenAI</Text>
-        <Text className="text-justify text-sm p-10 pt-2 pb-3">
+        <Text className="text-xl text-slate-400 text-center m-5">About GenAI</Text>
+        <Text className="text-justify text-slate-400 text-sm p-10 pt-2 pb-3">
           {'\u2022'} "GenAI" is an innovative AI-powered assistant that engages
           users in interactive conversations and generates captivating AI images
           and artwork using OpenAI's GPT3.5 and DALL·E 2.0.{'\n\n'}• The app
@@ -38,7 +38,7 @@ const About = () => {
           cutting-edge AI functionalities.{'\n\n'}
         </Text>
         <View className="justify-end mb-0 self-center p-10 pt-2">
-          <Text>© 2023 @ktushar</Text>
+          <Text className='text-slate-400'>© 2023 @ktushar</Text>
         </View>
       </ScrollView>
     </View>

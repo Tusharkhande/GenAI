@@ -1,42 +1,50 @@
 import bot from '../../assets/images/genAI2.jpeg';
-import palm from '../../assets/images/palm.png';
 import dalle from '../../assets/images/dalle2.png';
 import chatgptIcon from '../../assets/images/chatgpt.png';
+import vision from '../../assets/images/vision.jpeg';
+import friday from '../../assets/images/friday.jpeg';
+import jarvis from '../../assets/images/jarvis.jpeg';
+import gemini from '../../assets/images/writeModels/gemini.png';
 export default model=[
     {
         id:1,
         name:'Jarvis',
-        image:chatgptIcon,
+        image:jarvis,
         primary:'#50C878',
-        secondary:'black'
+        secondary:'black',
+        provider:'gpt-3.5-turbo'
     },
     {
         id:2,
         name:'GenAI',
         image:bot,
         primary:'#3B96D2',
-        secondary:'black'
+        secondary:'black',
+        provider:'gpt-3.5-turbo, dalle-2'
     },
     {
         id:3,
         name:'Friday',
-        image:dalle,
+        image:friday,
         primary:'#CBC3E3',
-        secondary:'black'
+        secondary:'black',
+        provider:'dalle-2'
     },
     
-    // {
-    //     id:4,
-    //     name:'Estor',
-    //     image:smartAI,
-    //     primary:'#37474F',
-    //     secondary:''
-    // },
-    // {
-    //     id:5,
-    //     name:'Pega',
-    //     image:'https://res.cloudinary.com/dknvsbuyy/image/upload/v1685709886/image_23_211d7370cb.png',
-    //     primary:'#2473FE',
-    //     secondary:''
-    // },
+    {
+        id:4,
+        name:'Vision',
+        image:vision,
+        primary:'#fff',
+        secondary:'#000',
+        provider:'gemini-pro-vision'
+    },
+    {
+        id:5,
+        name:'Gemini',
+        image:gemini,
+        primary:'#2473FE',
+        secondary:'',
+        provider:'gemini-pro'
+    },
 ]

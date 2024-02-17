@@ -8,11 +8,16 @@ const generateRandomName = () => {
   const randomNumber = Math.floor(Math.random() * 100000);
   return `${timestamp}_${randomNumber}`;
 };
-const downloadImage = async (url) => {
+const downloadImage = async (url, setLoading) => {
   select_beep();
   try {
     setLoading(true);
     const imageName = generateRandomName();
+    assistantSpeech(
+      'Starting Download!',
+    );
+    ToastAndroid.show('Download Started...', ToastAndroid.SHORT);
+    setLoading(false)
     const response = await RNFetchBlob.config({
       fileCache: true,
       addAndroidDownloads: {
@@ -26,13 +31,13 @@ const downloadImage = async (url) => {
       'Download Completed Successfully! Kindly check your Gallery!',
     );
     ToastAndroid.show('Download Completed', ToastAndroid.SHORT);
-    setLoading(false);
-    setImageDownloaded(true);
+    // setLoading(false);
 
     console.log('File saved to: ', response.path());
     // Alert.alert('Download complete', 'Image has been downloaded successfully.');
   } catch (error) {
     console.error('Error while downloading image:', error);
+    ToastAndroid.show('Something went wrong!', ToastAndroid.SHORT);
   }
 };
 

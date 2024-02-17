@@ -134,7 +134,7 @@ const GenerateByPromptNative = () => {
                 className="rounded-2xl"
                 resizeMode="contain"
                 style={{height: wp(60), width: wp(60)}}
-              />
+              />  
             ) : (
               !loading && (
                 <Image

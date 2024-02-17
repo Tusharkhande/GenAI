@@ -57,6 +57,7 @@ let error = "Error! Sorry server issue! Wait for a bit and try again";
 
 
 export const apiCall = async (prompt, messages) => {
+    console.log(messages)
     try {console.log(apiKey)
         const res = await client.post(chatgptUrl, {
             model: "gpt-3.5-turbo",
@@ -95,7 +96,6 @@ export const chatgptApiCall = async (prompt, messages) => {
 
         let answer = res.data?.choices[0]?.message?.content;
         messages.push({ role: 'assistant', content: answer.trim() });
-        chatCompletion('Write a code in java to print 5 table')
         // console.log('got chat response', answer);
         return Promise.resolve({ success: true, data: messages });
 
@@ -113,6 +113,8 @@ export const dalleApiCall = async (prompt, messages) => {
             prompt: prompt,
             n: 1,
             size: "512x512"
+            // size: "1024x1792",
+            // quality: "hd",
         })
 
         let url = res?.data?.data[0]?.url;

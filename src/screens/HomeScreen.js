@@ -34,14 +34,17 @@ import {assistantSpeech, startTextToSpeech} from '../constants/TextToSpeech';
 import {sweep, select_beep} from '../constants/Sounds';
 import Markdown, {MarkdownIt} from 'react-native-markdown-display';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {downloadImage} from '../constants/DownloadImage';
+import {vision} from '../api/gemini';
+import ImagePickerModal from '../constants/ImagePickerModa';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
-  const [words, setWords] = useState([]);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [text, setText] = useState('');
+  const [base64String, setBase64String] = useState('');
+  const [openImagePickerModal, setOpenImagePickerModal] = useState(false);
   const param = useRoute().params;
   const scrollViewRef = useRef();
   const navigation = useNavigation();
@@ -63,56 +66,6 @@ const App = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWordIndex(prevIndex => prevIndex + 1);
-      // updateScrollView();
-    }, 300);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [words]);
-
-  const generateRandomName = () => {
-    const timestamp = new Date().getTime();
-    const randomNumber = Math.floor(Math.random() * 100000);
-    return `${timestamp}_${randomNumber}`;
-  };
-  const downloadImage = async url => {
-    select_beep();
-    try {
-      setLoading(true);
-      const imageName = generateRandomName();
-      ToastAndroid.show('Downloading...', ToastAndroid.SHORT);
-      const response = await RNFetchBlob.config({
-        fileCache: true,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          path: RNFetchBlob.fs.dirs.DownloadDir + `/${imageName}.jpg`,
-          description: 'Image',
-        },
-      }).fetch('GET', url);
-      assistantSpeech(
-        'Download Completed Successfully! Kindly check your Gallery!',
-      );
-      ToastAndroid.show('Download Completed!', ToastAndroid.SHORT);
-      setLoading(false);
-      // setImageDownloaded(true);
-
-      console.log('File saved to: ', response.path());
-      // Alert.alert('Download complete', 'Image has been downloaded successfully.');
-    } catch (error) {
-      console.error('Error while downloading image:', error);
-      setLoading(false);
-      ToastAndroid.show(
-        'Some Error occured please try later',
-        ToastAndroid.SHORT,
-      );
-    }
-  };
-
   const clear = () => {
     sweep();
     Tts.stop();
@@ -124,10 +77,18 @@ const App = () => {
     if (text.trim().length > 0) {
       Tts.stop();
       setLoading(true);
-	  setIsSpeaking(false);
       select_beep();
       let newMessages = [...messages];
-      newMessages.push({role: 'user', content: text.trim()});
+      if (param.selectedModel.name != 'Vision') {
+        newMessages.push({role: 'user', content: text.trim()});
+      } else {
+        newMessages.push({
+          role: 'user',
+          content: text.trim(),
+          base64String: base64String,
+        });
+      }
+
       setMessages([...newMessages]);
 
       // scroll to the bottom of the view
@@ -145,8 +106,6 @@ const App = () => {
               setLoading(false);
               if (res.success) {
                 setMessages([...res.data]);
-                setWords(res.data.map(message => message.content.split(' ')));
-                setCurrentWordIndex(0);
                 console.log('res: ', res.data);
                 updateScrollView();
                 startTextToSpeech(res.data[res.data.length - 1]);
@@ -157,11 +116,6 @@ const App = () => {
                 // } else {
                 //   startTextToSpeech(lastMessage);
                 // }
-              } else {
-                newMessages.push({
-                  role: 'assistant',
-                  content: 'Error: Wait for a bit and try again',
-                });
               }
             })
             .catch(error => {
@@ -189,11 +143,6 @@ const App = () => {
                 } else {
                   startTextToSpeech(lastMessage);
                 }
-              } else {
-                newMessages.push({
-                  role: 'assistant',
-                  content: 'Error: Wait for a bit and try again',
-                });
               }
             })
             .catch(error => {
@@ -201,7 +150,7 @@ const App = () => {
               Alert.alert('Error', 'Something went wrong');
               console.error('API call error:', error);
             });
-        } else {
+        } else if (param.selectedModel.name == 'GenAI') {
           apiCall(text, newMessages)
             .then(res => {
               console.log('after API Call');
@@ -212,19 +161,27 @@ const App = () => {
                 updateScrollView();
                 // startTextToSpeech(res.data[res.data.length - 1]);
                 const lastMessage = res.data[res.data.length - 1];
-                if (lastMessage.content.includes('https')) {
-                  startTextToSpeech({
-                    role: 'assistant',
-                    content: "Sure, I'll try to create that!",
-                  });
-                } else {
-                  startTextToSpeech(lastMessage);
-                }
-              } else {
-                newMessages.push({
-                  role: 'assistant',
-                  content: 'Error: Wait for a bit and try again',
-                });
+                startTextToSpeech(lastMessage);
+              }
+            })
+            .catch(error => {
+              setLoading(false);
+              Alert.alert('Error', 'Something went wrong');
+              console.error('API call error:', error);
+            });
+        } else {
+          vision(text, base64String, newMessages)
+            .then(res => {
+              console.log('after API Call');
+              setText('');
+              setBase64String('');
+              setLoading(false);
+              if (res.success) {
+                console.log(res.data);
+                newMessages.push({role: 'assistant', content: res.data});
+                setMessages(newMessages);
+                updateScrollView();
+                assistantSpeech(res.data);
               }
             })
             .catch(error => {
@@ -251,14 +208,36 @@ const App = () => {
     ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
   };
 
-  const speakCurrResponse = msg => {
-    setIsSpeaking(true);
-    assistantSpeech(msg)
+  const camera = async () => {
+    const options = {
+      includeBase64: true,
+      maxWidth: 512,
+      maxHeight: 512,
+    };
+    const result = await launchCamera(options);
+    if (!result.didCancel) {
+      setOpenImagePickerModal(false)
+      setBase64String(result.assets[0].base64);
+    }else{
+      ToastAndroid.show('No image clicked!', ToastAndroid.SHORT);
+    }
+    // vision(base64String)
+    // console.log(result.assets[0].base64);
   };
-
-  useEffect(() => {
-	Tts.addEventListener('tts-finish', (event) => [setIsSpeaking(false)]);
-  }, [])
+  const gallery = async () => {
+    const options = {
+      includeBase64: true,
+      maxWidth: 512,
+      maxHeight: 512,
+    };
+    const result = await launchImageLibrary(options);
+    if (!result.didCancel) {
+      setOpenImagePickerModal(false)
+      setBase64String(result.assets[0].base64);
+    }else{
+      ToastAndroid.show('No image selected!', ToastAndroid.SHORT);
+    }
+  };
 
   useEffect(() => {
     if (param.selectedModel.name == 'Jarvis') {
@@ -305,18 +284,25 @@ const App = () => {
                   : require('../../assets/images/bot3.png')
               }
               style={{height: hp(15), width: hp(15)}}
-              className='rounded-full'
+              className="rounded-full"
             />
           </View>
 
           {/* features || message history */}
           {messages.length > 0 ? (
             <View className="space-y-5 flex-1">
+              <View className='flex-row justify-between'>
               <Text
                 className="text-white font-semibold ml-1"
                 style={{fontSize: wp(5)}}>
                 {param.selectedModel.name}
               </Text>
+              <Text
+                className="text-white font-thin mr-1"
+                style={{fontSize: wp(3)}}>
+                {param.selectedModel.provider}
+              </Text>
+              </View>
 
               <View
                 style={{height: hp(58)}}
@@ -336,12 +322,6 @@ const App = () => {
                               className="p-2 flex rounded-2xl bg-blue-300 rounded-tl-none"
                               // style={[{backgroundColor:param.selectedModel.primary}]}
                             >
-                              {/* <Text
-                                className="text-neutral-800"
-                                style={{ fontSize: wp(4) }}
-                              >
-                                Sure, I'll try to create that!
-                              </Text> */}
                               <Markdown style={markdownStyles}>
                                 Sure, I'll try to create that!
                               </Markdown>
@@ -358,7 +338,9 @@ const App = () => {
                               {/* Add the Download button */}
                               <TouchableOpacity
                                 style={{alignItems: 'center', marginTop: 10}}
-                                onPress={() => downloadImage(message.content)}>
+                                onPress={() =>
+                                  downloadImage(message.content, setLoading)
+                                }>
                                 <Text
                                   style={{
                                     color: 'blue',
@@ -392,56 +374,15 @@ const App = () => {
                                 {message.content}
                               </Markdown>
                             </Text>
-                            <View className="mr-1 flex-row self-end" key={message.content}>
-                              {/* {isSpeaking ? (
-								<Button
-                                image={require('../../assets/images/speaking.gif')}
-                                // title={'Copy'}
-                                onPress={() =>
-                                  Tts.stop()
-                                }
-                              />
-							  ) : (
-								<Button
-                                image={require('../../assets/images/sound.png')}
-                                // title={'Copy'}
-                                onPress={() =>
-                                  speakCurrResponse(message.content)
-                                }
-                              />
-							  )} */}
+                            <View
+                              className="mr-1 flex-row self-end"
+                              key={message.content}>
                               <Button
                                 image={require('../../assets/images/copy.png')}
                                 // title={'Copy'}
                                 onPress={() => copyToClipboard(message.content)}
                               />
                             </View>
-                            {/* {!finishedTyping ? (
-                              <TypeWriterEffect
-                                content={message.content}
-                                vibration={false}
-                                onTypingEnd={() => setFinishedTyping(true)}
-                                mindelay={-20}
-                                maxdelay={-1}
-                              />
-                            ) : (
-                              // <MarkdownRenderer>{}</MarkdownRenderer>
-                              <Markdown style={markdownStyles}>
-                                {message.content}
-                              </Markdown>
-                            )}
-                            <View className="mr-1 flex-row self-end">
-                              <Button
-                                image={require('../../assets/images/speed.png')}
-                                // title={'Copy'}
-                                onPress={() => setFinishedTyping(true)}
-                              />
-                              <Button
-                                image={require('../../assets/images/copy.png')}
-                                // title={'Copy'}
-                                onPress={() => copyToClipboard(message.content)}
-                              />
-                            </View> */}
                           </View>
                         );
                       }
@@ -457,6 +398,15 @@ const App = () => {
                               style={{fontSize: wp(4)}}>
                               {message.content}
                             </Text>
+                            {message.base64String && (
+                              <Image
+                                source={{
+                                  uri: `data:image/png;base64,${message.base64String}`,
+                                }}
+                                style={{width: hp(10), height: hp(10)}}
+                                className="m-2 rounded-2xl"
+                              />
+                            )}
                           </View>
                         </View>
                       );
@@ -469,54 +419,80 @@ const App = () => {
             <KeyboardAvoidingView
               style={{flex: 1}}
               behavior={Platform.OS !== 'ios' ? 'padding' : 'height'}>
-              <Features model={param.selectedModel.name} />
+              <Features model={param.selectedModel.name} provider={param.selectedModel.provider} />
             </KeyboardAvoidingView>
           )}
 
           {/* input field and clear button... */}
-          <View className="flex bg-slate-950 justify-center mb-8">
+          <View className="flex bg-slate-950 justify-center ">
             {loading ? (
               <Image
                 source={require('../../assets/images/loading2.gif')}
                 style={{width: hp(10), height: hp(10)}}
-                className="ml-5"
+                className="m-2"
               />
             ) : (
-              <KeyboardAvoidingView
-                style={{padding: 10}}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View className="flex flex-row p-2 relative">
+              <KeyboardAvoidingView style={{padding: 10}}>
+                {base64String && (
+                  <>
+                    <Image
+                      source={{
+                        uri: `data:image/png;base64,${base64String}`,
+                      }}
+                      style={{width: hp(10), height: hp(10)}}
+                      className="m- rounded-2xl opacity-70"
+                    />
+                    <Image
+                      source={require('../../assets/images/uploading1.gif')}
+                      style={{width: hp(10), height: hp(10)}}
+                      className=" rounded-2xl absolute self-start ml-0 left-3 top-2"
+                    />
+                  </>
+                )}
+                <View className="flex flex-row justify-center p-2 pb-8">
                   {messages.length > 0 && (
                     <TouchableOpacity
-                      className="p-1 mt-2 ml-0 rounded-md mb-0  dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-0 transition-colors disabled:opacity-40"
+                      className="p-1 self-start pl-0 mt-2 ml-0 rounded-md mb-0  "
                       onPress={clear}>
                       <Image
-                        source={require('../../assets/images/clear1.png')}
-                        className="h-6 w-6 ml-0"
+                        source={require('../../assets/images/clear2.png')}
+                        className="h-7 w-7 ml-0"
                       />
                     </TouchableOpacity>
                   )}
                   <View
-                    style={{width: '60%'}}
+                    style={{width: wp(85)}}
                     // className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-gray-700 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs'
-                    className="flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 dark:border-gray-700 dark:text-white rounded-xl shadow-xs dark:shadow-xs bg-gray-700">
+                    className="flex flex-col justify-center">
                     <TextInput
-                      className="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0"
+                      className="m-0 border-slate-500 border-opacity-5 border-solid border rounded-xl bg-slate-800 p-3 text-white"
                       onChangeText={setText}
                       placeholder="Send a message"
                       multiline={true}
                       numberOfLines={1}
                       style={{color: 'white'}}
                     />
-                    <TouchableOpacity
-                      className="absolute p-1 rounded-md md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white bottom-1.5 transition-colors disabled:opacity-40"
-                      onPress={fetchResponse}
-                      disabled={!text.trim()}>
-                      <Image
-                        source={require('../../assets/images/send-2.png')}
-                        className="h-6 w-6"
-                      />
-                    </TouchableOpacity>
+                    <View className="flex flex-row self-end absolute">
+                      {param.selectedModel.name == 'Vision' && (
+                        <TouchableOpacity
+                          className=" p-2 my-auto rounded-md"
+                          onPress={() => setOpenImagePickerModal(true)}>
+                          <Image
+                            source={require('../../assets/images/addImg.png')}
+                            className="h-6 w-6"
+                          />
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity
+                        className=" p-2 my-auto rounded-md"
+                        onPress={fetchResponse}
+                        disabled={!text.trim()}>
+                        <Image
+                          source={require('../../assets/images/send-2.png')}
+                          className="h-6 w-6"
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </KeyboardAvoidingView>
@@ -525,29 +501,33 @@ const App = () => {
         </SafeAreaView>
         {/* </ImageBackground> */}
       </View>
-      {/* <Modal visible={imageDownloaded} animationType="fade" transparent>
-        <View
-          className="flex flex-1 items-center justify-center self-center w-full"
-          style={styles.modalContainer}>
+      {/* <ImagePickerModal openImagePickerModal={openImagePickerModal} setOpenImagePickerModal={setOpenImagePickerModal} /> */}
+      <Modal visible={openImagePickerModal} animationType="slide" transparent>
+        <View className="flex flex-1 bg-black/50 items-center justify-end">
           <View
-            style={{width: wp(80), height: wp(50)}}
-            className="flex flex-col bg-slate-800 p-5 pb-0 w-96 justify-center rounded-3xl">
-            <Text className="font-mono text-xl text-center mb-5 mt-0">
-              Download Completed Successfully! {'\n'} Kindly check your Gallery!
+            style={{width: wp(90), height: wp(40)}}
+            className="flex flex-col bg-slate-800 p-2 justify-normal rounded-3xl">
+            <View className='flex flex-row justify-between'>
+            <Text className="font-mono text-base self-start text-center text-slate-100 m-5 mt-2">
+              Please select an option:
             </Text>
-            <View className="flex justify-center self-center">
-              <View
-                style={{width: wp(20)}}
-                className="bg-slate-500 rounded-2xl flex justify-center text-center">
-                <Button
-                  title=" OK"
-                  onPress={() => [setImageDownloaded(false), select_beep()]}
-                />
-              </View>
+            <TouchableOpacity className='self-start' onPress={() => setOpenImagePickerModal(false)}>
+            <Image source={require('../../assets/images/close.png')} className="h-6 w-6"/>
+            </TouchableOpacity>
+            </View>
+            <View className="flex flex-row justify-center self-center gap-8">
+              <TouchableOpacity className='flex flex-col justify-center' onPress={gallery}>
+                <Image source={require('../../assets/images/gallery.png')} className="h-10 w-10 self-center"/>
+                <Text className='text-white'>Gallery</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className='flex flex-col justify-center' onPress={camera}>
+                <Image source={require('../../assets/images/camera.png')} className="h-10 w-10 self-center"/>
+                <Text className='text-white'>Camera</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-      </Modal> */}
+      </Modal>
     </KeyboardAvoidingView>
   );
 };

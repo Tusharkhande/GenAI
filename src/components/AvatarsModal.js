@@ -14,7 +14,7 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
             <Image
               // source={require('../../assets/images/loki1.jpg')}
               // source={selectedAvatar ? { uri: selectedAvatar } : require('../../assets/images/user.png')}
-              source={selectedAvatar ? selectedAvatar : require('../../assets/images/user.png')}
+              source={selectedAvatar ? selectedAvatar : require('../../assets/images/avatars/arc.jpg')}
               // style={styles.profileImage}
               className="rounded-full w-16 h-16 mx-auto"
             />

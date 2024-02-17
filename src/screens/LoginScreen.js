@@ -34,85 +34,6 @@ export default function LoginScreen() {
   const [loading, setIsLoading] = useState(false);
   const {user, guser,login, loginWithGoogle} = useUser();
 
-  // useEffect(() => {
-  //   GoogleSignin.configure({
-  //     webClientId: '1095480992319-v0428v3jqmn5htkl4fck1ko1f51mfuvc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-  //   });
-  // }, []);
-
-  // const login = async () => {
-  //   select_beep();
-  //   // const auth = getAuth();
-  //   if (email.trim() === '' && password === '') {
-  //     err_beep();
-  //     setErrorMessage('Please enter email and password.');
-  //     assistantSpeech(errorMessage);
-  //     return;
-  //   } else if (email.trim() === '') {
-  //     err_beep();
-  //     setErrorMessage('Please enter email.');
-  //     assistantSpeech(errorMessage);
-  //     return;
-  //   } else if (password === '') {
-  //     err_beep();
-  //     setErrorMessage('Please enter password.');
-  //     assistantSpeech(errorMessage);
-  //     return;
-  //   }
-  //   setErrorMessage('');
-  //   setEmail(email.toLowerCase());
-  //   try {
-  //     setIsLoading(true);
-  //     await signInWithEmailAndPassword(auth, email, password)
-  //       .then(userCredential => {
-  //         // Signed in
-  //         // ToastAndroid.show("Logged in successfully!", ToastAndroid.SHORT);
-  //         // assistantSpeech("Logged in successfully");
-  //         console.log('Logged in successfully');
-  //         // EncryptedStorage.setItem('user_session', JSON.stringify(userCredential.user));
-  //         // navigation.navigate('Welcome');
-  //         const user = userCredential.user;
-  //         console.log(user);
-  //       })
-  //       .catch(error => {
-  //         const errorCode = error.code;
-  //         const errormessage = error.message;
-  //         setErrorMessage('Invalid email or password');
-  //         err_beep();
-  //         assistantSpeech(errorMessage);
-  //         console.log(errorCode, errormessage);
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // const loginWithGoogle = async (navigation) => {
-  //   // setIsLoading(true);
-  //   try {
-  //     console.log('Checking Play Services...');
-  //     await GoogleSignin.hasPlayServices();
-  //     console.log('Signing in...');
-  //     const userInfo = await GoogleSignin.signIn();
-  //     navigation.navigate('Welcome');
-  //     // navigation.navigate('Welcome');
-  //     console.log('Signed in. User info:', userInfo);
-  //   } catch (error) {
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       // user cancelled the login flow
-  //     } else if (error.code === statusCodes.IN_PROGRESS) {
-  //       // operation (e.g. sign in) is in progress already
-  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-  //       // play services not available or outdated
-  //     } else {
-  //       // some other error happened
-  //       console.log(error);
-  //     }
-  //   }
-  // };
-
   return (
     <View className="flex flex-1 bg-slate-900 ">
       {/* <ImageBackground
@@ -199,7 +120,7 @@ export default function LoginScreen() {
               className="w-10 h-10"
             />
           </TouchableOpacity>
-          <TouchableOpacity className="p-2 bg-blue-200 rounded-2xl">
+          {/* <TouchableOpacity className="p-2 bg-blue-200 rounded-2xl">
             <Image
               source={require('../../assets/images/apple.png')}
               className="w-10 h-10"
@@ -210,8 +131,8 @@ export default function LoginScreen() {
               source={require('../../assets/images/facebook.png')}
               className="w-10 h-10"
             />
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity> */}
+        </View> 
         <View className="flex-row justify-center mt-3">
           <Text className="text-blue-200 text-base font-semibold">
             Don't have an account?
