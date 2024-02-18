@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, ToastAndroid } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Button from './Button';
 import { select_beep } from '../constants/Sounds';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelectedAvatar,selectedAvatar}) => {
+  
+  const gallery = async () => {
+    const options = {
+      includeBase64: true,
+      maxWidth: 512,
+      maxHeight: 512,
+    };
+    const result = await launchImageLibrary(options);
+    if (!result.didCancel) {
+      setSelectedAvatar(result.assets[0].base64);
+    } else {
+      ToastAndroid.show('No image selected!', ToastAndroid.SHORT);
+    }
+  };
   return (
     
     <Modal visible={modalVisible} animationType="fade" transparent>

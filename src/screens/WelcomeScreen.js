@@ -147,10 +147,11 @@ export default function WelcomeScreen () {
           numColumns={3}
           renderItem={({ item }) => ( */}
           <View className='flex flex-wrap flex-row justify-center'>
-          {Models.map((item) => (
+          {Models.map((item, index) => (
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
               className="flex flex-row items-center justify-between px-1 mx-4 py-2 my-2 rounded-full"
+              key={index}
             // style={{ backgroundColor: item.primary }}
             >
               <View className="">

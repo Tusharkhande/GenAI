@@ -114,7 +114,6 @@ export const vision = async (text, imageBase64) => {
       ],
     };
 
-    const API_KEY = GEMINI_API_KEY; // Replace 'YOUR_API_KEY_HERE' with your actual API key
     const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`;
 
     const response = await axios.post(API_ENDPOINT, requestData, {
@@ -130,5 +129,36 @@ export const vision = async (text, imageBase64) => {
     console.error('Error:', err);
     // messages.push({role: 'assistant', content: error.trim()});
     return Promise.resolve({success: true, data: error});
+  }
+};
+
+
+export const geminiChatApiCall = async (inputText, conversationHistory) => {
+  
+  const updatedConversationHistory = [...conversationHistory, {
+    role: "user",
+    parts: [{text: inputText}]
+  }];
+
+  // Prepare the payload with the updated conversation history
+  const requestData = {
+    contents: updatedConversationHistory
+  };
+
+  try {
+    const response = await axios.post(endpoint, requestData, {
+      headers: {'Content-Type': 'application/json'}
+    });
+
+    // Process the response to fit your existing message structure
+    const modelResponse = response.data.candidates[0].content.parts.map(part => part.text).join("\n");
+    const newMessage = {role: 'assistant', content: modelResponse};
+
+    // Return the new message to be added to the conversation history
+    console.log(newMessage);
+    return newMessage;
+  } catch (error) {
+    console.error("Error calling the Gemini API:", error);
+    throw error;
   }
 };

@@ -37,7 +37,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {downloadImage} from '../constants/DownloadImage';
 import {vision} from '../api/gemini';
-import ImagePickerModal from '../constants/ImagePickerModa';
+import {geminiChatApiCall} from '../api/gemini';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
@@ -169,6 +169,25 @@ const App = () => {
               Alert.alert('Error', 'Something went wrong');
               console.error('API call error:', error);
             });
+        } else if (param.selectedModel.name == 'Gemini') {
+          const conversationHistory = messages.map(m => ({
+            role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
+            parts: [{text: m.content}],
+          }));
+          geminiChatApiCall(text, conversationHistory)
+            .then(newMessage => {
+              setText('');
+              setLoading(false);              
+              setMessages(prevMessages => [...prevMessages, newMessage]);
+              updateScrollView();
+              startTextToSpeech(newMessage);
+
+            })
+            .catch(error => {
+              setLoading(false);
+              Alert.alert('Error', 'Something went wrong');
+              console.error('API call error:', error);
+            });
         } else {
           vision(text, base64String, newMessages)
             .then(res => {
@@ -211,14 +230,14 @@ const App = () => {
   const camera = async () => {
     const options = {
       includeBase64: true,
-      maxWidth: 512,
-      maxHeight: 512,
+      // maxWidth: 512,
+      // maxHeight: 512,
     };
     const result = await launchCamera(options);
     if (!result.didCancel) {
-      setOpenImagePickerModal(false)
+      setOpenImagePickerModal(false);
       setBase64String(result.assets[0].base64);
-    }else{
+    } else {
       ToastAndroid.show('No image clicked!', ToastAndroid.SHORT);
     }
     // vision(base64String)
@@ -227,14 +246,14 @@ const App = () => {
   const gallery = async () => {
     const options = {
       includeBase64: true,
-      maxWidth: 512,
-      maxHeight: 512,
+      // maxWidth: 512,
+      // maxHeight: 512,
     };
     const result = await launchImageLibrary(options);
     if (!result.didCancel) {
-      setOpenImagePickerModal(false)
+      setOpenImagePickerModal(false);
       setBase64String(result.assets[0].base64);
-    }else{
+    } else {
       ToastAndroid.show('No image selected!', ToastAndroid.SHORT);
     }
   };
@@ -291,17 +310,17 @@ const App = () => {
           {/* features || message history */}
           {messages.length > 0 ? (
             <View className="space-y-5 flex-1">
-              <View className='flex-row justify-between'>
-              <Text
-                className="text-white font-semibold ml-1"
-                style={{fontSize: wp(5)}}>
-                {param.selectedModel.name}
-              </Text>
-              <Text
-                className="text-white font-thin mr-1"
-                style={{fontSize: wp(3)}}>
-                {param.selectedModel.provider}
-              </Text>
+              <View className="flex-row justify-between">
+                <Text
+                  className="text-white font-semibold ml-1"
+                  style={{fontSize: wp(5)}}>
+                  {param.selectedModel.name}
+                </Text>
+                <Text
+                  className="text-white font-thin mr-1 self-center"
+                  style={{fontSize: wp(3)}}>
+                  {param.selectedModel.provider}
+                </Text>
               </View>
 
               <View
@@ -419,7 +438,10 @@ const App = () => {
             <KeyboardAvoidingView
               style={{flex: 1}}
               behavior={Platform.OS !== 'ios' ? 'padding' : 'height'}>
-              <Features model={param.selectedModel.name} provider={param.selectedModel.provider} />
+              <Features
+                model={param.selectedModel.name}
+                provider={param.selectedModel.provider}
+              />
             </KeyboardAvoidingView>
           )}
 
@@ -507,22 +529,37 @@ const App = () => {
           <View
             style={{width: wp(90), height: wp(40)}}
             className="flex flex-col bg-slate-800 p-2 justify-normal rounded-3xl">
-            <View className='flex flex-row justify-between'>
-            <Text className="font-mono text-base self-start text-center text-slate-100 m-5 mt-2">
-              Please select an option:
-            </Text>
-            <TouchableOpacity className='self-start' onPress={() => setOpenImagePickerModal(false)}>
-            <Image source={require('../../assets/images/close.png')} className="h-6 w-6"/>
-            </TouchableOpacity>
+            <View className="flex flex-row justify-between">
+              <Text className="font-mono text-base self-start text-center text-slate-100 m-5 mt-2">
+                Please select an option:
+              </Text>
+              <TouchableOpacity
+                className="self-start"
+                onPress={() => setOpenImagePickerModal(false)}>
+                <Image
+                  source={require('../../assets/images/close.png')}
+                  className="h-6 w-6"
+                />
+              </TouchableOpacity>
             </View>
             <View className="flex flex-row justify-center self-center gap-8">
-              <TouchableOpacity className='flex flex-col justify-center' onPress={gallery}>
-                <Image source={require('../../assets/images/gallery.png')} className="h-10 w-10 self-center"/>
-                <Text className='text-white'>Gallery</Text>
+              <TouchableOpacity
+                className="flex flex-col justify-center"
+                onPress={gallery}>
+                <Image
+                  source={require('../../assets/images/gallery.png')}
+                  className="h-10 w-10 self-center"
+                />
+                <Text className="text-white">Gallery</Text>
               </TouchableOpacity>
-              <TouchableOpacity className='flex flex-col justify-center' onPress={camera}>
-                <Image source={require('../../assets/images/camera.png')} className="h-10 w-10 self-center"/>
-                <Text className='text-white'>Camera</Text>
+              <TouchableOpacity
+                className="flex flex-col justify-center"
+                onPress={camera}>
+                <Image
+                  source={require('../../assets/images/camera.png')}
+                  className="h-10 w-10 self-center"
+                />
+                <Text className="text-white">Camera</Text>
               </TouchableOpacity>
             </View>
           </View>

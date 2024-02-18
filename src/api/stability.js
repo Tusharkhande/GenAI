@@ -48,31 +48,40 @@ export default generateImage = async (
 };
 
 
-export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage, blobImage) => {
+export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage, blobImage, selectedModel) => {
   setLoading(true);
+  console.log(selectedModel)
   try {
     // const cacheDirPath = RNFetchBlob.fs.dirs.CacheDir;
     // console.log("cacheDirPath", cacheDirPath);
-    if(blobImage.length>0){
-      await RNFetchBlob.fs.unlink(blobImage).then(() => {
-        console.log("Cache cleaned successfully!");
-      })
-    }
+    // if(blobImage.length>0){
+    //   await RNFetchBlob.fs.unlink(blobImage).then(() => {
+    //     console.log("Cache cleaned successfully!");
+    //   })
+    // }
     const response = await RNFetchBlob.config({
       fileCache: true,
     }).fetch(
       'POST',
-      // 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-bOase-1.0',
+      `https://api-inference.huggingface.co/models/${selectedModel}`,
+      // 'https://api-inference.huggingface.co/models/dataautogpt3/ProteusV0.2',
       // 'https://api-inference.huggingface.co/models/kviai/Paint-Diffuion-V2', 
       // 'https://api-inference.huggingface.co/models/h94/IP-Adapter-FaceID',
       // 'https://api-inference.huggingface.co/models/briaai/BRIA-2.2',
-      'https://api-inference.huggingface.co/models/playgroundai/playground-v2-1024px-aesthetic',
+      // 'https://api-inference.huggingface.co/models/playgroundai/playground-v2-1024px-aesthetic',
       // 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0',
       {
         Authorization: 'Bearer ' + HUGGING_API_KEY,
       },
       JSON.stringify(data),
     );
+    
+    const contentType = response.respInfo.headers['content-type'];
+    console.log(response.respInfo)
+    console.log(contentType)
+    if(!contentType.includes('image')){
+      throw new Error('Something went wrong please try later or select another model');
+    }
     const imagePath =
       Platform.OS === 'android' ? `file://${response.path()}` : response.path();
       console.log(imagePath)

@@ -20,7 +20,7 @@ export function useUser() {
 export function Context({children}) {
   const [user, setUser] = useState(null);
   const [guser, setGuser] = useState(null);
-  const [gUserAvatar, setGUserAvatar] = useState('6');
+  const [gUserAvatar, setGUserAvatar] = useState('9');
   const [isLoggedin, setIsLoggedin] = useState(false);
 
   useEffect(() => {
