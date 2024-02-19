@@ -60,7 +60,7 @@ export default imageModels=[
         id:6,
         name:'Time Travel',
         image:timeTravel,
-        color:'#3B4023',
+        color:'#ffd',
         demo:'a beautiful queen',
         desc:'Create pictures in different time periods',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],

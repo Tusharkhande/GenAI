@@ -171,7 +171,7 @@ export default function WelcomeScreen () {
         <Text className="text-slate-100 text-sm font-bold ml-5 pb-2">Select your interative Assistant</Text>
       </View>
       <TouchableOpacity
-        onPress={() => [navigation.navigate('Home', { selectedModel: selectedModel }), select_beep()]}
+        onPress={() => [navigation.navigate('Home', { selectedModel: selectedModel, selectedAvatar: selectedAvatar }), select_beep()]}
         className="mt-0 mx-24 rounded-3xl p-3 border-r-8 border-l-8 mb-10" //bg-blue-800
         style={{ backgroundColor: selectedModel.primary }}
       >

@@ -27,7 +27,6 @@ import {apiCall, chatgptApiCall, dalleApiCall} from '../api/openAi';
 import Features from '../components/Features';
 import Tts from 'react-native-tts';
 import {useRoute} from '@react-navigation/native';
-import RNFetchBlob from 'rn-fetch-blob';
 import Button from '../components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {assistantSpeech, startTextToSpeech} from '../constants/TextToSpeech';
@@ -38,16 +37,19 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {downloadImage} from '../constants/DownloadImage';
 import {vision} from '../api/gemini';
 import {geminiChatApiCall} from '../api/gemini';
+import { useUser } from '../context/userContext';
 
-const App = () => {
+const HomeScreen = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [text, setText] = useState('');
   const [base64String, setBase64String] = useState('');
   const [openImagePickerModal, setOpenImagePickerModal] = useState(false);
   const param = useRoute().params;
   const scrollViewRef = useRef();
   const navigation = useNavigation();
+  const {gUserAvatar} = useUser
 
   useEffect(() => {
     console.log(param.selectedModel.name);
@@ -126,6 +128,7 @@ const App = () => {
               if (res.success) {
                 setMessages([...res.data]);
                 updateScrollView();
+                setImageLoading(true)
                 // startTextToSpeech(res.data[res.data.length - 1]);
 
                 const lastMessage = res.data[res.data.length - 1];
@@ -150,6 +153,7 @@ const App = () => {
                 // startTextToSpeech(res.data[res.data.length - 1]);
                 const lastMessage = res.data[res.data.length - 1];
                 if (lastMessage.content.includes('https')) {
+                  setImageLoading(true)
                   startTextToSpeech({
                     role: 'assistant',
                     content: "Sure, I'll try to create that!",
@@ -270,10 +274,17 @@ const App = () => {
       assistantSpeech(
         "Hello Boss, I'm Gemini. I'm powered by the latest gemini-pro model by Google A- I. Please feel free to ask me anything!",
       );
-    } else {
+    }else if (param.selectedModel.name == 'GenAI') {
       Tts.setDefaultLanguage('en-GB');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.1);
+      assistantSpeech(
+        `{Hello Boss, I'm gen*. I'm powered by the legacy gpt-3.5-turbo and DALL -E 2.0 models by open-AI. I'm capable of generating content as well as stunning images. Please feel free to ask me anything!}`,
+      );
+    } else {
+      Tts.setDefaultLanguage('en-US');
+      // Tts.setDefaultRate(0.6);
+      Tts.setDefaultPitch(0.4);
       assistantSpeech(
         `Hello Boss, I'm Vision. I'm powered by the latest gemini-pro-vision model by Google A- I. I'm capable of extracting content from images and describing them in detail. Lets pick an image and get started`,
       );
@@ -289,9 +300,9 @@ const App = () => {
       source={require("../../assets/images/bg1.jpg")}
       style={{ flex: 1 }}
       > */}
-        <SafeAreaView className="flex-1 flex mx-5 ">
-          {/* bot icon */}
-          <View className="flex-row justify-center pt-2">
+        <SafeAreaView className="flex-1 flex mx-5 pt-3">
+
+          {messages.length ==0 && <View className="flex-row justify-center">
             <Image
               // source={require('../../assets/images/bot1.png')}
               source={
@@ -299,10 +310,10 @@ const App = () => {
                   ? param.selectedModel.image
                   : require('../../assets/images/bot3.png')
               }
-              style={{height: hp(15), width: hp(15)}}
+              style={{height: hp(14), width: hp(14)}}
               className="rounded-full"
             />
-          </View>
+          </View>}
 
           {/* features || message history */}
           {messages.length > 0 ? (
@@ -321,8 +332,8 @@ const App = () => {
               </View>
 
               <View
-                style={{height: hp(58)}}
-                className="bg-gray-300 rounded-3xl p-4">
+                style={{height: hp(76)}}
+                className="bg-slate-400 rounded-3xl p-4 pl-1 pr-1">
                 <ScrollView
                   ref={scrollViewRef}
                   bounces={false}
@@ -335,37 +346,69 @@ const App = () => {
                         return (
                           <View key={index} className="flex-row justify-start">
                             <View
-                              className="p-2 flex rounded-2xl bg-blue-300 rounded-tl-none"
+                              className=" p-2 flex rounded-2xl rounded-tl-none"
                               // style={[{backgroundColor:param.selectedModel.primary}]}
                             >
-                              <Markdown style={markdownStyles}>
-                                Sure, I'll try to create that!
-                              </Markdown>
-                              <Image
-                                source={
-                                  message.content
-                                    ? {uri: message.content}
-                                    : require('../../assets/images/loading2.gif')
-                                }
-                                className="rounded-2xl self-center"
-                                resizeMode="contain"
-                                style={{height: wp(60), width: wp(60)}}
-                              />
-                              {/* Add the Download button */}
-                              <TouchableOpacity
-                                style={{alignItems: 'center', marginTop: 10}}
-                                onPress={() =>
-                                  downloadImage(message.content, setLoading)
-                                }>
-                                <Text
-                                  style={{
-                                    color: 'blue',
-                                    textDecorationLine: 'none',
-                                  }}
-                                  className="">
-                                  Download
-                                </Text>
-                              </TouchableOpacity>
+                              <View className="flex-row">
+                                <Image
+                                  className="h-8 w-8 rounded-full mr-1"
+                                  source={param.selectedModel.image}
+                                />
+                                <View className="flex-col">
+                                  <Text className="text-slate-900 text-lg">
+                                    {param.selectedModel.name}
+                                  </Text>
+                                  <Markdown style={markdownStyles}>
+                                    Sure, I'll try to create that!
+                                  </Markdown>
+                                  <View>
+                                  <Image
+                                    source={
+                                      message.content
+                                        ? {uri: message.content}
+                                        : require('../../assets/images/loading2.gif')
+                                    }
+                                    className="rounded-2xl self-start mr-4 z-10"
+                                    resizeMode="contain"
+                                    onLoad={() => setImageLoading(false)}
+                                    style={{height: wp(60), width: wp(60)}}
+                                  />
+                                  {imageLoading && <Image
+                                    source={require('../../assets/images/dallePlaceholder.png')}
+                                    className="absolute rounded-2xl self-start mr-4"
+                                    resizeMode="contain"
+                                    style={{height: wp(60), width: wp(60)}}
+                                  />}
+                                  </View>
+                                  {/* Add the Download button */}
+                                  {/* <TouchableOpacity
+                                    style={{
+                                      alignItems: 'center',
+                                      marginTop: 10,
+                                    }}
+                                    onPress={() =>
+                                      downloadImage(message.content, setLoading)
+                                    }>
+                                    <Text
+                                      style={{
+                                        color: 'blue',
+                                        textDecorationLine: 'none',
+                                      }}
+                                      className="">
+                                      Download
+                                    </Text>
+                                  </TouchableOpacity> */}
+                                  <Button
+                                  style='self-end'
+                                    image={require('../../assets/images/dwd2.png')}
+                                    isize={'h-6 w-6'}
+                                    // title={'Copy'}
+                                    onPress={() =>
+                                      downloadImage(message.content, setLoading)
+                                    }
+                                  />
+                                </View>
+                              </View>
                             </View>
                           </View>
                         );
@@ -375,29 +418,43 @@ const App = () => {
                           <View
                             key={index}
                             style={[
-                              {width: wp(70)},
+                              {width: 'full'},
                               // ,{backgroundColor:param.selectedModel.primary}
                             ]}
-                            className="bg-blue-300 p-2 rounded-xl rounded-tl-none">
-                            <Text
-                              className="text-neutral-800"
-                              style={{fontSize: wp(4)}}>
-                              <Markdown
-                                style={markdownStyles}
-                                markdownit={MarkdownIt({
-                                  typographer: true,
-                                }).disable(['link', 'image'])}>
-                                {message.content}
-                              </Markdown>
-                            </Text>
-                            <View
-                              className="mr-1 flex-row self-end"
-                              key={message.content}>
-                              <Button
-                                image={require('../../assets/images/copy.png')}
-                                // title={'Copy'}
-                                onPress={() => copyToClipboard(message.content)}
+                            className=" p-2 rounded-xl rounded-tl-none">
+                            <View className="ml-0 flex-row">
+                              <Image
+                                className="h-7 w-7 rounded-full mr-1"
+                                source={param.selectedModel.image}
                               />
+                              <View className="flex-col">
+                                <Text className="text-slate-900 text-lg">
+                                  {param.selectedModel.name}
+                                </Text>
+                                <Text
+                                  className="text-neutral-800"
+                                  style={{fontSize: wp(4)}}>
+                                  <Markdown
+                                    style={markdownStyles}
+                                    markdownit={MarkdownIt({
+                                      typographer: true,
+                                    }).disable(['link', 'image'])}>
+                                    {message.content}
+                                  </Markdown>
+                                </Text>
+                                <View
+                                  className="m-0 opacity-80 right-0 flex-row self-end"
+                                  key={message.content}>
+                                  <Button
+                                    image={require('../../assets/images/copy2.png')}
+                                    isize={'h-6 w-6'}
+                                    // title={'Copy'}
+                                    onPress={() =>
+                                      copyToClipboard(message.content)
+                                    }
+                                  />
+                                </View>
+                              </View>
                             </View>
                           </View>
                         );
@@ -405,24 +462,33 @@ const App = () => {
                     } else {
                       // user input text
                       return (
-                        <View key={index} className="flex-row justify-end">
-                          <View
-                            style={{width: wp(70)}}
-                            className="bg-blue-100 p-2 rounded-xl rounded-tr-none">
-                            <Text
-                              className="text-neutral-800"
-                              style={{fontSize: wp(4)}}>
-                              {message.content}
-                            </Text>
-                            {message.base64String && (
+                        <View key={index} className="flex-row w-full">
+                          <View className="  p-2 pr-0 rounded-xl rounded-tr-none w-full">
+                            <View className="flex-row">
                               <Image
-                                source={{
-                                  uri: `data:image/png;base64,${message.base64String}`,
-                                }}
-                                style={{width: hp(10), height: hp(10)}}
-                                className="m-2 rounded-2xl"
+                                className="h-7 w-7 rounded-full mr-1"
+                                source={param.selectedAvatar}
                               />
-                            )}
+                              <View className="flex-col">
+                                <Text className="text-slate-900 text-lg">
+                                  You
+                                </Text>
+                                <Markdown
+                                  // className="text-neutral-800"
+                                  style={markdownStyles}>
+                                  {message.content}
+                                </Markdown>
+                                {message.base64String && (
+                                  <Image
+                                    source={{
+                                      uri: `data:image/png;base64,${message.base64String}`,
+                                    }}
+                                    style={{width: hp(10), height: hp(10)}}
+                                    className="m-2 mt-0 ml-0 rounded-2xl"
+                                  />
+                                )}
+                              </View>
+                            </View>
                           </View>
                         </View>
                       );
@@ -566,7 +632,7 @@ const App = () => {
   );
 };
 
-export default App;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -579,7 +645,7 @@ const markdownStyles = StyleSheet.create({
     color: '#000',
     // backgroundColor: '#rgb(2 6 23)',
     fontSize: wp(4),
-    width: wp(66),
+    width: wp(73),
     marginTop: 0,
   },
   fence: {
