@@ -53,23 +53,23 @@ const imageVarUrl = 'https://api.openai.com/v1/images/variations';
 
 // }
 
-let error = "Error! Sorry server issue! Wait for a bit and try again";
+let error = "I'm currently experiencing high demand! Feel free to try again in a few moments.";
 
 
 export const apiCall = async (prompt, messages) => {
     console.log(messages)
     try {console.log(apiKey)
-        const res = await client.post(chatgptUrl, {
-            model: "gpt-3.5-turbo",
-            messages
-            // : [
-            //     {
-            //         role: 'user',
-            //         content: `Remember I'm going to call you GenAI or Jarvis. Does this message want to generate an AI picture, image, art, or anything similar? ${prompt}. Simply answer with yes or no.`,
-            //     },
-            //     ...messages,
-            // ],
-        });
+        // const res = await client.post(chatgptUrl, {
+        //     model: "gpt-3.5-turbo",
+        //     messages
+        //     // : [
+        //     //     {
+        //     //         role: 'user',
+        //     //         content: `Remember I'm going to call you GenAI or Jarvis. Does this message want to generate an AI picture, image, art, or anything similar? ${prompt}. Simply answer with yes or no.`,
+        //     //     },
+        //     //     ...messages,
+        //     // ],
+        // });
 
         prompt = prompt.toLowerCase();
         let isArt = prompt.includes('create a image') || prompt.includes('image') || prompt.includes('create an image') || prompt.includes('sketch') || prompt.includes('generate a image') || prompt.includes('picture') || prompt.includes('drawing');

@@ -74,33 +74,33 @@ const App = () => {
   };
 
   const fetchResponse = async () => {
-    if (text.trim().length > 0) {
-      Tts.stop();
-      setLoading(true);
-      select_beep();
-      let newMessages = [...messages];
-      if (param.selectedModel.name != 'Vision') {
-        newMessages.push({role: 'user', content: text.trim()});
-      } else {
-        newMessages.push({
-          role: 'user',
-          content: text.trim(),
-          base64String: base64String,
-        });
-      }
+    try {
+      if (text.trim().length > 0) {
+        Tts.stop();
+        setLoading(true);
+        select_beep();
+        let newMessages = [...messages];
+        if (param.selectedModel.name != 'Vision') {
+          newMessages.push({role: 'user', content: text.trim()});
+        } else {
+          newMessages.push({
+            role: 'user',
+            content: text.trim(),
+            base64String: base64String,
+          });
+        }
 
-      setMessages([...newMessages]);
+        setMessages([...newMessages]);
 
-      // scroll to the bottom of the view
-      updateScrollView();
+        // scroll to the bottom of the view
+        updateScrollView();
 
-      console.log('Before Api Call', text);
+        console.log('Before Api Call', text);
 
-      // Make the API call
-      {
-        if (param.selectedModel.name == 'Jarvis') {
-          chatgptApiCall(text, newMessages)
-            .then(res => {
+        // Make the API call
+        {
+          if (param.selectedModel.name == 'Jarvis') {
+            chatgptApiCall(text, newMessages).then(res => {
               console.log('after API Call');
               setText('');
               setLoading(false);
@@ -117,15 +117,9 @@ const App = () => {
                 //   startTextToSpeech(lastMessage);
                 // }
               }
-            })
-            .catch(error => {
-              setLoading(false);
-              Alert.alert('Error', 'Something went wrong');
-              console.error('API call error:', error);
             });
-        } else if (param.selectedModel.name == 'Friday') {
-          dalleApiCall(text, newMessages)
-            .then(res => {
+          } else if (param.selectedModel.name == 'Friday') {
+            dalleApiCall(text, newMessages).then(res => {
               console.log('after API Call');
               setText('');
               setLoading(false);
@@ -144,15 +138,9 @@ const App = () => {
                   startTextToSpeech(lastMessage);
                 }
               }
-            })
-            .catch(error => {
-              setLoading(false);
-              Alert.alert('Error', 'Something went wrong');
-              console.error('API call error:', error);
             });
-        } else if (param.selectedModel.name == 'GenAI') {
-          apiCall(text, newMessages)
-            .then(res => {
+          } else if (param.selectedModel.name == 'GenAI') {
+            apiCall(text, newMessages).then(res => {
               console.log('after API Call');
               setText('');
               setLoading(false);
@@ -161,36 +149,39 @@ const App = () => {
                 updateScrollView();
                 // startTextToSpeech(res.data[res.data.length - 1]);
                 const lastMessage = res.data[res.data.length - 1];
-                startTextToSpeech(lastMessage);
+                if (lastMessage.content.includes('https')) {
+                  startTextToSpeech({
+                    role: 'assistant',
+                    content: "Sure, I'll try to create that!",
+                  });
+                } else {
+                  startTextToSpeech(lastMessage);
+                }
               }
-            })
-            .catch(error => {
-              setLoading(false);
-              Alert.alert('Error', 'Something went wrong');
-              console.error('API call error:', error);
             });
-        } else if (param.selectedModel.name == 'Gemini') {
-          const conversationHistory = messages.map(m => ({
-            role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
-            parts: [{text: m.content}],
-          }));
-          geminiChatApiCall(text, conversationHistory)
-            .then(newMessage => {
+          } else if (param.selectedModel.name == 'Gemini') {
+            const conversationHistory = messages.map(m => ({
+              role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
+              parts: [{text: m.content}],
+            }));
+            geminiChatApiCall(text, conversationHistory).then(newMessage => {
               setText('');
-              setLoading(false);              
-              setMessages(prevMessages => [...prevMessages, newMessage]);
+              setLoading(false);
+              if (newMessage) {
+                setMessages(prevMessages => [...prevMessages, newMessage]);
+              } else {
+                newMessage = {
+                  role: 'assistant',
+                  content:
+                    "I'm currently experiencing high demand! Feel free to try again in a few moments.",
+                };
+                setMessages(prevMessages => [...prevMessages, newMessage]);
+              }
               updateScrollView();
               startTextToSpeech(newMessage);
-
-            })
-            .catch(error => {
-              setLoading(false);
-              Alert.alert('Error', 'Something went wrong');
-              console.error('API call error:', error);
             });
-        } else {
-          vision(text, base64String, newMessages)
-            .then(res => {
+          } else {
+            vision(text, base64String, newMessages).then(res => {
               console.log('after API Call');
               setText('');
               setBase64String('');
@@ -202,16 +193,15 @@ const App = () => {
                 updateScrollView();
                 assistantSpeech(res.data);
               }
-            })
-            .catch(error => {
-              setLoading(false);
-              Alert.alert('Error', 'Something went wrong');
-              console.error('API call error:', error);
             });
+          }
         }
+      } else {
+        ToastAndroid.show('Please enter your query!', SHORT);
       }
-    } else {
-      Alert.alert('Error', 'Please enter a message');
+    } catch (e) {
+      // ToastAndroid.show('Something went wrong!', SHORT);
+      setLoading(false);
     }
   };
 
@@ -264,21 +254,28 @@ const App = () => {
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(0.5);
       assistantSpeech(
-        "Hello Boss, I'm Jarvis. I'm powered by the latest GPT-4 model by open-AI. Please feel free to ask me anything!",
+        "Hello Boss, I'm Jarvis. I'm powered by the legacy gpt-3.5-turbo model by open-AI. Please feel free to ask me anything!",
       );
     } else if (param.selectedModel.name == 'Friday') {
       Tts.setDefaultLanguage('en-US');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.0);
       assistantSpeech(
-        "Hello Boss, I'm Friday. I'm powered by the latest Dall-E 2.0 model by OPEN-A I. Anything you can imagine, I can create!",
+        "Hello Boss, I'm Friday. I'm powered by the legacy Dall-E 2.0 model by OPEN-A I. Anything you can imagine, I can create!",
+      );
+    } else if (param.selectedModel.name == 'Gemini') {
+      Tts.setDefaultLanguage('en-US');
+      // Tts.setDefaultRate(0.6);
+      Tts.setDefaultPitch(1.0);
+      assistantSpeech(
+        "Hello Boss, I'm Gemini. I'm powered by the latest gemini-pro model by Google A- I. Please feel free to ask me anything!",
       );
     } else {
       Tts.setDefaultLanguage('en-GB');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.1);
       assistantSpeech(
-        `{Hello Boss, I'm gen*. I'm powered by the latest GPT-4 and DALL -E 2.0 models by open-AI. I'm capable of generating content as well as stunning images. Please feel free to ask me anything!}`,
+        `Hello Boss, I'm Vision. I'm powered by the latest gemini-pro-vision model by Google A- I. I'm capable of extracting content from images and describing them in detail. Lets pick an image and get started`,
       );
     }
   }, []);

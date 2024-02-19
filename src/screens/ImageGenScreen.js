@@ -21,7 +21,7 @@ import {
 } from '../constants/DownloadImage';
 import generateImage, {stableDiffusionXL} from '../api/stability';
 
-const StabilityImageGen = () => {
+const ImageGenScreen = () => {
   const [prompt, setPrompt] = useState('');
   const [image, setImage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -187,12 +187,12 @@ const StabilityImageGen = () => {
             onPress={initiate}
             disabled={loading || !prompt}
             aria-disabled={loading || !prompt}
-            className="flex-row mt-0 mx-24 rounded-3xl p-2 justify-center bg-indigo-800">
+            className="flex-row mt-0 mx-24 rounded-2xl p-2 justify-center bg-indigo-800">
             <Image
-              source={require('../../assets/images/send-2.png')}
-              className="h-6 w-6 mr-1"
+              source={require('../../assets/images/generate.png')}
+              className=" ml-0 h-6 w-6 mr-1"
             />
-            <Text className="text-center font-bold text-base ml-1 text-slate-50">
+            <Text className="text-center font-bold text-base ml- text-slate-50 mr-1">
               Generate
             </Text>
           </TouchableOpacity>
@@ -252,4 +252,4 @@ const StabilityImageGen = () => {
   );
 };
 
-export default StabilityImageGen;
+export default ImageGenScreen;

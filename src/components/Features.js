@@ -2,7 +2,6 @@
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import React from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Markdown, {MarkdownIt} from 'react-native-markdown-display';
 import features from '../constants/features';
 
 
@@ -26,9 +25,9 @@ export default function Features({ model, provider }) {
                             <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
                             <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Jarvis</Text>
                         </View>
-                        <Markdown style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            I'm powered by the latest Gpt-4 model by OpenAI having the ability to assist you with creative ideas on a wide range of topics.
-                        </Markdown>
+                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                            I'm powered by the legacy gpt-3.5-turbo model by OpenAI having the ability to assist you with creative ideas on a wide range of topics.
+                        </Text>
                     </View>
                     <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
                         <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
@@ -108,83 +107,57 @@ export default function Features({ model, provider }) {
                     <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
                     <View className='flex-row items-center space-x-1'>
                         <Image source={require('../../assets/images/writeModels/gemini.png')} style={{ height: hp(4), width: hp(4) }} />
-                        <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Friday</Text>
+                        <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Gemini</Text>
                     </View>
-                    <Markdown style={markdownStyles}>
-                        # I'm powered by the latest gemini-pro model by Google AI which excels at handling a wide range of tasks, making it a versatile choice for various applications.
-                    </Markdown>
-                </View>
-                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
-                    <Markdown style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Versatility in Imagery: Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.
-                    </Markdown>
-                </View>
-                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
                     <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Natural Language Understanding: Similar to Jarvis (ChatGPT), Friday also demonstrates strong natural language understanding, making the interaction between textual input and visual output more intuitive.
+                        I'm powered by the latest gemini-pro model by Google AI which excels at handling a wide range of tasks, making it a versatile choice for various applications.
                     </Text>
                 </View>
                 <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
                     <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Fine-Grained Control: Users can provide specific instructions and control over the generated images, enabling precise adjustments to the visual output.
+                    Long-Context Understanding: This model introduces a groundbreaking feature for comprehending extended information, leading to more nuanced and accurate responses.
+                    </Text>
+                </View>
+                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
+                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    State-of-the-Art Capabilities: represents Google's most advanced AI model to date, offering superior performance in tasks like text generation, problem-solving, and information retrieval.
+                    </Text>
+                </View>
+                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
+                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    Multilingual Support: Gemini supports multiple languages, broadening its accessibility to users around the world.
                     </Text>
                 </View>
 
                 </ScrollView>
             ) : (
                 <ScrollView style={{ height: hp(60) }} className="space-y-4">
-                    <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
-                            <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>ChatGPT (Jarvis)</Text>
-                        </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            ChatGPT can provide you with instant and knowledgeable responses, assist you with creative ideas on a wide range of topics.
-                        </Text>
-                    </View>
-                    <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
-                            <Image source={require('../../assets/images/dalleIcon.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>DALL-E (Friday)</Text>
-                        </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            DALL-E can generate imaginative and diverse images from textual descriptions, expanding the boundaries of visual creativity.
-                        </Text>
-                    </View>
                     <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
-                            <Image source={require('../../assets/images/smartAI.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>GenAI (Jarvis + Friday)</Text>
-                        </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            A powerful assistant with the abilities of ChatGPT and Dall-E, providing you the best of both worlds.
-                        </Text>
+                    <View className='flex-row items-center space-x-1'>
+                        <Image className='rounded-full' source={require('../../assets/images/vision.jpg')} style={{ height: hp(2), width: hp(4) }} />
+                        <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Vision</Text>
                     </View>
-
+                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                        I'm powered by the latest gemini-pro-vision model by Google AI which can handle large amounts of text input, enabling it to process complex descriptions and instructions related to images.
+                    </Text>
+                </View>
+                <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
+                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    Image Processing: Vision specializes in tasks involving images, allowing for functionalities like object detection, image captioning, and content generation based on visual input.
+                    </Text>
+                </View>
+                <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
+                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    Multimodal Integration: It seamlessly integrates with text-based Gemini models, allowing for combined analysis of textual and visual data, leading to richer insights.
+                    </Text>
+                </View>
+                <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
+                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    Scalability and Efficiency: Similar to the general Gemini Pro model, Vision offers a balance between performance and resource usage, making it accessible for various applications.
+                    </Text>
+                </View>
                 </ScrollView>
             )}
         </View>
     );
 }
-
-const markdownStyles = StyleSheet.create({
-    body: {
-        color: '#000',
-        // // backgroundColor: '#rgb(2 6 23)',
-        // fontSize: wp(4),
-        // width: wp(66),
-        // marginTop: 0,
-    },
-    text: {
-      fontSize: wp(5),
-      color: '#000',
-    },
-    paragraph: {
-      fontSize: wp(3.5),
-      color: '#000',
-    },
-    heading1: {
-        color: '#000',
-    }
-  });
-  

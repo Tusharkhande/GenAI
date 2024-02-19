@@ -93,7 +93,7 @@ export default geminiApi = async (prompt, setIsLoading) => {
   }
 };
 
-let error = 'Error! Please select an image to proceed!';
+let error = 'Please select an image to proceed!';
 
 export const vision = async (text, imageBase64) => {
   console.log(text)
@@ -126,7 +126,7 @@ export const vision = async (text, imageBase64) => {
     console.log('Response:', response.data.candidates[0].content.parts[0].text);
     return Promise.resolve({success: true, data: res});
   } catch (err) {
-    console.error('Error:', err);
+    // console.error('Error:', err);
     // messages.push({role: 'assistant', content: error.trim()});
     return Promise.resolve({success: true, data: error});
   }
@@ -134,7 +134,8 @@ export const vision = async (text, imageBase64) => {
 
 
 export const geminiChatApiCall = async (inputText, conversationHistory) => {
-  
+  console.log(conversationHistory)
+
   const updatedConversationHistory = [...conversationHistory, {
     role: "user",
     parts: [{text: inputText}]
@@ -142,7 +143,10 @@ export const geminiChatApiCall = async (inputText, conversationHistory) => {
 
   // Prepare the payload with the updated conversation history
   const requestData = {
-    contents: updatedConversationHistory
+    contents: [...conversationHistory, {
+      role: "user",
+      parts: [{text: inputText}]
+    }]
   };
 
   try {
@@ -151,14 +155,15 @@ export const geminiChatApiCall = async (inputText, conversationHistory) => {
     });
 
     // Process the response to fit your existing message structure
-    const modelResponse = response.data.candidates[0].content.parts.map(part => part.text).join("\n");
+    const modelResponse = response.data.candidates[0].content.parts[0].text;
+    console.log("modelResponse", modelResponse)
     const newMessage = {role: 'assistant', content: modelResponse};
 
     // Return the new message to be added to the conversation history
     console.log(newMessage);
     return newMessage;
   } catch (error) {
-    console.error("Error calling the Gemini API:", error);
-    throw error;
+    // console.error("Error calling the Gemini API:", error);
+    // throw error;
   }
 };

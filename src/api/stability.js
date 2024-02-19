@@ -89,7 +89,7 @@ export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage
       setBlobImage(imagePath);
     return imagePath;
   } catch (error) {
-    console.error('Error fetching and saving image:', error);
+    // console.error('Error fetching and saving image:', error);
     throw error;
   } finally {
     setLoading(false);

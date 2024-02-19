@@ -8,7 +8,7 @@ import About from "../screens/About";
 import GetStarted from "../screens/GetStarted";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/SignUpScreen";
-import StabilityImageGen from "../screens/StabilityImageGen";
+import StabilityImageGen from "../screens/ImageGenScreen";
 import ExploreAiScreen from "../screens/ExploreAiScreen";
 import WritingScreen from "../screens/WritingScreen";
 
