@@ -15,10 +15,11 @@ const assistantSpeech = msg => {
 };
 
 const startTextToSpeech = message => {
+    const filteredContent = message.content.replace(/[\*\#`]/g, '');
     if (!message.content.includes('https')) {
         Tts.setDefaultRate(0.6);
         // playing response with the voice id and voice speed
-        Tts.speak(message.content, {
+        Tts.speak(filteredContent, {
             androidParams: {
                 KEY_PARAM_PAN: -1,
                 KEY_PARAM_VOLUME: 1,

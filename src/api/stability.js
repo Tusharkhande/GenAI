@@ -51,7 +51,49 @@ export default generateImage = async (
 export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage, blobImage, selectedModel) => {
   setLoading(true);
   console.log(selectedModel)
-  try {
+  const models = [selectedModel, 'stabilityai/stable-diffusion-xl-base-1.0'];
+  const error = 'Something went wrong please try later or select another model'
+  for(let model of models){
+    console.log(model)
+    try{
+      const response = await RNFetchBlob.config({
+        fileCache: true,
+      }).fetch(
+        'POST',
+        `https://api-inference.huggingface.co/models/${model}`,
+        // 'https://api-inference.huggingface.co/models/dataautogpt3/ProteusV0.2',
+        // 'https://api-inference.huggingface.co/models/kviai/Paint-Diffuion-V2', 
+        // 'https://api-inference.huggingface.co/models/h94/IP-Adapter-FaceID',
+        // 'https://api-inference.huggingface.co/models/briaai/BRIA-2.2',
+        // 'https://api-inference.huggingface.co/models/playgroundai/playground-v2-1024px-aesthetic',
+        // 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0',
+        {
+          Authorization: 'Bearer ' + HUGGING_API_KEY,
+        },
+        JSON.stringify(data),
+      );
+      
+      const contentType = response.respInfo.headers['content-type'];
+      console.log(response.respInfo)
+      console.log(contentType)
+      if(!contentType.includes('image')){
+        // throw new Error('Something went wrong please try later or select another model');
+        error = 'Something went wrong please try later or select another model';
+      }
+      const imagePath =
+        Platform.OS === 'android' ? `file://${response.path()}` : response.path();
+        console.log(imagePath)
+        setImage(imagePath);
+        setBlobImage(imagePath);
+      return imagePath;
+    }catch(e){
+      console.log(e)
+      continue;
+    }
+  }
+  setLoading(false);
+  throw new Error(error);
+  /* try {
     // const cacheDirPath = RNFetchBlob.fs.dirs.CacheDir;
     // console.log("cacheDirPath", cacheDirPath);
     // if(blobImage.length>0){
@@ -90,8 +132,12 @@ export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage
     return imagePath;
   } catch (error) {
     // console.error('Error fetching and saving image:', error);
-    throw error;
+    try{
+      return stableDiffusionXL(data, setLoading, setImage, setBlobImage, blobImage, 'stabilityai/stable-diffusion-xl-base-1.0')
+    }catch{
+      throw error;
+    }
   } finally {
     setLoading(false);
-  }
+  } */
 };

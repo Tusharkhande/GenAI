@@ -71,31 +71,21 @@ export default geminiApi = async (prompt, setIsLoading) => {
     // console.log(fallbackMessage)
     // return fallbackMessage;
   } catch (e) {
-    console.error('Error calling the API: ', e);
-    ToastAndroid.show(
-      'Some Error occurred, trying again...',
-      ToastAndroid.SHORT,
-    );
-    try {
-      const fallbackMessage = await chatCompletion(prompt);
-      console.log(fallbackMessage);
-      return fallbackMessage;
-    } catch (fallbackError) {
-      console.error('Fallback error: ', fallbackError);
-      ToastAndroid.show(
-        'Our Servers are really busy. Please try later.',
-        ToastAndroid.SHORT,
-      );
-      return null;
-    }
+    return "I'm currently experiencing high demand! Feel free to try again in a few moments.";
   } finally {
     // setIsLoading(false);
   }
 };
 
-let error = 'Please select an image to proceed!';
+
+let error = 'I am currently experiencing high demand! Feel free to try again in a few moments.';
 
 export const vision = async (text, imageBase64) => {
+
+  if(!imageBase64){
+    error = 'Please select an image to proceed!';
+  }
+  
   console.log(text)
   try {
     const requestData = {

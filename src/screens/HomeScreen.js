@@ -37,7 +37,8 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {downloadImage} from '../constants/DownloadImage';
 import {vision} from '../api/gemini';
 import {geminiChatApiCall} from '../api/gemini';
-import { useUser } from '../context/userContext';
+import {useUser} from '../context/userContext';
+import PickDocument from '../components/DocumentPicker';
 
 const HomeScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -45,11 +46,12 @@ const HomeScreen = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [text, setText] = useState('');
   const [base64String, setBase64String] = useState('');
+  const [file, setFile] = useState('');
   const [openImagePickerModal, setOpenImagePickerModal] = useState(false);
   const param = useRoute().params;
   const scrollViewRef = useRef();
   const navigation = useNavigation();
-  const {gUserAvatar} = useUser
+  const {gUserAvatar} = useUser;
 
   useEffect(() => {
     console.log(param.selectedModel.name);
@@ -128,11 +130,13 @@ const HomeScreen = () => {
               if (res.success) {
                 setMessages([...res.data]);
                 updateScrollView();
-                setImageLoading(true)
+                setImageLoading(true);
                 // startTextToSpeech(res.data[res.data.length - 1]);
 
                 const lastMessage = res.data[res.data.length - 1];
-                if (lastMessage.content.includes('https')) {
+                if (
+                  lastMessage.content.includes('https://oaidalleapiprodscus')
+                ) {
                   startTextToSpeech({
                     role: 'assistant',
                     content: "Sure, I'll try to create that!",
@@ -152,8 +156,10 @@ const HomeScreen = () => {
                 updateScrollView();
                 // startTextToSpeech(res.data[res.data.length - 1]);
                 const lastMessage = res.data[res.data.length - 1];
-                if (lastMessage.content.includes('https')) {
-                  setImageLoading(true)
+                if (
+                  lastMessage.content.includes('https://oaidalleapiprodscus')
+                ) {
+                  setImageLoading(true);
                   startTextToSpeech({
                     role: 'assistant',
                     content: "Sure, I'll try to create that!",
@@ -185,11 +191,11 @@ const HomeScreen = () => {
               startTextToSpeech(newMessage);
             });
           } else {
-            vision(text, base64String, newMessages).then(res => {
+            vision(text, base64String).then(res => {
               console.log('after API Call');
               setText('');
-              setBase64String('');
               setLoading(false);
+              setBase64String('');
               if (res.success) {
                 console.log(res.data);
                 newMessages.push({role: 'assistant', content: res.data});
@@ -224,8 +230,8 @@ const HomeScreen = () => {
   const camera = async () => {
     const options = {
       includeBase64: true,
-      // maxWidth: 512,
-      // maxHeight: 512,
+      maxWidth: 512,
+      maxHeight: 512,
     };
     const result = await launchCamera(options);
     if (!result.didCancel) {
@@ -240,8 +246,8 @@ const HomeScreen = () => {
   const gallery = async () => {
     const options = {
       includeBase64: true,
-      // maxWidth: 512,
-      // maxHeight: 512,
+      maxWidth: 512,
+      maxHeight: 512,
     };
     const result = await launchImageLibrary(options);
     if (!result.didCancel) {
@@ -274,7 +280,7 @@ const HomeScreen = () => {
       assistantSpeech(
         "Hello Boss, I'm Gemini. I'm powered by the latest gemini-pro model by Google A- I. Please feel free to ask me anything!",
       );
-    }else if (param.selectedModel.name == 'GenAI') {
+    } else if (param.selectedModel.name == 'GenAI') {
       Tts.setDefaultLanguage('en-GB');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.1);
@@ -301,19 +307,20 @@ const HomeScreen = () => {
       style={{ flex: 1 }}
       > */}
         <SafeAreaView className="flex-1 flex mx-5 pt-3">
-
-          {messages.length ==0 && <View className="flex-row justify-center">
-            <Image
-              // source={require('../../assets/images/bot1.png')}
-              source={
-                param.selectedModel
-                  ? param.selectedModel.image
-                  : require('../../assets/images/bot3.png')
-              }
-              style={{height: hp(14), width: hp(14)}}
-              className="rounded-full"
-            />
-          </View>}
+          {messages.length == 0 && (
+            <View className="flex-row justify-center">
+              <Image
+                // source={require('../../assets/images/bot1.png')}
+                source={
+                  param.selectedModel
+                    ? param.selectedModel.image
+                    : require('../../assets/images/bot3.png')
+                }
+                style={{height: hp(14), width: hp(14)}}
+                className="rounded-full"
+              />
+            </View>
+          )}
 
           {/* features || message history */}
           {messages.length > 0 ? (
@@ -341,7 +348,9 @@ const HomeScreen = () => {
                   showsVerticalScrollIndicator={false}>
                   {messages.map((message, index) => {
                     if (message.role == 'assistant') {
-                      if (message.content.includes('https')) {
+                      if (
+                        message.content.includes('https://oaidalleapiprodscus')
+                      ) {
                         // result is an ai image
                         return (
                           <View key={index} className="flex-row justify-start">
@@ -362,23 +371,25 @@ const HomeScreen = () => {
                                     Sure, I'll try to create that!
                                   </Markdown>
                                   <View>
-                                  <Image
-                                    source={
-                                      message.content
-                                        ? {uri: message.content}
-                                        : require('../../assets/images/loading2.gif')
-                                    }
-                                    className="rounded-2xl self-start mr-4 z-10"
-                                    resizeMode="contain"
-                                    onLoad={() => setImageLoading(false)}
-                                    style={{height: wp(60), width: wp(60)}}
-                                  />
-                                  {imageLoading && <Image
-                                    source={require('../../assets/images/dallePlaceholder.png')}
-                                    className="absolute rounded-2xl self-start mr-4"
-                                    resizeMode="contain"
-                                    style={{height: wp(60), width: wp(60)}}
-                                  />}
+                                    <Image
+                                      source={
+                                        message.content
+                                          ? {uri: message.content}
+                                          : require('../../assets/images/loading2.gif')
+                                      }
+                                      className="rounded-2xl self-start mr-4 z-10"
+                                      resizeMode="contain"
+                                      onLoad={() => setImageLoading(false)}
+                                      style={{height: wp(60), width: wp(60)}}
+                                    />
+                                    {imageLoading && (
+                                      <Image
+                                        source={require('../../assets/images/dallePlaceholder.png')}
+                                        className="absolute rounded-2xl self-start mr-4"
+                                        resizeMode="contain"
+                                        style={{height: wp(60), width: wp(60)}}
+                                      />
+                                    )}
                                   </View>
                                   {/* Add the Download button */}
                                   {/* <TouchableOpacity
@@ -399,7 +410,7 @@ const HomeScreen = () => {
                                     </Text>
                                   </TouchableOpacity> */}
                                   <Button
-                                  style='self-end'
+                                    style="self-end"
                                     image={require('../../assets/images/dwd2.png')}
                                     isize={'h-6 w-6'}
                                     // title={'Copy'}
@@ -568,6 +579,11 @@ const HomeScreen = () => {
                           />
                         </TouchableOpacity>
                       )}
+                      <View>
+                        <PickDocument
+                          onPress={() => setOpenImagePickerModal(true)} setFile={setFile} file = {file}
+                        />
+                      </View>
                       <TouchableOpacity
                         className=" p-2 my-auto rounded-md"
                         onPress={fetchResponse}
@@ -650,10 +666,17 @@ const markdownStyles = StyleSheet.create({
   },
   fence: {
     color: '#fff',
-    backgroundColor: '#444',
-
+    fontSize: 10,
+    backgroundColor: '#000',
     overflow: 'hidden',
-
+    padding: 10,
+    borderRadius: 5,
+  },
+  code_block: {
+    color: '#fff',
+    fontSize: 10,
+    backgroundColor: '#000',
+    overflow: 'hidden',
     padding: 10,
     borderRadius: 5,
   },

@@ -118,7 +118,8 @@ export const dalleApiCall = async (prompt, messages) => {
         })
 
         let url = res?.data?.data[0]?.url;
-        // console.log('got image url: ',url);
+        console.log('got image url: ',url);
+
         messages.push({ role: 'assistant', content: url });
         return Promise.resolve({ success: true, data: messages });
 
@@ -146,7 +147,6 @@ export const chatCompletion = async (prompt) => {
         console.log("chatcompletion error: " ,e);
     }
 }
-const API_TOKEN = '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';
 export async function gpt2(data) {
     try {
         const response = await axios.post(
