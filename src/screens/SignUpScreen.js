@@ -9,6 +9,7 @@ import AvatarsModal from '../components/AvatarsModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { select_beep,err_beep } from '../constants/Sounds';
 import { assistantSpeech } from '../constants/TextToSpeech';
+import { useUser } from '../context/userContext';
 
 
 export default function SignUpScreen() {
@@ -21,6 +22,7 @@ export default function SignUpScreen() {
   const [currentUser, setCurrentUser] = useState(auth.currentUser);
   const [loading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const {createUser} = useUser();
 
   // const createUser = async () => {
   //   select_beep();
@@ -196,12 +198,12 @@ export default function SignUpScreen() {
               />
             </View>
             {errorMessage !== '' && (
-              <Text className="text-red-300 mt-0 mb-2 ml-4 text-base">{errorMessage}</Text>
+              <Text className="text-red-300 mt-0 mb-2 ml-4 text-sm">{errorMessage}</Text>
             )}
             <View className="flex-row justify-center">
               <TouchableOpacity
                 className="py-3 w-52 bg-blue-400 rounded-xl"
-                onPress={() => createUser(email, password, name, setErrorMessage,errorMessage, setIsLoading, setCurrentUser)}
+                onPress={() => createUser(setEmail, email, password, name, setErrorMessage, errorMessage, setIsLoading, selectedAvatar)}
               >
                 <Text className="text-base font-bold text-center text-gray-700">
                   Sign Up

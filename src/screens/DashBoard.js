@@ -33,6 +33,7 @@ import {logout_beep, select_beep} from '../constants/Sounds';
 import {assistantSpeech} from '../constants/TextToSpeech';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useUser} from '../context/userContext';
+import useAuth from '../firebase/useAuth';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -45,6 +46,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const {guser, setGUserAvatar, gUserAvatar, signOut, deleteAccount} = useUser();
   const user = auth.currentUser;
+  const avatar = user.photoURL || gUserAvatar;
 
   const [photo, setPhoto] = useState(
     require('../../assets/images/avatars/thor.jpeg'),
@@ -52,7 +54,7 @@ const Dashboard = () => {
 
   const handleBackPress = () => {
     select_beep();
-    navigation.navigate('Welcome', {selectedAvatar: selectedAvatar}); 
+    navigation.navigate('Home', {selectedAvatar: selectedAvatar}); 
     return true; 
   };
 
@@ -111,7 +113,7 @@ const Dashboard = () => {
         onPress={() => [setModalVisible(true), select_beep()]}
         className="self-center flex justify-center mt-0 mb-5">
         <Image
-          source={ gUserAvatar}
+          source={ avatar}
           className="rounded-full w-20 h-20 m-12 mb-0 mx-auto"
         />
         <Text className="text-center text-sm text-slate-200">
@@ -150,7 +152,7 @@ const Dashboard = () => {
       <DeleteAccModal
         setDelModalVisible={setDelModalVisible}
         delModalVisible={delModalVisible}
-        deleteAccount={() => deleteAccount(setDelModalVisible,navigation, setLoading)}
+        deleteAccount={() => deleteAccount(setDelModalVisible,navigation, setLoading, email, password)}
         setPassword={setPassword}
         password={password}
       />

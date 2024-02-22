@@ -14,15 +14,14 @@ const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, se
           <Text className="font-mono text-2xl text-center mb-5 mt-0">Are you sure you wanna delete your account?</Text>
           <TextInput
             style={{ width: wp(60), height: wp(10) }}
-            editable={true}
             onChangeText={(text) => setPassword(text)}
             placeholder="Confirm Password"
             className='bg-slate-500 mb-8 rounded-xl text-slate-200 self-center'
           />
           <View className='flex flex-row justify-center gap-8 mb-5'>
             <TouchableOpacity style={{ width: wp(20) }} disabled={password.length < 6 ? true : false}
-              onPress={() => deleteAccount()}
-              className="bg-red-900 rounded-3xl flex justify-center text-center">
+              onPress={deleteAccount}
+              className={`${password.length < 6 ? 'bg-red-900' : 'bg-red-900'} rounded-3xl flex justify-center text-center`}>
               {/* <Button title="Confirm" onPress={() => deleteAccount()} /> */}
               <Text style={styles.text}>Confirm</Text>
             </TouchableOpacity>

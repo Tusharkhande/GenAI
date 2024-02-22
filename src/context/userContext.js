@@ -22,6 +22,7 @@ export function Context({children}) {
   const [guser, setGuser] = useState(null);
   const [gUserAvatar, setGUserAvatar] = useState('9');
   const [isLoggedin, setIsLoggedin] = useState(false);
+  const [name, setName] = useState('Sir');
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -130,34 +131,34 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
 };
 
 
-  const createUser = async ( email, password, name, setErrorMessage, errorMessage, setIsLoading, setCurrentUser
+  const createUser = async ( setEmail, email, password, name, setErrorMessage, errorMessage, setIsLoading, selectedAvatar
   ) => {
     select_beep();
     if (email === '' || password === '' || name === '') {
       err_beep();
       setErrorMessage('Please fill in all fields.');
-      assistantSpeech(errorMessage);
       return;
     }
-    if (!email.includes('@')) {
-      err_beep();
-      setErrorMessage('Please enter a valid email address.');
-      assistantSpeech(errorMessage);
-      return;
-    }
-    if (password.length < 6) {
-      err_beep();
-      setErrorMessage('Password must be at least 6 characters.');
-      assistantSpeech(errorMessage);
-      return;
-    }
-    setErrorMessage('');
+    // if (!email.includes('@')) {
+    //   err_beep();
+    //   setErrorMessage('Please enter a valid email address.');
+    //   assistantSpeech(errorMessage);
+    //   return;
+    // }
+    // if (password.length < 6) {
+    //   err_beep();
+    //   setErrorMessage('Password must be at least 6 characters.');
+    //   assistantSpeech(errorMessage);
+    //   return;
+    // }
     setEmail(email.toLowerCase());
     try {
       setIsLoading(true);
       await createUserWithEmailAndPassword(auth, email, password)
         .then(result => {
-          setCurrentUser(result.user);
+          // setCurrentUser(result.user);
+          setName(name);
+          setGUserAvatar(selectedAvatar);
           // setGuser(result.user);
           updateProfile(result.user, {
             displayName: name,
@@ -174,23 +175,27 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
           // storeData();
         })
         .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
+          const msg = error.message;
+          if (msg.includes('(auth/email-already-in-use)')) {
             console.log('Entered email address is already in use!');
             setErrorMessage('Entered email address is already in use!');
-          } else if (error.code === 'auth/invalid-email') {
+          } else if (msg.includes('(auth/invalid-email)')) {
             console.log('Entered email address is invalid!');
             setErrorMessage('Entered email address is invalid!');
-          } else if (error.code === 'auth/weak-password') {
+          } else if (msg.includes('(auth/weak-password)')) {
             console.log('Password should be at least 6 characters!');
             setErrorMessage('Password should be at least 6 characters!');
-          } else if (error.code === 'auth/wrong-password') {
+          } else if (msg.includes('(auth/wrong-password)')) {
             console.log('Wrong password!');
             setErrorMessage('Wrong password!');
+          }else{
+            setErrorMessage('Something went wrong!');
           }
-          console.error(error);
+          
+          // const error = err.nativeErrorMessage;
+          console.log(error);
         });
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -208,11 +213,14 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
       //     // return unsubscribe;
       //   });
       // }else{
-        try {
-          const guser = (await GoogleSignin.signInSilently()).user;
-          guser?setGuser(guser):setGuser(null);
-        } catch (error) {
-          console.error('Error getting current user:', error);
+        // try {
+        //   const guser = (await GoogleSignin.signInSilently()).user;
+        //   guser?setGuser(guser):setGuser(null);
+        // } catch (error) {
+        //   console.error('Error getting current user:', error);
+        // }
+        if (currentUser && currentUser.providerData.some(provider => provider.providerId === 'google.com')) {
+          setGuser(currentUser);
         }
       // }
   
@@ -231,23 +239,19 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
 
   const signOut = async (setLoading) => {
     setLoading(true);
-    auth
-        .signOut()
-        .then(() => {
-          logout_beep();
-
-          assistantSpeech('Logged out successfully');
-          // ToastAndroid.show("Sign out successful", ToastAndroid.SHORT);
-          // navigation.navigate('Welcome');
-        })
-        .catch(error => console.log(error.message));
-        await GoogleSignin.signOut();
+    try{
+      await auth.signOut();
+      await GoogleSignin.signOut();
+      setUser(null);
+      setGuser(null);
+    }catch(e){
+      console.log(e);
+    }
     setLoading(false);
   };
 
-  const deleteAccount = async (setDelModalVisible,navigation, setLoading) => {
+  const deleteAccount = async (setDelModalVisible,navigation, setLoading, email, password) => {
     select_beep();
-    setDelModalVisible(false);
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -256,23 +260,24 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
         .then(() => {
           console.log('User deleted successfully');
           assistantSpeech('Account deletion successfull');
+          setUser(null);
+          setDelModalVisible(false);
           // ToastAndroid.show("User deleted successfully", ToastAndroid.SHORT);
-          navigation.navigate('Begin');
+          // navigation.navigate('Welcome');
         })
         .catch(error => {
           console.log('Error deleting user', error);
-          Alert.alert('Error deleting user try again: ' + error.message);
         });
     } catch (e) {
       console.log(e);
-      Alert.alert('Error deleting user try again: ' + e.message);
     } finally {
       setLoading(false);
     }
   };
 
+
   return (
-    <UserContext.Provider value={{user, setUser, guser, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
+    <UserContext.Provider value={{user, setUser, guser,name, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
       {children}
     </UserContext.Provider>
   );

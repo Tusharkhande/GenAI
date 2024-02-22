@@ -5,7 +5,7 @@ export default function Button({ title, onPress, image, isize, style }) {
   return (
     <TouchableOpacity className={`${style}`} onPress={onPress} style={styles.button}>
       {image && <Image source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
-      <Text style={styles.text}>{title}</Text>
+      {title && <Text style={styles.text}>{title}</Text>}
     </TouchableOpacity>
   );
 }

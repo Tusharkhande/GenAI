@@ -1,37 +1,93 @@
 import React from 'react';
-import {Modal, View, Text} from 'react-native';
+import {Modal, View, Text, TouchableOpacity, Image, ToastAndroid} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import Button from '../components/Button';
-import {select_beep} from './Sounds';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-const ImagePickerModal = (openImagePickerModal, setOpenImagePickerModal) => {
+const ImagePickerModal = ({openImagePickerModal, setOpenImagePickerModal, setBase64String}) => {
+
+  const camera = async () => {
+    const options = {
+      includeBase64: true,
+      maxWidth: 512,
+      maxHeight: 512,
+    };
+    const result = await launchCamera(options);
+    if (!result.didCancel) {
+      setOpenImagePickerModal(false);
+      setBase64String(result.assets[0].base64);
+    } else {
+      ToastAndroid.show('No image clicked!', ToastAndroid.SHORT);
+    }
+    // vision(base64String)
+    // console.log(result.assets[0].base64);
+  };
+  const gallery = async () => {
+    const options = {
+      includeBase64: true,
+      maxWidth: 512,
+      maxHeight: 512,
+    };
+    const result = await launchImageLibrary(options);
+    if (!result.didCancel) {
+      setOpenImagePickerModal(false);
+      setBase64String(result.assets[0].base64);
+    } else {
+      ToastAndroid.show('No image selected!', ToastAndroid.SHORT);
+    }
+  };
+
   return (
-    <Modal visible={openImagePickerModal} animationType="fade" transparent>
-      <View className="flex flex-1 bg-black/50 items-center justify-center self-center w-full">
-        <View
-          style={{width: wp(80), height: wp(40)}}
-          className="flex flex-col bg-slate-800 p-5 w-96 justify-center rounded-3xl">
-          <Text className="font-mono text-xl text-center text-slate-100 mb-5 mt-0">
-            Please select an option:
-          </Text>
-          <View className="flex flex-row justify-center self-center gap-8">
-            <View
-              style={{width: wp(20)}}
-              className="bg-slate-500 rounded-2xl flex justify-center text-center">
-              <Button title="Yes" onPress={() => handleModal()} />
+    <View>
+      <TouchableOpacity
+        className=" p-2 my-auto rounded-md"
+        onPress={() => setOpenImagePickerModal(true)}>
+        <Image
+          source={require('../../assets/images/addImg.png')}
+          className="h-6 w-6"
+        />
+      </TouchableOpacity>
+      <Modal visible={openImagePickerModal} animationType="slide" transparent>
+        <View className="flex flex-1 bg-black/50 items-center justify-end">
+          <View
+            style={{width: wp(90), height: wp(40)}}
+            className="flex flex-col bg-slate-800 p-2 justify-normal rounded-3xl">
+            <View className="flex flex-row justify-between">
+              <Text className="font-mono text-base self-start text-center text-slate-100 m-5 mt-2">
+                Please select an option:
+              </Text>
+              <TouchableOpacity
+                className="self-start"
+                onPress={() => setOpenImagePickerModal(false)}>
+                <Image
+                  source={require('../../assets/images/close.png')}
+                  className="h-6 w-6"
+                />
+              </TouchableOpacity>
             </View>
-            <View
-              style={{width: wp(20)}}
-              className="bg-slate-500 rounded-2xl flex justify-center text-center">
-              <Button
-                title="No"
-                onPress={() => [setOpenImagePickerModal(false), select_beep()]}
-              />
+            <View className="flex flex-row justify-center self-center gap-8">
+              <TouchableOpacity
+                className="flex flex-col justify-center"
+                onPress={gallery}>
+                <Image
+                  source={require('../../assets/images/gallery.png')}
+                  className="h-10 w-10 self-center"
+                />
+                <Text className="text-white">Gallery</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex flex-col justify-center"
+                onPress={camera}>
+                <Image
+                  source={require('../../assets/images/camera.png')}
+                  className="h-10 w-10 self-center"
+                />
+                <Text className="text-white">Camera</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </View>
   );
 };
 

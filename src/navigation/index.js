@@ -11,63 +11,11 @@ import {getAuth} from 'firebase/auth';
 
 export default function AppNavigation() {
   const {user} = useAuth();
-  // const {guser, getUserData} = useUser();
-
-  // console.log("googleAuth", useGoogleAuth());
-
-  // const[guser, setGuser] = React.useState('')
-  // googleAuth().then((res) => {
-  //     console.log("googleAuth", res);
-  //     setGuser(res);
-  // });
-  // const checkUserStatus = async () => {
-  //   const {currentUser, guser} = await getUserData();
-  //   if (currentUser) {
-  //     assistantSpeech('Logged in Successfully!');
-  //     console.log('User is signed in');
-  //   } else if (guser) {
-  //     assistantSpeech('Logged in Successfully!');
-  //     console.log('User is signed in');
-  //   } else {
-  //     setTimeout(() => {
-  //       // setTimeout(() => {
-  //       // if(user=='' && guser==null){
-  //         assistantSpeech(
-  //           ' No user data found. Kindly create a new account or log in.',
-  //         );
-  //         console.log('User is signed out');
-  //       // }
-  //       // }, 2000);
-  //     }, 3000);
-  //   }
-  // }
-  // useEffect(() => {
-  //   // checkUserStatus();
-  //   getAuth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       assistantSpeech("Logged in Successfully!");
-  //       console.log('User is signed in');
-  //     } else {
-  //       setTimeout(() => {
-  //         assistantSpeech(" No user data found. Kindly create a new account or log in.");
-  //         console.log('User is signed out');
-  //       }, 2000);
-  //     }
-  //   });
-  // },[]);
-
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (!guser && !user) {
-  //       assistantSpeech(
-  //         ' No user data found. Kindly create a new account or log in.',
-  //       );
-  //       console.log('User is signed out');
-  //     }
-  //   }, 4000);
-  // }, []);
-
+  const { getUserData} = useUser();
+  useEffect(() => {
+    getUserData();
+  }, [user]);
+  
   return user ? <UserStack /> : <AuthStack />;
 }
 

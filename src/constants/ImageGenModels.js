@@ -35,7 +35,7 @@ export default imageModels=[
         image:mystic,
         color:'#070F6C',
         demo:'a dog',
-        desc:'Produce pop-art masterpieces in the style of Andy Warhol',
+        desc:'Bring your fantasy to life!',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
     },
     {
@@ -72,7 +72,7 @@ export default imageModels=[
         color:'#000',
         demo:'a bike racing on a tree-ring bread',
         desc:'Create photos in miniature photography',
-        models: [],
+        models: ['kviai/Paint-Diffuion-V2'],
     },
     {
         id:8,
@@ -87,7 +87,7 @@ export default imageModels=[
         id:9,
         name:'Pet under fisheye lens',
         image:petunderlens,
-        color:'#000',
+        color:'#ffd',
         demo:'a curious cat',
         desc:'Create photos of pets under a fisheye lens',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
