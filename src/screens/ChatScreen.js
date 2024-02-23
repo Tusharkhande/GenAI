@@ -494,7 +494,8 @@ const ChatScreen = () => {
                                       uri: `data:image/png;base64,${message.base64String}`,
                                     }}
                                     style={{width: hp(10), height: hp(10)}}
-                                    className="m-2 mt-0 ml-0 rounded-2xl"
+                                    resizeMode="contain"
+                                    className="m-2 mt-0 ml-0 rounded-xl shadow-black"
                                   />
                                 )}
                               </View>
@@ -535,6 +536,7 @@ const ChatScreen = () => {
                         uri: `data:image/png;base64,${base64String}`,
                       }}
                       style={{width: hp(10), height: hp(10)}}
+                      resizeMode="contain"
                       className="m- rounded-2xl opacity-70"
                     />
                     <Image

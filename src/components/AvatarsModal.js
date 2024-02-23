@@ -52,11 +52,11 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
             <View className='flex flex-row justify-center gap-8'>
               <View style={{ width: wp(20) }}
                 className="bg-slate-500 rounded-3xl flex justify-center text-center">
-                <Button title="  Confirm" onPress={() => handleProfileImg()} />
+                <Button title="Confirm" onPress={() => handleProfileImg()} />
               </View>
               <View style={{ width: wp(20) }}
                 className="bg-slate-500 rounded-3xl flex justify-center text-center">
-                <Button title="  Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
+                <Button title="Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
               </View>
             </View>
           </View>

@@ -156,7 +156,7 @@ const WritingScreen = () => {
           {param.writingModel.options && (
             <View
               className={`flex flex-col  self-start ${
-                param.writingModel.options.length > 0 ? 'p-5' : 'p-0'
+                param.writingModel.options.length > 0 ? 'p-5 pt-2' : 'p-0'
               } `}>
               <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
                 {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
@@ -168,7 +168,7 @@ const WritingScreen = () => {
                     key={index}
                     onPress={() => onOptionSelect(option)}
                     //   underlayColor="#DDDDDD"
-                    className={`m-2 p-2 rounded-xl ${
+                    className={`m-1 p-2 rounded-md border border-indigo-800 ${
                       selectedOption === option
                         ? 'bg-indigo-800'
                         : 'bg-slate-700'
@@ -205,12 +205,12 @@ const WritingScreen = () => {
             onPress={initiate}
             disabled={isLoading || !prompt}
             aria-disabled={isLoading || !prompt}
-            className="flex-row mt-0 mx-24 rounded-3xl p-2 justify-center bg-indigo-800">
+            className={`flex-row mt-0 mx-24 rounded-3xl p-2 ${isLoading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'} justify-center`}>
             <Image
               source={require('../../assets/images/send-2.png')}
               className="h-6 w-6 mr-1"
             />
-            <Text className="text-center font-bold text-base ml-1 text-slate-50">
+            <Text className="text-center font-bold text-base ml-1 text-slate-50 ${isLoading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'} justify-center ">
               Generate
             </Text>
           </TouchableOpacity>
@@ -220,24 +220,21 @@ const WritingScreen = () => {
                 {isSpeaking ? (
                   <Button
                     image={require('../../assets/images/speaking.gif')}
-                    // title={'Copy'}
                     onPress={() => [Tts.stop(), setIsSpeaking(false)]}
                   />
                 ) : (
                   <Button
                     image={require('../../assets/images/sound.png')}
-                    // title={'Copy'}
                     onPress={() => speakCurrResponse(message)}
                   />
                 )}
                 <Button
                   image={require('../../assets/images/speed.png')}
-                  // title={'Copy'}
                   onPress={() => setFinishedTyping(true)}
                 />
                 <Button
-                  image={require('../../assets/images/copy.png')}
-                  // title={'Copy'}
+                  image={require('../../assets/images/copy2.png')}
+                  isize={'h-6 w-6'}
                   onPress={copyToClipboard}
                 />
               </View>

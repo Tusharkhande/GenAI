@@ -18,7 +18,8 @@ export default imageModels=[
         color:'#070F6C',
         demo:'a funny cat wearing sunglasses',
         desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
-        models:['stabilityai/stable-diffusion-xl-base-1.0', 'kviai/Paint-Diffuion-V2', 'runwayml/stable-diffusion-v1-5', 'dataautogpt3/ProteusV0.2', 'briaai/BRIA-2.2', 'playgroundai/playground-v2-1024px-aesthetic', 'cagliostrolab/animagine-xl-3.0','stablediffusionapi/juggernaut-xl-v8', 'Norod78/SDXL-Fairy-Form-LoRA', 'joachimsallstrom/aether-glitch-lora-for-sdxl', 'deepghs/animefull-latest', 'dataautogpt3/OpenDalleV1.1'],
+        models:['stabilityai/stable-diffusion-xl-base-1.0', 'kviai/Paint-Diffuion-V2', 'dataautogpt3/ProteusV0.2', 'playgroundai/playground-v2-1024px-aesthetic', 'dataautogpt3/OpenDalleV1.1', 'cagliostrolab/animagine-xl-3.0','stablediffusionapi/juggernaut-xl-v8', 'Norod78/SDXL-Fairy-Form-LoRA', 'joachimsallstrom/aether-glitch-lora-for-sdxl', 'deepghs/animefull-latest', 'runwayml/stable-diffusion-v1-5', 'briaai/BRIA-2.2'],
+        options: []
     },
     {
         id:2,
@@ -28,6 +29,7 @@ export default imageModels=[
         demo:'a funny cat wearing sunglasses',
         desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
         models:['stabilityai/stable-diffusion-xl-base-1.0'],
+        options: []
     },
     {
         id:3,
@@ -37,6 +39,7 @@ export default imageModels=[
         demo:'a dog',
         desc:'Bring your fantasy to life!',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
+        options: []
     },
     {
         id:4,
@@ -46,6 +49,7 @@ export default imageModels=[
         demo:'Monkey D. Luffy from One Piece',
         desc:'Create anime avatars using detailed descriptions',
         models: ['cagliostrolab/animagine-xl-3.0'],
+        options: []
     },
     {
         id:5,
@@ -55,6 +59,7 @@ export default imageModels=[
         demo:'boy in diwali',
         desc:'Generate 3D art toys based on specific descriptions',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
+        options: []
     },
     {
         id:6,
@@ -64,6 +69,7 @@ export default imageModels=[
         demo:'a beautiful queen',
         desc:'Create pictures in different time periods',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
+        options: ['Stone Age', 'Ancient Rome', 'Middle Ages', 'Renaissance', 'Industrial Revolution', '1960s', 'Modern Era', 'Cyberpunk']
     },
     {
         id:7,
@@ -73,6 +79,7 @@ export default imageModels=[
         demo:'a bike racing on a tree-ring bread',
         desc:'Create photos in miniature photography',
         models: ['kviai/Paint-Diffuion-V2'],
+        options: []
     },
     {
         id:8,
@@ -82,6 +89,7 @@ export default imageModels=[
         demo:'a bike racing on a tree-ring bread',
         desc:'Create photos in miniature photography',
         models: ['stabilityai/stable-diffusion-xl-base-1.0'],
+        options: []
     },
     {
         id:9,
@@ -91,6 +99,7 @@ export default imageModels=[
         demo:'a curious cat',
         desc:'Create photos of pets under a fisheye lens',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
+        options: []
     },
     {
         id:10,
@@ -100,6 +109,7 @@ export default imageModels=[
         demo:'a dog',
         desc:'Produce pop-art masterpieces in the style of Andy Warhol',
         models: ['stabilityai/stable-diffusion-xl-base-1.0'],
+        options: []
     },
     
     // {

@@ -68,16 +68,16 @@ export default function WelcomeScreen() {
             </View>
             <Modal visible={exit} animationType="fade" transparent>
                 <View className='flex flex-1 items-center justify-center self-center w-full' style={styles.modalContainer}>
-                    <View style={{ width: wp(80), height: wp(40) }}
+                    <View style={{ width: wp(80), height: wp(35) }}
                         className="flex flex-col bg-slate-800 p-5 w-96 justify-center rounded-3xl">
-                        <Text className="font-mono text-xl text-center mb-5 mt-0">Are you sure you want to Exit?</Text>
+                        <Text className="font-mono text-base text-center mb-5 mt-0">Are you sure you want to Exit?</Text>
                         <View className='flex flex-row justify-center self-center gap-8'>
                             <View style={{ width: wp(20) }}
-                                className="bg-slate-500 rounded-2xl flex justify-center text-center">
+                                className="bg-slate-600 rounded-3xl flex justify-center text-center">
                                 <Button title="Yes" onPress={() => handleModal()} />
                             </View>
                             <View style={{ width: wp(20) }}
-                                className="bg-slate-500 rounded-2xl flex justify-center text-center">
+                                className="bg-slate-600 rounded-3xl flex justify-center text-center">
                                 <Button title="No" onPress={() => [setExit(false), select_beep()]} />
                             </View>
                         </View>
@@ -93,47 +93,4 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    modalContent: {
-        backgroundColor: '#3B96D2',
-        width: '60%',
-        padding: 16,
-        borderRadius: 8,
-        textAlign: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    modalTitle: {
-        fontSize: 22,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        marginBottom: 16,
-        color: '#000',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        // alignSelf:'center',
-        textAlign: 'center',
-        alignItems: 'center',
-        backgroundColor: '#003249',
-        width: 80,
-        borderRadius: 8,
-        marginLeft: 20,
-        marginRight: 20,
-    },
-    buttonContainer1: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    buttonContainer2: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: '#003249',
-        width: 200,
-        borderRadius: 20,
-        paddingTop: 11,
-        marginLeft: 20,
-        marginRight: 20,
-    },
-
 });

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -19,7 +19,7 @@ import {
   downloadBase64Image,
   downloadBlobImage,
 } from '../constants/DownloadImage';
-import generateImage, {stableDiffusionXL} from '../api/stability';
+import generateImage, {stableDiffusionXL} from '../api/huggingface';
 
 const ImageGenScreen = () => {
   const [prompt, setPrompt] = useState('');
@@ -28,7 +28,9 @@ const ImageGenScreen = () => {
   const [base64Image, setBase64Image] = useState('');
   const [blobImage, setBlobImage] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
   const navigation = useNavigation();
+  const scrollViewRef = useRef();
   const param = useRoute().params;
   console.log(param);
 
@@ -49,6 +51,9 @@ const ImageGenScreen = () => {
     if (param.imageModel.models && param.imageModel.models.length > 0) {
       setSelectedModel(param.imageModel.models[0]);
     }
+    if(param.imageModel.options){
+      setSelectedOption(param.imageModel.options[0]);
+    }
   }, [param.imageModel.models]);
   
   const initiate = async () => {
@@ -64,7 +69,7 @@ const ImageGenScreen = () => {
     } else if (param.imageModel.name === '3D Toy Art') {
       para = `Generate a cute and childlike 3D ${prompt}, incorporating elements of fantasy, adventure or romantic. digital art. high resolution. smooth and curved lines. bright and saturated colors.`;
     } else if (param.imageModel.name === 'Time Travel') {
-      para = `Create a picture of  ${prompt}. Time travel to Ancient Rome. High resolution. 4K.`;
+      para = `Create a picture of  ${prompt}. Time travel to ${selectedOption}. High resolution. 4K.`;
     } else if (param.imageModel.name === 'Miniature paintings') {
       para = `Create a photo of ${prompt} in the style of miniature photography.`;
     } else if (param.imageModel.name === 'Pet under fisheye lens') {
@@ -97,11 +102,18 @@ const ImageGenScreen = () => {
         blobImage,
         selectedModel,
       );
+      updateScrollView();
     } catch (e) {
       ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
     }finally {
       setLoading(false);
     }
+  };
+
+  const updateScrollView = () => {
+    setTimeout(() => {
+      scrollViewRef?.current?.scrollToEnd({animated: true});
+    }, 200);
   };
 
   return (
@@ -115,7 +127,7 @@ const ImageGenScreen = () => {
         </View>
       </View>
       <ScrollView
-        // ref={scrollViewRef}
+        ref={scrollViewRef}
         // bounces={false}
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
@@ -137,11 +149,10 @@ const ImageGenScreen = () => {
           {param.imageModel.models.length > 1 && (
             <View
               className={`flex flex-col  self-start ${
-                param.imageModel.models.length > 1 ? 'p-5 pt-0 pb-2' : 'p-0'
+                param.imageModel.models.length > 1 ? 'p-5 pt-2 pb-3' : 'p-0'
               } `}>
               <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
-                {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
-                {/* {param.writingModel.optionsDesc} */}
+                Select a Model
               </Text>
               <View className="flex flex-row flex-wrap">
                 {param.imageModel.models.map((option, index) => (
@@ -149,18 +160,50 @@ const ImageGenScreen = () => {
                     key={index}
                     onPress={() => setSelectedModel(option)}
                     //   underlayColor="#DDDDDD"
-                    className={`m-2 p-2 rounded-xl ${
+                    className={`m-1 p-2 rounded-md border border-indigo-800 ${
                       selectedModel === option
                         ? 'bg-indigo-800'
                         : 'bg-slate-700'
                     }`}>
                     <Text
-                      className={`text-center ${
+                      className={`text-center text-xs ${
                         selectedModel === option
                           ? 'text-slate-50'
                           : 'text-slate-50'
                       }`}>
                       {option.split('/')[1]}
+                    </Text>
+                  </TouchableHighlight>
+                ))}
+              </View>
+            </View>
+          )}
+          {param.imageModel.options.length>0 && (
+            <View
+              className={`flex flex-col  self-start ${
+                param.imageModel.options.length > 0 ? 'p-5 pt-0 pb-3' : 'p-0'
+              } `}>
+              <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
+                Time travel to
+              </Text>
+              <View className="flex flex-row flex-wrap">
+                {param.imageModel.options.map((option, index) => (
+                  <TouchableHighlight
+                    key={index}
+                    onPress={() => setSelectedOption(option)}
+                    //   underlayColor="#DDDDDD"
+                    className={`m-1 p-2 rounded-md border border-indigo-800 ${
+                      selectedOption === option
+                        ? 'bg-indigo-800'
+                        : 'bg-slate-700'
+                    }`}>
+                    <Text
+                      className={`text-center text-xs ${
+                        selectedOption === option
+                          ? 'text-slate-50'
+                          : 'text-slate-50'
+                      }`}>
+                      {option}
                     </Text>
                   </TouchableHighlight>
                 ))}
@@ -187,16 +230,16 @@ const ImageGenScreen = () => {
             onPress={initiate}
             disabled={loading || !prompt}
             aria-disabled={loading || !prompt}
-            className="flex-row mt-0 mx-24 rounded-2xl p-2 justify-center bg-indigo-800">
+            className={`flex-row mt-0 mx-24 rounded-full p-2 ${loading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'} justify-center `}>
             <Image
               source={require('../../assets/images/generate.png')}
               className=" ml-0 h-6 w-6 mr-1"
             />
-            <Text className="text-center font-bold text-base ml- text-slate-50 mr-1">
+            <Text className="text-center font-bold text-base text-slate-50 mr-1">
               Generate
             </Text>
           </TouchableOpacity>
-          <View className="flex mx-auto justify-center mt-6">
+          <View className="flex mx-auto justify-center mt-6 mb-4">
             <View
               className=" flex rounded-2xl bg-black p-4 justify-center items-center"
               // style={[{backgroundColor:param.selectedModel.primary}]}
@@ -230,19 +273,30 @@ const ImageGenScreen = () => {
                 />
               )}
               {image && (
-                <TouchableOpacity
-                  style={{alignItems: 'center', marginTop: 10}}
-                  onPress={() =>
+                // <TouchableOpacity
+                //   style={{alignItems: 'center', marginTop: 10}}
+                //   onPress={() =>
+                //     blobImage
+                //       ? downloadBlobImage(blobImage, setImage, setBlobImage)
+                //       : downloadBase64Image(base64Image)
+                //   }>
+                //   <Text
+                //     style={{color: 'blue', textDecorationLine: 'none'}}
+                //     className="">
+                //     Download
+                //   </Text>
+                // </TouchableOpacity>
+                <Button
+                style="self-center mt-2"
+                image={require('../../assets/images/dwd.png')}
+                isize={'h-6 w-6'}
+                // title={'Copy'}
+                onPress={() =>
                     blobImage
                       ? downloadBlobImage(blobImage, setImage, setBlobImage)
                       : downloadBase64Image(base64Image)
-                  }>
-                  <Text
-                    style={{color: 'blue', textDecorationLine: 'none'}}
-                    className="">
-                    Download
-                  </Text>
-                </TouchableOpacity>
+                  }
+              />
               )}
             </View>
           </View>

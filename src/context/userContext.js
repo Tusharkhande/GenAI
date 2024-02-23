@@ -103,7 +103,8 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
       .then((firebaseUserCredential) => {
         console.log('Firebase Auth successful, user:', firebaseUserCredential.user);
         setIsLoggedin(true);
-        setGuser(firebaseUserCredential.user); // You might want to update this to handle Firebase user object
+        setName(firebaseUserCredential.user.displayName);
+        setGuser(firebaseUserCredential.user);
         if(firebaseUserCredential.user.photoURL.includes('https')){
           setGUserAvatar(require('../../assets/images/avatars/arc.jpg'));
         }else{

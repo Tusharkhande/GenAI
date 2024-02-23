@@ -134,7 +134,7 @@ export default function Features({ model, provider }) {
                 <ScrollView style={{ height: hp(60) }} className="space-y-4">
                     <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
                     <View className='flex-row items-center space-x-1'>
-                        <Image className='rounded-full' source={require('../../assets/images/vision.jpg')} style={{ height: hp(2), width: hp(4) }} />
+                        <Image className='rounded-full' source={require('../../assets/images/eye.jpg')} style={{ height: hp(2), width: hp(4) }} />
                         <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Vision</Text>
                     </View>
                     <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>

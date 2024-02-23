@@ -80,7 +80,7 @@ const Dashboard = () => {
     setLoading(true);
     select_beep();
     updateProfile(user, {
-      photoURL: selectedAvatar,
+      photoURL: selectedAvatar?selectedAvatar:gUserAvatar,
     })
     .then(() => {
         assistantSpeech('Profile updation successfull!');
@@ -111,12 +111,12 @@ const Dashboard = () => {
       <ScrollView className=" mt-8" showsVerticalScrollIndicator={false}>
       <TouchableOpacity
         onPress={() => [setModalVisible(true), select_beep()]}
-        className="self-center flex justify-center mt-0 mb-5">
+        className="self-center flex justify-center mt-0 mb-8">
         <Image
           source={ avatar}
           className="rounded-full w-20 h-20 m-12 mb-0 mx-auto"
         />
-        <Text className="text-center text-sm text-slate-200">
+        <Text className="text-center text-xs text-slate-200">
           Change Avatar
         </Text>
       </TouchableOpacity>
