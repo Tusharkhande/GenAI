@@ -88,14 +88,11 @@ const ExploreAiScreen = () => {
 
   return (
     <View className="flex bg-slate-950 w-full h-full">
-      <View className="flex self-end m-0 absolute right-2">
-        <View className="">
+      <View className="flex absolute flex-row self-start p-2 pt-0">
           <Button
-            image={require('../../assets/images/close.png')}
+            image={require('../../assets/images/back.png')}
             onPress={handleBackPress}
-            // size={'w-4 h-4'}
           />
-        </View>
       </View>
       <View className="flex flex-row flex-wrap justify-center mt-2">
         <Text

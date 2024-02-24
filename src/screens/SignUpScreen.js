@@ -24,90 +24,11 @@ export default function SignUpScreen() {
   const [loading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const {createUser} = useUser();
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
 
-  // const createUser = async () => {
-  //   select_beep();
-  //   if (email === '' || password === '' || name === '') {
-  //     err_beep();
-  //     setErrorMessage('Please fill in all fields.');
-  //     assistantSpeech(errorMessage);
-  //     return;
-  //   }
-  //   if (!email.includes('@')) {
-  //     err_beep();
-  //     setErrorMessage('Please enter a valid email address.');
-  //     assistantSpeech(errorMessage);
-  //     return;
-  //   }
-  //   if (password.length < 6) {
-  //     err_beep();
-  //     setErrorMessage('Password must be at least 6 characters.');
-  //     assistantSpeech(errorMessage);
-  //     return;
-  //   }
-  //   setErrorMessage('');
-  //   setEmail(email.toLowerCase());
-  //   try {
-  //     setIsLoading(true);
-  //     await createUserWithEmailAndPassword(auth, email, password)
-  //       .then((result) => {
-
-  //         // console.log('User account created & signed in!');
-  //         // console.log(result)
-  //         // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
-  //         // updateCurrentUser(auth.currentUser, {
-  //         //   displayName: name,
-  //         // });
-  //         // navigation.navigate('Welcome')
-  //         setCurrentUser(result.user);
-  //         updateProfile(result.user, {
-  //           displayName: name,
-  //           photoURL: selectedAvatar
-  //         })
-  //           .then(() => {
-
-  //             console.log('User account created & signed in!');
-  //             console.log(result);
-  //             assistantSpeech("Account Created successfully")
-  //             // ToastAndroid.show("User account created & Signed in Successfully!", ToastAndroid.SHORT);
-  //             // navigation.navigate('Welcome')
-  //           })
-  //           .catch((updateError) => {
-  //             console.error('Error updating displayName:', updateError);
-  //           });
-  //         // storeData();
-  //       })
-  //       .catch(error => {
-  //         if (error.code === 'auth/email-already-in-use') {
-  //           console.log('Entered email address is already in use!');
-  //           setErrorMessage('Entered email address is already in use!');
-  //         } else if (error.code === 'auth/invalid-email') {
-  //           console.log('Entered email address is invalid!');
-  //           setErrorMessage('Entered email address is invalid!');
-  //         } else if (error.code === 'auth/weak-password') {
-  //           console.log('Password should be at least 6 characters!');
-  //           setErrorMessage('Password should be at least 6 characters!');
-  //         } else if (error.code === 'auth/wrong-password') {
-  //           console.log('Wrong password!');
-  //           setErrorMessage('Wrong password!');
-  //         }
-  //         console.error(error);
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-
-  // }
-  // const storeData = async (value) => {
-  //   try {
-  //     await AsyncStorage.setItem('email', email);
-  //     await AsyncStorage.setItem('password', password);
-  //   } catch (e) {
-  //     // saving error
-  //   }
-  // };
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility);
+  };
 
   const handleProfileImg = () => {
     setModalVisible(false);
@@ -143,7 +64,7 @@ export default function SignUpScreen() {
             style={{ width: wp(20), height: wp(20) }}
             className="rounded-full w-28 h-28 mt-10 mx-auto"
           />
-          <Text className='text-center text-sm text-slate-200'>Choose an Avatar</Text>
+          <Text className='text-center text-xs text-slate-200'>Choose an Avatar</Text>
         </TouchableOpacity>
       </SafeAreaView>
       <View className="flex-1 px-8 pt-8 mt-5"
@@ -156,14 +77,15 @@ export default function SignUpScreen() {
               <Image source={require('../../assets/images/user.png')}
                 // style={{ width: 30, height: 30 }}
                 className="w-10 h-10  pt-4 m-2"
-                style={{ width: wp(8), height: wp(8) }}
+                style={{ width: wp(7), height: wp(7) }}
               />
               <TextInput
-                className="p-4 text-base w-80 bg-blue-200 text-gray-700 rounded-2xl mb-3 "
+                className="p-2 text-sm w-80 bg-blue-200 text-gray-700 rounded-2xl "
                 placeholderTextColor="#000"
                 placeholder="Enter your Name"
                 onChangeText={text => setName(text)}
-                style={{ width: wp(70), height: wp(14) }}
+                style={{ width: wp(70), height: wp(12) }}
+                returnKeyType="next"
               />
             </View>
             {/* <Text className="text-blue-200 ml-4 font-mono text-lg ">Email Address</Text> */}
@@ -171,15 +93,16 @@ export default function SignUpScreen() {
               <Image source={require('../../assets/images/email.png')}
                 // style={{ width: 30, height: 30 }}
                 className="w-10 h-10  pt-4 m-2"
-                style={{ width: wp(8), height: wp(8) }}
+                style={{ width: wp(7), height: wp(7) }}
               />
               <TextInput
-                className="p-4 text-base w-80 bg-blue-200 text-gray-700 rounded-2xl mb-3"
+                className="p-2 text-sm w-80 bg-blue-200 text-gray-700 rounded-2xl "
                 // className={`p-4 ${email ? 'text-base' : 'text-sm'} bg-blue-200 text-gray-700 rounded-2xl mb-3`}
                 placeholderTextColor="#000"
                 placeholder="Enter your email"
                 onChangeText={text => setEmail(text)}
-                style={{ width: wp(70), height: wp(14) }}
+                style={{ width: wp(70), height: wp(12) }}
+                returnKeyType="next"
               />
             </View>
             {/* <Text className="text-blue-200 ml-4 font-mono text-lg ">Password</Text> */}
@@ -187,21 +110,30 @@ export default function SignUpScreen() {
               <Image source={require('../../assets/images/password.png')}
                 // style={{ width: 30, height: 30 }}
                 className="w-10 h-10 pt-4 m-2"
-                style={{ width: wp(8), height: wp(8) }}
+                style={{ width: wp(7), height: wp(7) }}
               />
               <TextInput
-                secureTextEntry={true}
-                className="p-4 text-base w-80 bg-blue-200 text-gray-700 rounded-2xl mb-4"
+                secureTextEntry={passwordVisibility}
+                className="p-2 text-sm w-80 bg-blue-200 text-gray-700 rounded-2xl "
                 placeholderTextColor="#000"
                 placeholder="Enter your password"
                 onChangeText={text => setPassword(text)}
-                style={{ width: wp(70), height: wp(14) }}
+                style={{ width: wp(70), height: wp(12) }}
+                returnKeyType="send"
+                onSubmitEditing={() => createUser(setEmail, email, password, name, setErrorMessage, errorMessage, setIsLoading, selectedAvatar)}
               />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+            <Image
+              source={require('../../assets/images/viewPass.png')}
+              style={{width: wp(6), height: wp(6)}}
+              className="absolute self-end top-3 right-2 "
+            />
+            </TouchableOpacity>
             </View>
             {errorMessage !== '' && (
-              <Text className="text-red-300 mt-0 mb-2 ml-4 text-sm">{errorMessage}</Text>
+              <Text className="text-red-300 mt-0 mb-2 ml-4 text-xs">{errorMessage}</Text>
             )}
-            <View className="flex-row justify-center">
+            <View className="flex-row justify-center pt-10">
               <TouchableOpacity
                 className="py-3 w-52 bg-blue-400 rounded-xl"
                 onPress={() => createUser(setEmail, email, password, name, setErrorMessage, errorMessage, setIsLoading, selectedAvatar)}
@@ -212,13 +144,13 @@ export default function SignUpScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <Text className="text-xl text-blue-200 font-bold text-center py-5">
+          <Text className="text-base text-blue-200 font-bold text-center py-5">
             Or
           </Text>
-          <View className="flex-row justify-center mt-3">
-            <Text className="text-blue-200 text-base font-semibold">Already have an account?</Text>
+          <View className="flex-row justify-center">
+            <Text className="text-blue-200 text-sm font-semibold">Already have an account?</Text>
             <TouchableOpacity onPress={() => [navigation.navigate('Login'), select_beep()]}>
-              <Text className="font-semibold text-base text-blue-500"> Login</Text>
+              <Text className="font-semibold text-sm text-blue-500"> Login</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

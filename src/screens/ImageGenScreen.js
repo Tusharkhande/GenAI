@@ -119,13 +119,11 @@ const ImageGenScreen = () => {
 
   return (
     <View className="flex-1 bg-slate-950 justify-normal">
-      <View className="flex flex-row self-end m-0 right-2">
-        <View className="">
+      <View className="flex flex-row self-start p-2 pt-0">
           <Button
-            image={require('../../assets/images/close.png')}
+            image={require('../../assets/images/back.png')}
             onPress={handleBackPress}
           />
-        </View>
       </View>
       <ScrollView
         ref={scrollViewRef}

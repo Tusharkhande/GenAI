@@ -48,13 +48,13 @@ export default function WelcomeScreen() {
                         style={{ width: wp(75) }}
                     >
                         <Text
-                            className="text-xl font-mono justify-center font-bold text-center text-gray-700"
+                            className="text-base font-mono justify-center font-bold text-center text-gray-700"
                         >
                             Sign Up
                         </Text>
                     </TouchableOpacity>
                     <View className="flex-row justify-center top-7">
-                        <Text className="text-white font-semibold">Already have an account?</Text>
+                        <Text className="text-white font-mono">Already have an account?</Text>
                         <TouchableOpacity onPress={() => [navigation.navigate('Login'), select_beep()]}>
                             <Text className="font-semibold font-mono text-blue-400"> Log In</Text>
                         </TouchableOpacity>
