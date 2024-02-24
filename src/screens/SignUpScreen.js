@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { select_beep,err_beep } from '../constants/Sounds';
 import { assistantSpeech } from '../constants/TextToSpeech';
 import { useUser } from '../context/userContext';
+import Loader from '../components/Loader';
 
 
 export default function SignUpScreen() {
@@ -214,20 +215,6 @@ export default function SignUpScreen() {
           <Text className="text-xl text-blue-200 font-bold text-center py-5">
             Or
           </Text>
-          {/* <View className="flex-row justify-center space-x-12">
-          <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-            <Image source={require('../assets/icons/google.png')}
-              className="w-10 h-10" />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-            <Image source={require('../assets/icons/apple.png')}
-              className="w-10 h-10" />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-            <Image source={require('../assets/icons/facebook.png')}
-              className="w-10 h-10" />
-          </TouchableOpacity>
-        </View> */}
           <View className="flex-row justify-center mt-3">
             <Text className="text-blue-200 text-base font-semibold">Already have an account?</Text>
             <TouchableOpacity onPress={() => [navigation.navigate('Login'), select_beep()]}>
@@ -238,18 +225,7 @@ export default function SignUpScreen() {
       </View>
       {/* </ImageBackground> */}
       <AvatarsModal setModalVisible={setModalVisible} modalVisible={modalVisible} handleProfileImg={handleProfileImg} setSelectedAvatar={setSelectedAvatar} selectedAvatar={selectedAvatar} />
-      <Modal visible={loading} animationType="fade" transparent>
-        <View className='flex flex-1 items-center bg-transparent w-full'>
-          <View style={{ width: wp(100) }}
-            className="flex flex-1  flex-col bg-slate-500 opacity-50 w-auto justify-center">
-            <Image
-              source={require('../../assets/images/loading2.gif')}
-              style={{ width: hp(10), height: hp(10) }}
-              className="mx-auto"
-            />
-          </View>
-        </View>
-      </Modal>
+      <Loader loading={loading}/>
     </View>
 
   )

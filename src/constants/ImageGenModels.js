@@ -17,8 +17,8 @@ export default imageModels=[
         image:imageGen,
         color:'#070F6C',
         demo:'a funny cat wearing sunglasses',
-        desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
-        models:['stabilityai/stable-diffusion-xl-base-1.0', 'kviai/Paint-Diffuion-V2', 'dataautogpt3/ProteusV0.2', 'playgroundai/playground-v2-1024px-aesthetic', 'dataautogpt3/OpenDalleV1.1', 'cagliostrolab/animagine-xl-3.0','stablediffusionapi/juggernaut-xl-v8', 'Norod78/SDXL-Fairy-Form-LoRA', 'joachimsallstrom/aether-glitch-lora-for-sdxl', 'deepghs/animefull-latest', 'runwayml/stable-diffusion-v1-5', 'briaai/BRIA-2.2'],
+        desc:'Explore different models to generate images with specific descriptions.',
+        models:['stabilityai/stable-diffusion-xl-base-1.0', 'kviai/Paint-Diffuion-V2', 'dataautogpt3/ProteusV0.2','playgroundai/playground-v2-512px-base','playgroundai/playground-v2-256px-base','playgroundai/playground-v1', 'playgroundai/playground-v2-1024px-aesthetic', 'dataautogpt3/OpenDalleV1.1','tensorrt/stable-diffusion-2-1', 'cagliostrolab/animagine-xl-3.0','stablediffusionapi/juggernaut-xl-v8', 'Norod78/SDXL-Fairy-Form-LoRA', 'joachimsallstrom/aether-glitch-lora-for-sdxl', 'deepghs/animefull-latest', 'runwayml/stable-diffusion-v1-5', 'briaai/BRIA-2.2'],
         options: []
     },
     {

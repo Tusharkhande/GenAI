@@ -34,6 +34,7 @@ import {assistantSpeech} from '../constants/TextToSpeech';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useUser} from '../context/userContext';
 import useAuth from '../firebase/useAuth';
+import Loader from '../components/Loader';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -100,7 +101,7 @@ const Dashboard = () => {
 
   return (
     <View style={styles.container} className="flex-1 bg-slate-950 p-7">
-      <View className="flex absolute flex-row self-end m-0">
+      <View className="flex absolute flex-row self-end m-0 right-2">
         <View className="">
           <Button
             image={require('../../assets/images/close.png')}
@@ -164,19 +165,7 @@ const Dashboard = () => {
         selectedAvatar={selectedAvatar}
         />
 
-      <Modal visible={loading} animationType="fade" transparent>
-        <View className="flex flex-1 items-center bg-transparent w-full">
-          <View
-            style={{width: wp(100)}}
-            className="flex flex-1  flex-col bg-slate-500 opacity-50 w-auto justify-center">
-            <Image
-              source={require('../../assets/images/loading2.gif')}
-              style={{width: hp(10), height: hp(10)}}
-              className="mx-auto"
-            />
-          </View>
-        </View>
-      </Modal>
+      <Loader loading={loading}/>
         </ScrollView>
     </View>
   );

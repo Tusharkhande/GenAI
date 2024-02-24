@@ -88,7 +88,7 @@ const ExploreAiScreen = () => {
 
   return (
     <View className="flex bg-slate-950 w-full h-full">
-      <View className="flex self-end m-0 absolute">
+      <View className="flex self-end m-0 absolute right-2">
         <View className="">
           <Button
             image={require('../../assets/images/close.png')}

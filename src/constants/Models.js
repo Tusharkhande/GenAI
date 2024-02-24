@@ -1,4 +1,4 @@
-import bot from '../../assets/images/genAI2.jpeg';
+import bot from '../../assets/images/genai.png';
 import dalle from '../../assets/images/dalle2.png';
 import chatgptIcon from '../../assets/images/chatgpt.png';
 import vision from '../../assets/images/vision.jpeg';

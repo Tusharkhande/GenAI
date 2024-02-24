@@ -25,6 +25,7 @@ import {select_beep, err_beep} from '../constants/Sounds';
 // import EncryptedStorage from 'react-native-encrypted-storage';
 import {assistantSpeech} from '../constants/TextToSpeech';
 import { useUser } from '../context/userContext';
+import Loader from '../components/Loader';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -146,19 +147,7 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
       </View>
-      <Modal visible={loading} animationType="fade" transparent>
-        <View className="flex flex-1 items-center bg-transparent w-full">
-          <View
-            style={{width: wp(100)}}
-            className="flex flex-1  flex-col bg-slate-500 opacity-50 w-auto justify-center">
-            <Image
-              source={require('../../assets/images/loading2.gif')}
-              style={{width: hp(10), height: hp(10)}}
-              className="mx-auto"
-            />
-          </View>
-        </View>
-      </Modal>
+      <Loader loading={loading}/>
     </View>
   );
 }

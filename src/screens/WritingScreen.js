@@ -30,6 +30,7 @@ import Tts from 'react-native-tts';
 import Markdown from 'react-native-markdown-display';
 
 import TypeWriterEffect from 'react-native-typewriter-effect';
+import Options from '../components/Options';
 
 const WritingScreen = () => {
   const [prompt, setPrompt] = useState('');
@@ -65,7 +66,7 @@ const WritingScreen = () => {
   };
 
   const handleBackPress = () => {
-    Tts.stop()
+    Tts.stop();
     select_beep();
     setIsLoading(false);
     navigation.goBack();
@@ -130,7 +131,7 @@ const WritingScreen = () => {
 
   return (
     <View className="flex-1 bg-slate-950 justify-normal">
-      <View className="flex flex-row self-end m-0">
+      <View className="flex flex-row self-end m-0 right-2">
         <View className="">
           <Button
             image={require('../../assets/images/close.png')}
@@ -143,7 +144,10 @@ const WritingScreen = () => {
         // bounces={false}
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
-        <View className="flex mt-1 self-start p-5 pb-0">
+        <View
+          className={`flex mt-1 self-start p-5 pb-0 ${
+            param.writingModel.options.length > 0 ? 'p-5 pb-0' : 'p-5 pb-0'
+          }`}>
           <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
             {param.writingModel.name}
           </Text>
@@ -154,39 +158,20 @@ const WritingScreen = () => {
         </View>
         <View className="">
           {param.writingModel.options && (
-            <View
-              className={`flex flex-col  self-start ${
-                param.writingModel.options.length > 0 ? 'p-5 pt-2' : 'p-0'
-              } `}>
-              <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
-                {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
-                {param.writingModel.optionsDesc}
-              </Text>
-              <View className="flex flex-row flex-wrap">
-                {param.writingModel.options.map((option, index) => (
-                  <TouchableHighlight
-                    key={index}
-                    onPress={() => onOptionSelect(option)}
-                    //   underlayColor="#DDDDDD"
-                    className={`m-1 p-2 rounded-md border border-indigo-800 ${
-                      selectedOption === option
-                        ? 'bg-indigo-800'
-                        : 'bg-slate-700'
-                    }`}>
-                    <Text
-                      className={`text-center ${
-                        selectedOption === option
-                          ? 'text-slate-50'
-                          : 'text-slate-50'
-                      }`}>
-                      {option}
-                    </Text>
-                  </TouchableHighlight>
-                ))}
-              </View>
-            </View>
+            <Options
+              optionsLength={param.writingModel.options.length}
+              optionsDesc={param.writingModel.optionsDesc}
+              options={param.writingModel.options}
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+            />
           )}
-          <View className="flex flex-col mb-4 self-start p-5 pt-0">
+          <View
+            className={`flex flex-col mb-4 self-start ${
+              param.writingModel.options.length > 0
+                ? 'p-5 pt-2 pb-0'
+                : 'p-5 pt-0'
+            }`}>
             <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
               {param.writingModel.textInputDesc}
             </Text>
@@ -205,7 +190,9 @@ const WritingScreen = () => {
             onPress={initiate}
             disabled={isLoading || !prompt}
             aria-disabled={isLoading || !prompt}
-            className={`flex-row mt-0 mx-24 rounded-3xl p-2 ${isLoading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'} justify-center`}>
+            className={`flex-row mt-0 mx-24 rounded-3xl p-2 ${
+              isLoading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'
+            } justify-center`}>
             <Image
               source={require('../../assets/images/send-2.png')}
               className="h-6 w-6 mr-1"

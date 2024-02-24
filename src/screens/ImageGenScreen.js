@@ -20,6 +20,7 @@ import {
   downloadBlobImage,
 } from '../constants/DownloadImage';
 import generateImage, {stableDiffusionXL} from '../api/huggingface';
+import Options from '../components/Options';
 
 const ImageGenScreen = () => {
   const [prompt, setPrompt] = useState('');
@@ -118,7 +119,7 @@ const ImageGenScreen = () => {
 
   return (
     <View className="flex-1 bg-slate-950 justify-normal">
-      <View className="flex flex-row self-end m-0">
+      <View className="flex flex-row self-end m-0 right-2">
         <View className="">
           <Button
             image={require('../../assets/images/close.png')}
@@ -132,9 +133,7 @@ const ImageGenScreen = () => {
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
         <View
-          className={`flex mt-1 self-start ${
-            param.imageModel.models.length > 1 ? 'p-5 pb-0' : 'p-5'
-          }`}>
+          className={`flex mt-1 self-start p-5 pb-0`}>
           <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
             {/* Cyberpunk Avatars */}
             {param.imageModel.name}
@@ -147,71 +146,13 @@ const ImageGenScreen = () => {
         </View>
         <View className="">
           {param.imageModel.models.length > 1 && (
-            <View
-              className={`flex flex-col  self-start ${
-                param.imageModel.models.length > 1 ? 'p-5 pt-2 pb-3' : 'p-0'
-              } `}>
-              <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
-                Select a Model
-              </Text>
-              <View className="flex flex-row flex-wrap">
-                {param.imageModel.models.map((option, index) => (
-                  <TouchableHighlight
-                    key={index}
-                    onPress={() => setSelectedModel(option)}
-                    //   underlayColor="#DDDDDD"
-                    className={`m-1 p-2 rounded-md border border-indigo-800 ${
-                      selectedModel === option
-                        ? 'bg-indigo-800'
-                        : 'bg-slate-700'
-                    }`}>
-                    <Text
-                      className={`text-center text-xs ${
-                        selectedModel === option
-                          ? 'text-slate-50'
-                          : 'text-slate-50'
-                      }`}>
-                      {option.split('/')[1]}
-                    </Text>
-                  </TouchableHighlight>
-                ))}
-              </View>
-            </View>
+              <Options optionsLength={param.imageModel.models.length} optionsDesc={'Select a Model'} options={param.imageModel.models} selectedOption={selectedModel} setSelectedOption={setSelectedModel}/>
           )}
           {param.imageModel.options.length>0 && (
-            <View
-              className={`flex flex-col  self-start ${
-                param.imageModel.options.length > 0 ? 'p-5 pt-0 pb-3' : 'p-0'
-              } `}>
-              <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
-                Time travel to
-              </Text>
-              <View className="flex flex-row flex-wrap">
-                {param.imageModel.options.map((option, index) => (
-                  <TouchableHighlight
-                    key={index}
-                    onPress={() => setSelectedOption(option)}
-                    //   underlayColor="#DDDDDD"
-                    className={`m-1 p-2 rounded-md border border-indigo-800 ${
-                      selectedOption === option
-                        ? 'bg-indigo-800'
-                        : 'bg-slate-700'
-                    }`}>
-                    <Text
-                      className={`text-center text-xs ${
-                        selectedOption === option
-                          ? 'text-slate-50'
-                          : 'text-slate-50'
-                      }`}>
-                      {option}
-                    </Text>
-                  </TouchableHighlight>
-                ))}
-              </View>
-            </View>
+            <Options optionsLength={param.imageModel.options.length} optionsDesc={'Time travel to...'} options={param.imageModel.options} selectedOption={selectedOption} setSelectedOption={setSelectedOption}/>
           )}
           <Text
-            className="text-white text-xs mr-6 font-thin self-end"
+            className="text-white text-xs mr-6 mt-3 font-thin self-end"
             >
             {param.imageModel.models[0].split('\/')[1]}
           </Text>

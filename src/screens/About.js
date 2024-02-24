@@ -9,7 +9,7 @@ const About = () => {
   const navigation = useNavigation();
   return (
     <View className="flex bg-slate-950 flex-1 justify-normal ">
-        <View className="flex absolute flex-row self-end m-0">
+        <View className="flex absolute flex-row self-end right-2">
           <Button
             image={require('../../assets/images/close.png')}
             onPress={() => [navigation.goBack(), select_beep()]}
