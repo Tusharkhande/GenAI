@@ -8,6 +8,7 @@ import About from "../screens/About";
 import StabilityImageGen from "../screens/ImageGenScreen";
 import ExploreAiScreen from "../screens/ExploreAiScreen";
 import WritingScreen from "../screens/WritingScreen";
+import History from "../screens/History";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function UserStack() {
                 <Stack.Screen name='Chat' component={ChatScreen} />
                 <Stack.Screen name='Dashboard' component={Dashboard} />
                 <Stack.Screen name='About' component={About} />
+                <Stack.Screen name='History' component={History} />
                 <Stack.Screen name='ExploreAI' component={ExploreAiScreen} />
                 <Stack.Screen name='StabilityImageGen' component={StabilityImageGen} />
                 <Stack.Screen name='Writing' component={WritingScreen} />

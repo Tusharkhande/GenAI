@@ -106,9 +106,9 @@ export default function HomeScreen() {
         <View>
           <Button
             style={'top-0 px-2 my-auto mx-auto'}
-            image={require('../../assets/images/about.png')}
+            image={require('../../assets/images/history.png')}
             isize={'w-9 h-9'}
-            onPress={() => [navigation.navigate('About'), select_beep()]}
+            onPress={() => [navigation.navigate('History'), select_beep()]}
           />
         </View>
       </View>

@@ -2,6 +2,7 @@ import axios from 'axios';
 import {STABILITY_API_KEY, HUGGING_API_KEY} from '@env';
 import { Platform } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import { uploadImageFromCache } from '../constants/UploadImage';
 
 const apiKey = STABILITY_API_KEY;
 export default generateImage = async (
@@ -80,11 +81,13 @@ export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage
         // throw new Error('Something went wrong please try later or select another model');
         error = 'Something went wrong please try later or select another model';
       }
+      setLoading(false);
       const imagePath =
         Platform.OS === 'android' ? `file://${response.path()}` : response.path();
         console.log(imagePath)
         setImage(imagePath);
         setBlobImage(imagePath);
+       await uploadImageFromCache(imagePath, data.inputs);
       return imagePath;
     }catch(e){
       console.log(e)

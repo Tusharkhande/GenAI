@@ -18,7 +18,7 @@ import TextCard from '../components/TextCard';
 
 const AIPainting = ({imageModel, initiate}) => (
   <ScrollView className="flex bg-slate-950">
-    <View className="flex flex-row flex-wrap justify-around mt-2">
+    <View className="flex flex-row flex-wrap justify-evenly mt-2">
       {imageModel.map(imageModel => (
         <TouchableOpacity key={imageModel.id} className="mx-1 my-2">
           <Card
@@ -36,7 +36,7 @@ const AIPainting = ({imageModel, initiate}) => (
 const Writing = ({writingModel, navigation}) => (
   // <View style={{flex: 1, backgroundColor: '#673ab7'}} />
   <ScrollView className="flex bg-slate-950">
-    <View className="flex flex-row flex-wrap justify-around mt-2">
+    <View className="flex flex-row flex-wrap justify-evenly mt-2">
     {writingModel.map(writingModel => (
         <TouchableOpacity key={writingModel.id} className="mx-1 my-2">
           <TextCard
@@ -88,7 +88,7 @@ const ExploreAiScreen = () => {
 
   return (
     <View className="flex bg-slate-950 w-full h-full">
-      <View className="flex absolute flex-row self-start p-2 pt-0">
+      <View className="flex absolute flex-row self-start p-3 pt-1">
           <Button
             image={require('../../assets/images/back.png')}
             onPress={handleBackPress}
