@@ -8,16 +8,16 @@ const generateRandomName = () => {
   const randomNumber = Math.floor(Math.random() * 100000);
   return `${timestamp}_${randomNumber}`;
 };
-const downloadImage = async (url, setLoading) => {
+const downloadImage = async (url) => {
   select_beep();
   try {
-    setLoading(true);
+    // setLoading(true);
     const imageName = generateRandomName();
     assistantSpeech(
       'Starting Download!',
     );
     ToastAndroid.show('Download Started...', ToastAndroid.SHORT);
-    setLoading(false)
+    // setLoading(false)
     const response = await RNFetchBlob.config({
       fileCache: true,
       addAndroidDownloads: {

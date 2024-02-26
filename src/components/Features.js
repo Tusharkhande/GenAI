@@ -19,7 +19,7 @@ export default function Features({ model, provider }) {
               </Text>
             </View>
             {model === "Jarvis" ? (
-                <ScrollView className="space-y-4">
+                <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>
                     <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
                         <View className='flex-row items-center space-x-1'>
                             <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -45,7 +45,7 @@ export default function Features({ model, provider }) {
                     </View>
                 </ScrollView>
             ) : model === "Friday" ? (
-                <ScrollView className="space-y-4" showsVerticalScrollIndicator={false}>
+                <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>
                 <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
                     <View className='flex-row items-center space-x-1'>
                         <Image source={require('../../assets/images/dalleIcon.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -72,7 +72,7 @@ export default function Features({ model, provider }) {
                 </View>
                 </ScrollView>
             ) : model === "GenAI" ? (
-                <ScrollView style={{ height: hp(60) }} className="space-y-4">
+                <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
                     <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
                         <View className='flex-row items-center space-x-1'>
                             <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -103,7 +103,7 @@ export default function Features({ model, provider }) {
 
                 </ScrollView>
             ) : model === "Gemini" ? (
-                <ScrollView style={{ height: hp(60) }} className="space-y-4">
+                <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
                     <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
                     <View className='flex-row items-center space-x-1'>
                         <Image source={require('../../assets/images/writeModels/gemini.png')} style={{ height: hp(4), width: hp(4) }} />
@@ -131,7 +131,7 @@ export default function Features({ model, provider }) {
 
                 </ScrollView>
             ) : (
-                <ScrollView style={{ height: hp(60) }} className="space-y-4">
+                <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
                     <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
                     <View className='flex-row items-center space-x-1'>
                         <Image className='rounded-full' source={require('../../assets/images/eye.jpg')} style={{ height: hp(2), width: hp(4) }} />

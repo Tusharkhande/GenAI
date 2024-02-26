@@ -52,11 +52,11 @@ const ImageGenScreen = () => {
     if (param.imageModel.models && param.imageModel.models.length > 0) {
       setSelectedModel(param.imageModel.models[0]);
     }
-    if(param.imageModel.options){
+    if (param.imageModel.options) {
       setSelectedOption(param.imageModel.options[0]);
     }
   }, [param.imageModel.models]);
-  
+
   const initiate = async () => {
     let para = '';
     if (param.imageModel.name === 'Cyberpunk Avatars') {
@@ -84,7 +84,6 @@ const ImageGenScreen = () => {
     }
     // const para = `${param.imageModel.p1} ${prompt} ${param.imageModel.p2}`;
     // const para = `Create a detailed and visually rich avatar of a ${prompt} set in a futuristic cyberpunk world. This character embodies the essence of cyberpunk aesthetics. The avatar should have look showcasing advanced technology embedded in their attire. u may add holographic accessories.Background: night, sprawling cityscape filled with towering skyscrapers, flying vehicles, and bustling streets`;
-    console.log(para);
     // generateImage(para, setLoading, setImage, setBase64Image);
 
     // if(image.includes('file:///data')){
@@ -92,22 +91,25 @@ const ImageGenScreen = () => {
     //     console.log("deletion successful");
     //   })
     // }
-    setImage('');
-    setLoading(true);
-    try {
-      await stableDiffusionXL(
-        {inputs: para},
-        setLoading,
-        setImage,
-        setBlobImage,
-        blobImage,
-        selectedModel,
-      );
-      updateScrollView();
-    } catch (e) {
-      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
-    }finally {
-      setLoading(false);
+    if (!loading) {
+      console.log(para);
+      setImage('');
+      setLoading(true);
+      try {
+        await stableDiffusionXL(
+          {inputs: para},
+          setLoading,
+          setImage,
+          setBlobImage,
+          blobImage,
+          selectedModel,
+        );
+        updateScrollView();
+      } catch (e) {
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -119,19 +121,18 @@ const ImageGenScreen = () => {
 
   return (
     <View className="flex-1 bg-slate-950 justify-normal">
-      <View className="flex flex-row self-start p-2 pt-0">
-          <Button
-            image={require('../../assets/images/back.png')}
-            onPress={handleBackPress}
-          />
+      <View className="flex flex-row self-start p-3">
+        <Button
+          image={require('../../assets/images/back.png')}
+          onPress={handleBackPress}
+        />
       </View>
       <ScrollView
         ref={scrollViewRef}
         // bounces={false}
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
-        <View
-          className={`flex mt-1 self-start p-5 pb-0`}>
+        <View className={`flex mt-1 self-start p-5 pb-0`}>
           <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
             {/* Cyberpunk Avatars */}
             {param.imageModel.name}
@@ -140,28 +141,38 @@ const ImageGenScreen = () => {
             {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
             {param.imageModel.desc}
           </Text>
-          
         </View>
         <View className="">
           {param.imageModel.models.length > 1 && (
-              <Options optionsLength={param.imageModel.models.length} optionsDesc={'Select a Model'} options={param.imageModel.models} selectedOption={selectedModel} setSelectedOption={setSelectedModel}/>
+            <Options
+              optionsLength={param.imageModel.models.length}
+              optionsDesc={'Select a Model'}
+              options={param.imageModel.models}
+              selectedOption={selectedModel}
+              setSelectedOption={setSelectedModel}
+            />
           )}
-          {param.imageModel.options.length>0 && (
-            <Options optionsLength={param.imageModel.options.length} optionsDesc={'Time travel to...'} options={param.imageModel.options} selectedOption={selectedOption} setSelectedOption={setSelectedOption}/>
+          {param.imageModel.options.length > 0 && (
+            <Options
+              optionsLength={param.imageModel.options.length}
+              optionsDesc={'Time travel to...'}
+              options={param.imageModel.options}
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+            />
           )}
-          <Text
-            className="text-white text-xs mr-6 mt-3 font-thin self-end"
-            >
-            {param.imageModel.models[0].split('\/')[1]}
+          <Text className="text-white text-xs mr-6 mt-3 font-thin self-end">
+            {param.imageModel.models[0].split('/')[1]}
           </Text>
           <View className="flex-row mt-4 mb-4 justify-around">
-            
             <TextInput
               className="h-24 rounded-xl border-solid border-2 border-indigo-800"
               onChangeText={setPrompt}
               placeholder={param.imageModel.demo}
               multiline={true}
               // numberOfLines={1}
+              returnKeyType="send"
+              onSubmitEditing={initiate}
               style={{color: 'white', textAlignVertical: 'top', width: wp(90)}}
             />
           </View>
@@ -169,7 +180,9 @@ const ImageGenScreen = () => {
             onPress={initiate}
             disabled={loading || !prompt}
             aria-disabled={loading || !prompt}
-            className={`flex-row mt-0 mx-24 rounded-full p-2 ${loading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'} justify-center `}>
+            className={`flex-row mt-0 mx-24 rounded-full p-2 ${
+              loading || !prompt ? 'bg-slate-600' : 'bg-indigo-800'
+            } justify-center `}>
             <Image
               source={require('../../assets/images/generate.png')}
               className=" ml-0 h-6 w-6 mr-1"
@@ -226,16 +239,16 @@ const ImageGenScreen = () => {
                 //   </Text>
                 // </TouchableOpacity>
                 <Button
-                style="self-center mt-2"
-                image={require('../../assets/images/dwd.png')}
-                isize={'h-6 w-6'}
-                // title={'Copy'}
-                onPress={() =>
+                  style="self-center mt-2"
+                  image={require('../../assets/images/dwd.png')}
+                  isize={'h-6 w-6'}
+                  // title={'Copy'}
+                  onPress={() =>
                     blobImage
                       ? downloadBlobImage(blobImage, setImage, setBlobImage)
                       : downloadBase64Image(base64Image)
                   }
-              />
+                />
               )}
             </View>
           </View>

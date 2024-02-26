@@ -106,7 +106,7 @@ export default function HomeScreen() {
         <View>
           <Button
             style={'top-0 px-2 my-auto mx-auto'}
-            image={require('../../assets/images/history.png')}
+            image={require('../../assets/images/history1.png')}
             isize={'w-9 h-9'}
             onPress={() => [navigation.navigate('History'), select_beep()]}
           />
@@ -146,8 +146,9 @@ export default function HomeScreen() {
           <Button
             title={'Explore AI'}
             image={require('../../assets/images/explore.gif')}
-            onPress={() => navigation.navigate('ExploreAI')}
-            isize={'w-10 h-10'}
+            onPress={() => [navigation.navigate('ExploreAI'), select_beep()]}
+            isize={'w-11 h-12'}
+            textStyle={'text-slate-100 font-bold text-base mx-1'}
           />
         </View>
       </View>

@@ -123,11 +123,18 @@ const Dashboard = () => {
 
   return (
     <View style={styles.container} className="flex-1 bg-slate-950 p-7">
-      <View className="flex absolute flex-row self-start p-2 pt-0">
+      <View className="flex absolute flex-row self-start p-3">
         <Button
           image={require('../../assets/images/back.png')}
           onPress={handleBackPress}
           // size={'w-4 h-4'}
+        />
+      </View>
+      <View className="flex absolute flex-row self-end p-3">
+        <Button
+          image={require('../../assets/images/about.png')}
+          onPress={() => [navigation.navigate('About'), select_beep()]}
+          isize={'w-8 h-8'}
         />
       </View>
       <ScrollView className=" mt-8" showsVerticalScrollIndicator={false}>

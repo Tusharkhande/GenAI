@@ -2,7 +2,7 @@ import axios from 'axios';
 import {STABILITY_API_KEY, HUGGING_API_KEY} from '@env';
 import { Platform } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
-import { uploadImageFromCache } from '../constants/UploadImage';
+import { uploadImageFromCache } from '../firebase/firebase.storage';
 
 const apiKey = STABILITY_API_KEY;
 export default generateImage = async (

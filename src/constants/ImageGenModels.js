@@ -28,7 +28,7 @@ export default imageModels=[
         color:'#ffd',
         demo:'a funny cat wearing sunglasses',
         desc:'Design futuristic, edgy avatars in the Cyberpunk Genre',
-        models:['stabilityai/stable-diffusion-xl-base-1.0'],
+        models:['stablediffusionapi/juggernaut-xl-v8'],
         options: []
     },
     {

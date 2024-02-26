@@ -131,7 +131,7 @@ const WritingScreen = () => {
 
   return (
     <View className="flex-1 bg-slate-950 justify-normal">
-      <View className="flex flex-row self-start p-2 pt-0">
+      <View className="flex flex-row self-start p-3">
           <Button
             image={require('../../assets/images/back.png')}
             onPress={handleBackPress}

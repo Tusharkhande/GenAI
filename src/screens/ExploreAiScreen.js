@@ -16,8 +16,10 @@ import Button from '../components/Button';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import TextCard from '../components/TextCard';
 
-const AIPainting = ({imageModel, initiate}) => (
-  <ScrollView className="flex bg-slate-950">
+const AIPainting = ({imageModel, navigation}) => (
+  <ScrollView
+    className="flex bg-slate-950"
+    showsVerticalScrollIndicator={false}>
     <View className="flex flex-row flex-wrap justify-evenly mt-2">
       {imageModel.map(imageModel => (
         <TouchableOpacity key={imageModel.id} className="mx-1 my-2">
@@ -25,7 +27,12 @@ const AIPainting = ({imageModel, initiate}) => (
             imageSource={imageModel.image}
             text={imageModel.name}
             color={imageModel.color}
-            onPress={() => initiate(imageModel)}
+            onPress={() => [
+              navigation.navigate('StabilityImageGen', {
+                imageModel: imageModel,
+              }),
+              select_beep(),
+            ]}
           />
         </TouchableOpacity>
       ))}
@@ -35,15 +42,20 @@ const AIPainting = ({imageModel, initiate}) => (
 
 const Writing = ({writingModel, navigation}) => (
   // <View style={{flex: 1, backgroundColor: '#673ab7'}} />
-  <ScrollView className="flex bg-slate-950">
+  <ScrollView
+    className="flex bg-slate-950"
+    showsVerticalScrollIndicator={false}>
     <View className="flex flex-row flex-wrap justify-evenly mt-2">
-    {writingModel.map(writingModel => (
+      {writingModel.map(writingModel => (
         <TouchableOpacity key={writingModel.id} className="mx-1 my-2">
           <TextCard
             imageSource={writingModel.image}
             text={writingModel.name}
             // color={writingModel.color}
-            onPress={() => navigation.navigate('Writing', {writingModel: writingModel})}
+            onPress={() => [
+              navigation.navigate('Writing', {writingModel: writingModel}),
+              select_beep(),
+            ]}
           />
         </TouchableOpacity>
       ))}
@@ -64,7 +76,7 @@ const ExploreAiScreen = () => {
   const handleBackPress = () => {
     select_beep();
     navigation.goBack();
-    return true; // Return true to prevent the default back button behavior
+    return true;
   };
 
   useEffect(() => {
@@ -74,13 +86,9 @@ const ExploreAiScreen = () => {
     };
   }, []);
 
-  const initiate = (imageModel) => {
-    navigation.navigate('StabilityImageGen', {imageModel: imageModel});
-  };
-
   const Tab = createMaterialTopTabNavigator();
   const AIPaintingScreen = () => (
-    <AIPainting imageModel={imageModel} initiate={initiate} />
+    <AIPainting imageModel={imageModel} navigation={navigation} />
   );
   const WritingScreen = () => (
     <Writing writingModel={writingModel} navigation={navigation} />
@@ -89,10 +97,10 @@ const ExploreAiScreen = () => {
   return (
     <View className="flex bg-slate-950 w-full h-full">
       <View className="flex absolute flex-row self-start p-3 pt-1">
-          <Button
-            image={require('../../assets/images/back.png')}
-            onPress={handleBackPress}
-          />
+        <Button
+          image={require('../../assets/images/back.png')}
+          onPress={handleBackPress}
+        />
       </View>
       <View className="flex flex-row flex-wrap justify-center mt-2">
         <Text
@@ -102,11 +110,11 @@ const ExploreAiScreen = () => {
       </View>
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: '#e91e63', // Color of the text for the selected tab
-          tabBarInactiveTintColor: 'gray', // Color of the text for the unselected tabs
-          tabBarLabelStyle: {fontSize: 12}, // Style object for the tab label
-          tabBarStyle: {backgroundColor: 'rgb(2 6 23)'}, // Style object for the tab bar itself
-          tabBarIndicatorStyle: {backgroundColor: '#e91e63'}, // Style for the indicator (underline) of the active tab
+          tabBarActiveTintColor: '#e91e63',
+          tabBarInactiveTintColor: 'gray', 
+          tabBarLabelStyle: {fontSize: 12}, 
+          tabBarStyle: {backgroundColor: 'rgb(2 6 23)'}, 
+          tabBarIndicatorStyle: {backgroundColor: '#e91e63'}, 
         }}>
         <Tab.Screen name="AI Painting">{AIPaintingScreen}</Tab.Screen>
         <Tab.Screen name="Writing">{WritingScreen}</Tab.Screen>

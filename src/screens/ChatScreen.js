@@ -414,7 +414,7 @@ const ChatScreen = () => {
                                     isize={'h-6 w-6'}
                                     // title={'Copy'}
                                     onPress={() =>
-                                      downloadImage(message.content, setLoading)
+                                      downloadImage(message.content)
                                     }
                                   />
                                 </View>

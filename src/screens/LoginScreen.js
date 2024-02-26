@@ -81,6 +81,7 @@ export default function LoginScreen() {
               onChangeText={text => setEmail(text.toLowerCase().trim())}
               style={{ width: wp(70), height: wp(12) }}
               returnKeyType="next"
+              inputMode='email'
             />
             
           </View>

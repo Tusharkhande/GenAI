@@ -2,7 +2,7 @@ import {createContext, useContext, useState, useEffect} from 'react';
 
 import React from 'react';
 import {assistantSpeech} from '../constants/TextToSpeech';
-import {select_beep, err_beep} from '../constants/Sounds';
+import {select_beep, err_beep, logout_beep} from '../constants/Sounds';
 import {signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import {auth} from '../firebase/firebase.config';
 import {
@@ -242,7 +242,8 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
     setLoading(true);
     try{
       await auth.signOut();
-      await GoogleSignin.signOut();
+      logout_beep();
+      assistantSpeech('Logged out successfully');
       setUser(null);
       setGuser(null);
     }catch(e){

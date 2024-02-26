@@ -9,18 +9,31 @@ const Card = ({ imageSource, text, color, onPress, textStyle }) => {
     return typeof source === 'string' && (source.startsWith('http://') || source.startsWith('https://'));
   };
 
+  const truncateText = (text, no) => {
+    if (typeof text === 'string' && text.length > 0) {
+      if (text.length > no) {
+        return text.slice(0, no) + '...';
+      } else {
+        return text;
+      }
+    } else {
+      return '';
+    }
+  };
+  
+
   return (
     <TouchableOpacity onPress={onPress} className='w-40 h-40 rounded-xl overflow-hidden'>
       {isUrl(imageSource) ? (<Image source={{uri : imageSource}} onLoad={() => setImageLoading(false)} className='mx-auto transition-opacity ease-in duration-1000 opacity-90 -z-10 w-full h-full'/>)
       : (<Image source={imageSource} onLoad={() => setImageLoading(false)} className='mx-auto transition-opacity ease-in duration-1000 opacity-90 -z-10 w-full h-full'/>)}
       {imageLoading && (
         <Image
-        source={require('../../assets/images/loading3.gif')}
+        source={require('../../assets/images/placeholder2.png')}
         className="absolute rounded-2xl self-start mr-4 w-full h-full"
         resizeMode="contain"
       />      
       )}
-      <Text style={{color: color}} className={`mx-auto ${textStyle ? textStyle : ' mt-2 ml-2 text-base'} absolute z-0 font-semibold `}>{text}</Text>
+      <Text style={{color: color}} className={`mx-auto ${textStyle ? textStyle : ' mt-2 ml-2 text-base'} absolute z-0 font-semibold `}>{truncateText(text, 35)}</Text>
     </TouchableOpacity>
   );
 };
