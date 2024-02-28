@@ -36,8 +36,19 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {downloadImage} from '../constants/DownloadImage';
 import {vision} from '../api/gemini';
-import {geminiChatApiCall} from '../api/gemini';
+import {geminiChatApiCall, gemini} from '../api/gemini';
 import {useUser} from '../context/userContext';
+import {saveChatSession} from '../firebase/firebase.storage';
+import {auth, storage} from '../firebase/firebase.config';
+import {
+  query,
+  collection,
+  getDocs,
+  where,
+  orderBy,
+  doc,
+} from 'firebase/firestore';
+import {db} from '../firebase/firebase.config';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -51,12 +62,25 @@ const ChatScreen = () => {
   const scrollViewRef = useRef();
   const navigation = useNavigation();
   const {gUserAvatar} = useUser;
+  const user = auth.currentUser;
+  const userId = user.uid;
+  const sessionId = param.sessionId ? param.sessionId : '';
+  const selectedAvatar = param.selectedAvatar || gUserAvatar || require('../../assets/images/avatars/thor.jpeg');
 
   useEffect(() => {
     console.log(param.selectedModel.name);
   }, []);
 
   const handleBackPress = () => {
+    console.log(messages.length);
+    if (
+      param.selectedModel.name != 'Vision' &&
+      messages.length >= 2
+    ) {
+      const firstMessage = messages.length > 0 ? messages[0] : null;
+      const title = firstMessage ? firstMessage.content : '';
+      saveChatSession(user.uid, messages, param.selectedModel, param.sessionId);
+    }
     navigation.goBack(); // works best when the goBack is async
     Tts.stop();
     return true; // Return true to prevent the default back button behavior
@@ -67,7 +91,14 @@ const ChatScreen = () => {
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
-  }, []);
+  }, [messages]);
+
+  useEffect(() => {
+    if (param.sessionId && param.sessionId.trim() !== '') {
+      console.log(param.sessionId.trim());
+      fetchMessagesForSession(param.sessionId);
+    }
+  }, [param.sessionId]); // Adding param.sessionId as a dependency
 
   const clear = () => {
     sweep();
@@ -75,6 +106,70 @@ const ChatScreen = () => {
     setLoading(false);
     setMessages([]);
   };
+
+ /*  async function fetchMessagesForSession(sessionId) {
+    if (!sessionId) {
+      console.error('Session ID is undefined');
+      return;
+    }
+    setLoading(true);
+    const fullPath = `/chat_sessions/${sessionId}`;
+    const q = query(
+      collection(db, 'messages'),
+      where('sessionId', '==', fullPath), // Use the extracted session ID
+      // orderBy('createdAt', 'asc'),
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+      const messages = [];
+      for(const doc of querySnapshot.docs) {
+        const data = doc.data();
+        // const messageRef = ref(storage, data.sessionId);
+        messages.push({role: data.role, content: data.content});
+      }
+
+      console.log(messages);
+      setMessages(messages);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      setLoading(false);
+    }
+  } */
+
+  async function fetchMessagesForSession(sessionId) {
+    if (!sessionId) {
+      console.error('Session ID is undefined');
+      return;
+    }
+
+
+    setLoading(true);
+
+    const q = query(
+      collection(db, 'messages'),
+      where('sessionId', '==', sessionId),
+      orderBy('createdAt', 'asc'),
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log(`Found ${querySnapshot.docs.length} documents`); // Debug log
+
+      const messages = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {role: data.role, content: data.content};
+      });
+
+      console.log('Messages:', messages); // Debug log
+      setMessages(messages);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      setLoading(false);
+    }
+}
 
   const fetchResponse = async () => {
     try {
@@ -330,11 +425,18 @@ const ChatScreen = () => {
                   style={{fontSize: wp(5)}}>
                   {param.selectedModel.name}
                 </Text>
-                <Text
-                  className="text-white font-thin mr-1 self-center"
-                  style={{fontSize: wp(3)}}>
-                  {param.selectedModel.provider}
-                </Text>
+                <View className="flex flex-row items-center">
+                  <Text
+                    className="text-white font-thin mr-2"
+                    style={{fontSize: wp(3)}}>
+                    {param.selectedModel.provider}
+                  </Text>
+                  <Button
+                    image={require('../../assets/images/history1.png')}
+                    onPress={() => navigation.navigate('ChatHistory')}
+                    style={'h-6 w-6 mr-1'}
+                  />
+                </View>
               </View>
 
               <View
@@ -473,11 +575,11 @@ const ChatScreen = () => {
                       // user input text
                       return (
                         <View key={index} className="flex-row w-full">
-                          <View className="  p-2 pr-0 rounded-xl rounded-tr-none w-full">
+                          <View className="  p-2 pr-0 rounded-xl  w-full">
                             <View className="flex-row">
                               <Image
                                 className="h-7 w-7 rounded-full mr-1"
-                                source={param.selectedAvatar}
+                                source={selectedAvatar}
                               />
                               <View className="flex-col">
                                 <Text className="text-slate-900 text-lg">

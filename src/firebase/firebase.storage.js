@@ -1,7 +1,39 @@
-import {  ref, uploadBytes, deleteObject } from "firebase/storage";
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc  } from "firebase/firestore";
+import {  ref, uploadBytes, deleteObject,getDownloadURL } from "firebase/storage";
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc, serverTimestamp, updateDoc, setDoc  } from "firebase/firestore";
 import { auth, db, storage  } from "./firebase.config";
 import { ToastAndroid } from "react-native";
+import gemini from "../api/gemini";
+
+export async function fetchUserImages(userId, setImages) {
+  // setLoading(true);
+  const images = [];
+  const imagesQuery = query(
+    collection(db, 'user_images'),
+    where('userId', '==', userId),
+  );
+  const querySnapshot = await getDocs(imagesQuery);
+
+  for (const doc of querySnapshot.docs) {
+    const data = doc.data();
+    // console.log(data);
+    // console.log(storage, data.fullPath);
+    const imageRef = ref(storage, data.fullPath);
+    const imageUrl = await getDownloadURL(imageRef);
+    images.push({
+      name: data.imageName,
+      url: imageUrl,
+      path: data.fullPath,
+      prompt: data.prompt,
+      date: data.createdAt,
+    });
+  }
+  const sortedImages = images.sort((a, b) => b.date - a.date);
+  setImages(sortedImages);
+  // console.log(images);
+  // setLoading(false);
+
+  // return images;
+}
 
 async function saveImageMetadata(metadata, userId, prompt) {
   try {
@@ -71,5 +103,77 @@ export async function deleteImageFromStorage(fullPath) {
     } catch (error) {
       ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
       console.error('Error deleting image from storage', error);
+    }
+  }
+
+  // export async function saveChatSession(userId, messages, selectedModel) {
+  //   try {
+  //     // Save the chat session
+  //     const messagesString = JSON.stringify(messages);
+  //     console.log(messagesString)
+  //     const title = await gemini("take a look at this "+ messagesString + "and tell a short title for it");
+  //     const sessionRef = await addDoc(collection(db, "chat_sessions"), {
+  //       userId,
+  //       title,
+  //       selectedModel,
+  //       createdAt: serverTimestamp(),
+  //     });
+  
+  //     // Save each message under the messages collection with a reference to the chat session
+  //     for (const message of messages) {
+  //       await addDoc(collection(db, "messages"), {
+  //         ...message,
+  //         sessionId: sessionRef.id,
+  //         createdAt: serverTimestamp(),
+  //       });
+  //     }
+  //     console.log('Chat session and messages saved');
+  //   } catch (error) {
+  //     console.error('Error saving chat session', error);
+  //   }
+  // }
+
+
+  export async function saveChatSession(userId, messages, selectedModel, existingSessionId) {
+    try {
+      let sessionRef;
+      const messagesString = JSON.stringify(messages);
+      console.log(messagesString);
+      if (existingSessionId) {
+        const sessionDocRef = doc(db, "chat_sessions", existingSessionId);
+        sessionRef = { id: existingSessionId };
+        await updateDoc(sessionDocRef, {
+          lastModified: serverTimestamp(),
+        });
+      } else {
+        const title = await gemini("take a look at this " + messagesString + " and tell a short title for it");
+        const newSessionRef = await addDoc(collection(db, "chat_sessions"), {
+          userId,
+          title,
+          selectedModel: selectedModel, 
+          createdAt: serverTimestamp(),
+        });
+        sessionRef = newSessionRef;
+      }
+  
+      const existingMessagesQuery = query(
+        collection(db, "messages"),
+        where("sessionId", "==", sessionRef.id)
+      );
+      const existingMessagesSnapshot = await getDocs(existingMessagesQuery);
+      const existingMessages = existingMessagesSnapshot.docs.map(doc => doc.data().content); 
+
+      for (const message of messages) {
+        if (!existingMessages.includes(message.content)) {
+          await addDoc(collection(db, "messages"), {
+            ...message,
+            sessionId: sessionRef.id,
+            createdAt: serverTimestamp(),
+          });
+        }
+      }
+      console.log('Chat session and messages saved/updated');
+    } catch (error) {
+      console.error('Error saving/updating chat session', error);
     }
   }

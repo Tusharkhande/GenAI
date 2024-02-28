@@ -147,8 +147,7 @@ export default function HomeScreen() {
             title={'Explore AI'}
             image={require('../../assets/images/explore.gif')}
             onPress={() => [navigation.navigate('ExploreAI'), select_beep()]}
-            isize={'w-11 h-12'}
-            textStyle={'text-slate-100 font-bold text-base mx-1'}
+            isize={'w-10 h-10'}
           />
         </View>
       </View>

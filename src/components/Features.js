@@ -3,20 +3,29 @@ import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import React from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import features from '../constants/features';
+import Button from './Button';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function Features({ model, provider }) {
-    const a = "hello";
+    const navigation = useNavigation();
     return (
         
         <View style={{ height: hp(68) }} className="space-y-4 pt-0">
             <View className='flex-row justify-between'>
             <Text style={{ fontSize: wp(6.5) }} className="font-semibold text-neutral-100">Features</Text>
-            <Text
-                className="text-white font-thin mr-1 self-center"
-                style={{fontSize: wp(3)}}>
-                {provider}
-              </Text>
+            <View className="flex flex-row items-center">
+                  <Text
+                    className="text-white font-thin mr-2"
+                    style={{fontSize: wp(3)}}>
+                    {provider}
+                  </Text>
+                  <Button
+                    image={require('../../assets/images/history1.png')}
+                    onPress={() => navigation.navigate('ChatHistory')}
+                    style={'h-6 w-6 mr-1'}
+                  />
+                </View>
             </View>
             {model === "Jarvis" ? (
                 <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>

@@ -77,7 +77,7 @@ export default imageModels=[
         image:painter,
         color:'#000',
         demo:'a bike racing on a tree-ring bread',
-        desc:'Create photos in miniature photography',
+        desc:'Create photos in the style of famous painters like Van Gogh, Picasso, and more.',
         models: ['kviai/Paint-Diffuion-V2'],
         options: []
     },

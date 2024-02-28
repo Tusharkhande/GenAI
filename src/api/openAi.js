@@ -147,23 +147,7 @@ export const chatCompletion = async (prompt) => {
         console.log("chatcompletion error: " ,e);
     }
 }
-export async function gpt2(data) {
-    try {
-        const response = await axios.post(
-            "https://api-inference.huggingface.co/models/openai-community/gpt2",
-            data, 
-            {
-                headers: { Authorization: "Bearer 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" }
-            }
-        );
-        console.log("response is", response.data);
-        
-        return response.data[0].generated_text;
-    } catch (error) {
-        console.error("An error occurred while querying the API:", error);
-        throw error; 
-    }
-}
+
 
 // export const imageVariationApiCall = async (image, messages) => {
 //     try {

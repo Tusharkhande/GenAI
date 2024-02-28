@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 export default function Button({ title, onPress, image, isize, style, textStyle }) {
   return (
-    <TouchableOpacity className={`${style}`} onPress={onPress} style={styles.button}>
+    <TouchableOpacity className={`${style ? style : 'flex-row items-center justify-center h-10'}`} onPress={onPress} >
       {image && <Image source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
       {title && <Text className={`${textStyle ? textStyle : 'text-center self-center'}`} >{title}</Text>}
     </TouchableOpacity>

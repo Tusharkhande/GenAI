@@ -7,7 +7,7 @@ import {chatCompletion, gpt2} from './openAi';
 const API_KEY = GEMINI_API_KEY;
 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
-export default geminiApi = async (prompt, setIsLoading) => {
+export default geminiApi = async (prompt) => {
   // setIsLoading(true);
   // console.log('API_KEY:', API_KEY);
   let message = '';
@@ -145,7 +145,7 @@ export const geminiChatApiCall = async (inputText, conversationHistory) => {
     });
 
     // Process the response to fit your existing message structure
-    const modelResponse = response.data.candidates[0].content.parts[0].text;
+    const modelResponse = response.data.candidates[0].content?.parts[0].text;
     console.log("modelResponse", modelResponse)
     const newMessage = {role: 'assistant', content: modelResponse};
 
@@ -153,7 +153,7 @@ export const geminiChatApiCall = async (inputText, conversationHistory) => {
     console.log(newMessage);
     return newMessage;
   } catch (error) {
-    // console.error("Error calling the Gemini API:", error);
+    console.error("Error calling the Gemini API:", error);
     // throw error;
   }
 };
