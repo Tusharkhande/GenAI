@@ -5,7 +5,7 @@ const HorizontalLine = ({text}) => {
   return (
     <View style={styles.horizontalLine}>
         <View style={styles.line} />
-        <Text style={styles.contactText}>{text}</Text>
+        {text && <Text style={styles.contactText}>{text}</Text>}
         <View style={styles.line} />
       </View>
   )
@@ -15,22 +15,20 @@ const styles = StyleSheet.create({
     
   horizontalLine: {
     width: '100%',
-    flexDirection: 'row', // To align text horizontally
-    alignItems: 'center', // To center text vertically
-    marginVertical: 10, // Adjust as needed
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginVertical: 10, 
   },
 
-  // Style for the horizontal lines
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: 'gray', // You can change the color to match your design
+    backgroundColor: 'gray', 
   },
 
-  // Style for the "Contact" text
   contactText: {
-    paddingHorizontal: 10, // Add spacing around text
-    fontSize: 18, // Adjust the font size as needed
+    paddingHorizontal: 10, 
+    fontSize: 18, 
   },
 });
 

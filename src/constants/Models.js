@@ -1,10 +1,10 @@
-import bot from '../../assets/images/genai.png';
+import bot from '../../assets/images/ai2.png';
 import dalle from '../../assets/images/dalle2.png';
 import chatgptIcon from '../../assets/images/chatgpt.png';
 import vision from '../../assets/images/vision.jpeg';
 import friday from '../../assets/images/friday.jpeg';
 import jarvis from '../../assets/images/jarvis.jpeg';
-import gemini from '../../assets/images/writeModels/gemini.png';
+import gemini from '../../assets/images/gemini.jpeg';
 export default model=[
     {
         id:1,
@@ -13,14 +13,6 @@ export default model=[
         primary:'#50C878',
         secondary:'black',
         provider:'gpt-3.5-turbo'
-    },
-    {
-        id:2,
-        name:'GenAI',
-        image:bot,
-        primary:'#3B96D2',
-        secondary:'black',
-        provider:'gpt-3.5-turbo, dalle-2'
     },
     {
         id:3,
@@ -46,5 +38,13 @@ export default model=[
         primary:'#2473FE',
         secondary:'#000',
         provider:'gemini-pro'
+    },
+    {
+        id:2,
+        name:'GenAI',
+        image:bot,
+        primary:'#3B96D2',
+        secondary:'black',
+        provider:'gpt-3.5-turbo, dalle-2'
     },
 ]

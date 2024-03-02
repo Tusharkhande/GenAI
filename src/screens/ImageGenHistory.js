@@ -19,7 +19,7 @@ import Card from '../components/Card';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import ViewImage from '../components/ViewImage';
 
-const History = () => {
+const ImageGenHistory = () => {
   const user = auth.currentUser;
   const userId = user.uid;
   const [images, setImages] = useState([]);
@@ -160,4 +160,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default ImageGenHistory;

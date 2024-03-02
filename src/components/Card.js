@@ -33,7 +33,7 @@ const Card = ({ imageSource, text, color, onPress, textStyle }) => {
         resizeMode="contain"
       />      
       )}
-      <Text style={{color: color}} className={`mx-auto ${textStyle ? textStyle : ' mt-2 ml-2 text-base'} absolute z-0 font-semibold `}>{truncateText(text, 35)}</Text>
+      <Text style={{color: color}} className={`${textStyle ? textStyle : ' mt-2 ml-2 text-base'} absolute opacity-100 font-semibold mx-auto `}>{truncateText(text, 35)}</Text>
     </TouchableOpacity>
   );
 };

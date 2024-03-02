@@ -38,7 +38,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     setModel(Models);
-    setSelectedModel(Models[1]);
+    setSelectedModel(Models[4]);
   }, []);
 
   useEffect(() => {
@@ -165,7 +165,7 @@ export default function HomeScreen() {
           {Models.map((item, index) => (
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
-              className="flex flex-row items-center justify-between px-1 mx-4 py-2 my-2 rounded-full"
+              className="flex flex-row items-center justify-between px-2 mx-4 py-2 my-2 rounded-full"
               key={index}
               // style={{ backgroundColor: item.primary }}
             >
