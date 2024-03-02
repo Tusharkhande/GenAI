@@ -108,6 +108,14 @@ const ExploreAiScreen = () => {
           Explore AI
         </Text>
       </View>
+      <View className='absolute self-end p-3'>
+          <Button
+            style={'top-0 px-2 my-auto mx-auto'}
+            image={require('../../assets/images/history1.png')}
+            isize={'w-8 h-8'}
+            onPress={() => [navigation.navigate('History'), select_beep()]}
+          />
+        </View>
       <Tab.Navigator
         screenOptions={{
           tabBarActiveTintColor: '#e91e63',

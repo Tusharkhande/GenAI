@@ -8,7 +8,7 @@ import About from "../screens/About";
 import StabilityImageGen from "../screens/ImageGenScreen";
 import ExploreAiScreen from "../screens/ExploreAiScreen";
 import WritingScreen from "../screens/WritingScreen";
-import History from "../screens/History";
+import History from "../screens/ImageGenHistory";
 import ChatHistory from "../screens/ChatHistory";
 
 const Stack = createNativeStackNavigator();

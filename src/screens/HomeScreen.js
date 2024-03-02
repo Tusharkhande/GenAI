@@ -72,7 +72,8 @@ export default function HomeScreen() {
       <View
         className="flex flex-row justify-between"
         style={{width: wp(90), alignSelf: 'center'}}>
-        <View className="mr-3">
+        <View className="">
+        <View className="absolute top-1.5 bg-slate-300 rounded-full -z-10 self-center" style={{height: wp(12), width: wp(12)}} />
           <TouchableOpacity
             onPress={() => [navigation.navigate('Dashboard'), select_beep()]}
             className="flex top-0 px-2 py-2 my-0 rounded-3xl"
@@ -82,10 +83,11 @@ export default function HomeScreen() {
               // source={user ? user.photoURL : guser ? gUserAvatar : require("../../assets/images/avatars/thor.jpeg")}
               // source={avatar ? avatar : require("../../assets/images/avatars/arc.jpg")}
               style={{height: wp(11), width: wp(11)}}
-              className="rounded-full w-14 h-14 mx-auto"
+              className="rounded-full "
               resizeMode="contain"
             />
           </TouchableOpacity>
+
         </View>
         <View className="flex mx-auto justify-center ">
           <Text

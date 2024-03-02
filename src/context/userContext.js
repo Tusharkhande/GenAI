@@ -10,6 +10,7 @@ import {
   statusCodes,
   
 } from '@react-native-google-signin/google-signin';
+import { ToastAndroid } from 'react-native';
 
 const UserContext = createContext();
 
@@ -116,16 +117,8 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
         console.error('Firebase Auth with Google failed:', error);
       });
   } catch (error) {
-    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-      // User cancelled the login flow
-    } else if (error.code === statusCodes.IN_PROGRESS) {
-      // Operation (e.g. sign in) is in progress already
-    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-      // Play services not available or outdated
-    } else {
-      // Some other error happened
-      console.log(error);
-    }
+    let msg = error.message;
+    ToastAndroid.show(msg, ToastAndroid.SHORT);
   }finally{
     setIsLoading(false);
   }
@@ -242,6 +235,8 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
     setLoading(true);
     try{
       await auth.signOut();
+      await GoogleSignin.signOut();
+      console.log("logged out")
       logout_beep();
       assistantSpeech('Logged out successfully');
       setUser(null);

@@ -141,49 +141,68 @@ const Dashboard = () => {
         <TouchableOpacity
           onPress={() => [setModalVisible(true), select_beep()]}
           className="self-center flex justify-center mt-0 mb-8">
+          <View
+            className="absolute top-11 bg-slate-300 rounded-full -z-10 self-center"
+            style={{height: wp(21.5), width: wp(21.5)}}
+          />
           <Image
             source={avatar}
-            className="rounded-full w-20 h-20 m-12 mb-0 mx-auto"
+            style={{width: wp(20), height: wp(20)}}
+            className="rounded-full m-12 mb-0 mx-auto"
           />
-          <Text className="text-center text-xs text-slate-200">
+          <Text className="text-center text-xs text-slate-300">
             Change Avatar
           </Text>
         </TouchableOpacity>
         <View className="flex self-start">
           <View className="flex flex-row">
-            {editName &&
-            <>
-              <TextInput
-                placeholder="Name"
-                style={styles.input}
-                value={newName}
-                onChangeText={setNewName}
-                multiline={false}
-                returnKeyType="send"
-                onSubmitEditing={() => updateName()}
-                className="font-mono text-base self-center font-medium text-slate-300 border h-10 w-52 border-slate-300 rounded-md px-2 py-0"
-              />
-              <TouchableOpacity className="px-2 self-center" onPress={() => updateName()}>
-              <Image
-                source={require('../../assets/images/update.png')}
-                className="rounded-full w-5 h-5 mx-auto"
-              />
-            </TouchableOpacity>
-            </>
-             }
-             {!editName &&
-             <> 
-              <Text className="font-mono text-base font-medium text-slate-300">
-                Hello, {displayName}
-              </Text>
-            <TouchableOpacity className="px-2 self-center" onPress={() => setEditName(true)}>
-              <Image
-                source={require('../../assets/images/edit.png')}
-                className="rounded-full w-5 h-5 mx-auto"
-              />
-            </TouchableOpacity>
-            </>
-            }
+            {editName && (
+              <>
+                <TextInput
+                  placeholder="Name"
+                  style={styles.input}
+                  value={newName}
+                  onChangeText={setNewName}
+                  multiline={false}
+                  returnKeyType="send"
+                  onSubmitEditing={() => updateName()}
+                  className="font-mono text-base self-center font-medium text-slate-300 border h-10 w-52 border-slate-300 rounded-md px-2 py-0"
+                />
+                <TouchableOpacity
+                  className="px-2 pl-4 self-center"
+                  onPress={() => updateName()}>
+                  <Image
+                    source={require('../../assets/images/update.png')}
+                    style={{height: wp(5), width: wp(5)}}
+                    className="rounded-full mx-auto"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="px-2 self-center"
+                  onPress={() => setEditName(false)}>
+                  <Image
+                    source={require('../../assets/images/close.png')}
+                    style={{height: wp(5.5), width: wp(5.5)}}
+                    className="rounded-full w-5 h-5 mx-auto"
+                  />
+                </TouchableOpacity>
+              </>
+            )}
+            {!editName && (
+              <>
+                <Text className="font-mono text-base font-medium text-slate-300">
+                  Hello, {displayName}
+                </Text>
+                <TouchableOpacity
+                  className="px-2 self-center"
+                  onPress={() => setEditName(true)}>
+                  <Image
+                    source={require('../../assets/images/edit.png')}
+                    className="rounded-full w-5 h-5 mx-auto"
+                  />
+                </TouchableOpacity>
+              </>
+            )}
           </View>
           <Text className="font-mono text-base font-medium mt-5 mb-5 text-slate-300">
             Email: {email}
