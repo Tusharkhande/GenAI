@@ -49,6 +49,8 @@ import {
   doc,
 } from 'firebase/firestore';
 import {db} from '../firebase/firebase.config';
+import generateImage from '../api/huggingface'
+import { fetchMessagesForSession } from '../firebase/firebase.storage';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -67,6 +69,7 @@ const ChatScreen = () => {
   const sessionId = param.sessionId ? param.sessionId : '';
   const selectedAvatar = param.selectedAvatar || gUserAvatar || require('../../assets/images/avatars/thor.jpeg');
 
+
   useEffect(() => {
     console.log(param.selectedModel.name);
   }, []);
@@ -74,16 +77,13 @@ const ChatScreen = () => {
   const handleBackPress = () => {
     console.log(messages.length);
     if (
-      param.selectedModel.name != 'Vision' &&
       messages.length >= 2
     ) {
-      const firstMessage = messages.length > 0 ? messages[0] : null;
-      const title = firstMessage ? firstMessage.content : '';
       saveChatSession(user.uid, messages, param.selectedModel, param.sessionId);
     }
-    navigation.goBack(); // works best when the goBack is async
+    navigation.goBack(); 
     Tts.stop();
-    return true; // Return true to prevent the default back button behavior
+    return true; 
   };
 
   useEffect(() => {
@@ -96,9 +96,9 @@ const ChatScreen = () => {
   useEffect(() => {
     if (param.sessionId && param.sessionId.trim() !== '') {
       console.log(param.sessionId.trim());
-      fetchMessagesForSession(param.sessionId);
+      fetchMessagesForSession(param.sessionId, setLoading, setMessages);
     }
-  }, [param.sessionId]); // Adding param.sessionId as a dependency
+  }, [param.sessionId]); 
 
   const clear = () => {
     sweep();
@@ -106,47 +106,13 @@ const ChatScreen = () => {
     setLoading(false);
     setMessages([]);
   };
-
- /*  async function fetchMessagesForSession(sessionId) {
-    if (!sessionId) {
-      console.error('Session ID is undefined');
-      return;
-    }
-    setLoading(true);
-    const fullPath = `/chat_sessions/${sessionId}`;
-    const q = query(
-      collection(db, 'messages'),
-      where('sessionId', '==', fullPath), // Use the extracted session ID
-      // orderBy('createdAt', 'asc'),
-    );
-
-    try {
-      const querySnapshot = await getDocs(q);
-      const messages = [];
-      for(const doc of querySnapshot.docs) {
-        const data = doc.data();
-        // const messageRef = ref(storage, data.sessionId);
-        messages.push({role: data.role, content: data.content});
-      }
-
-      console.log(messages);
-      setMessages(messages);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      setLoading(false);
-    }
-  } */
-
+/* 
   async function fetchMessagesForSession(sessionId) {
     if (!sessionId) {
       console.error('Session ID is undefined');
       return;
     }
-
-
     setLoading(true);
-
     const q = query(
       collection(db, 'messages'),
       where('sessionId', '==', sessionId),
@@ -155,11 +121,15 @@ const ChatScreen = () => {
 
     try {
       const querySnapshot = await getDocs(q);
-      console.log(`Found ${querySnapshot.docs.length} documents`); // Debug log
+      console.log(`Found ${querySnapshot.docs.length} documents`);
 
       const messages = querySnapshot.docs.map(doc => {
         const data = doc.data();
-        return {role: data.role, content: data.content};
+        if(data.base64String){
+          return {role: data.role, content: data.content, base64String: data.base64String};
+        }else{
+          return {role: data.role, content: data.content};
+        }
       });
 
       console.log('Messages:', messages); // Debug log
@@ -170,7 +140,7 @@ const ChatScreen = () => {
       setLoading(false);
     }
 }
-
+ */
   const fetchResponse = async () => {
     try {
       if (text.trim().length > 0) {
@@ -178,7 +148,7 @@ const ChatScreen = () => {
         setLoading(true);
         select_beep();
         let newMessages = [...messages];
-        if (param.selectedModel.name != 'Vision') {
+        if (!base64String) {
           newMessages.push({role: 'user', content: text.trim()});
         } else {
           newMessages.push({
@@ -241,28 +211,91 @@ const ChatScreen = () => {
               }
             });
           } else if (param.selectedModel.name == 'GenAI') {
-            apiCall(text, newMessages).then(res => {
-              console.log('after API Call');
-              setText('');
-              setLoading(false);
-              if (res.success) {
-                setMessages([...res.data]);
-                updateScrollView();
-                // startTextToSpeech(res.data[res.data.length - 1]);
-                const lastMessage = res.data[res.data.length - 1];
-                if (
-                  lastMessage.content.includes('https://oaidalleapiprodscus')
-                ) {
-                  setImageLoading(true);
-                  startTextToSpeech({
-                    role: 'assistant',
-                    content: "Sure, I'll try to create that!",
-                  });
-                } else {
-                  startTextToSpeech(lastMessage);
+            console.log("first")
+            if(base64String){
+              console.log("vis")
+              vision(text, base64String).then(res => {
+                console.log('after API Call');
+                setText('');
+                setLoading(false);
+                setBase64String('');
+                if (res.success) {
+                  console.log(res.data);
+                  newMessages.push({role: 'assistant', content: res.data});
+                  setMessages(newMessages);
+                  updateScrollView();
+                  assistantSpeech(res.data);
                 }
-              }
-            });
+              });
+            }else if(text.includes('create a image') || text.includes('image') || text.includes('create an image') || text.includes('sketch') || text.includes('generate a image') || text.includes('picture') || text.includes('drawing')){
+              console.log("image")
+              dalleApiCall(text, newMessages).then(res => {
+                console.log('after API Call');
+                setText('');
+                setLoading(false);
+                if (res.success) {
+                  setMessages([...res.data]);
+                  updateScrollView();
+                  setImageLoading(true);
+                  // startTextToSpeech(res.data[res.data.length - 1]);
+  
+                  const lastMessage = res.data[res.data.length - 1];
+                  if (
+                    lastMessage.content.includes('https://oaidalleapiprodscus')
+                  ) {
+                    startTextToSpeech({
+                      role: 'assistant',
+                      content: "Sure, I'll try to create that!",
+                    });
+                  } else {
+                    startTextToSpeech(lastMessage);
+                  }
+                }
+              });
+            }else{
+              const conversationHistory = messages.map(m => ({
+                role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
+                parts: [{text: m.content}],
+              }));
+              geminiChatApiCall(text, conversationHistory).then(newMessage => {
+                setText('');
+                setLoading(false);
+                if (newMessage) {
+                  setMessages(prevMessages => [...prevMessages, newMessage]);
+                } else {
+                  newMessage = {
+                    role: 'assistant',
+                    content:
+                      "I'm currently experiencing high demand! Feel free to try again in a few moments.",
+                  };
+                  setMessages(prevMessages => [...prevMessages, newMessage]);
+                }
+                updateScrollView();
+                startTextToSpeech(newMessage);
+              });
+            }
+            // apiCall(text, newMessages).then(res => {
+            //   console.log('after API Call');
+            //   setText('');
+            //   setLoading(false);
+            //   if (res.success) {
+            //     setMessages([...res.data]);
+            //     updateScrollView();
+            //     // startTextToSpeech(res.data[res.data.length - 1]);
+            //     const lastMessage = res.data[res.data.length - 1];
+            //     if (
+            //       lastMessage.content.includes('https://oaidalleapiprodscus')
+            //     ) {
+            //       setImageLoading(true);
+            //       startTextToSpeech({
+            //         role: 'assistant',
+            //         content: "Sure, I'll try to create that!",
+            //       });
+            //     } else {
+            //       startTextToSpeech(lastMessage);
+            //     }
+            //   }
+            // });
           } else if (param.selectedModel.name == 'Gemini') {
             const conversationHistory = messages.map(m => ({
               role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
@@ -492,24 +525,6 @@ const ChatScreen = () => {
                                       />
                                     )}
                                   </View>
-                                  {/* Add the Download button */}
-                                  {/* <TouchableOpacity
-                                    style={{
-                                      alignItems: 'center',
-                                      marginTop: 10,
-                                    }}
-                                    onPress={() =>
-                                      downloadImage(message.content, setLoading)
-                                    }>
-                                    <Text
-                                      style={{
-                                        color: 'blue',
-                                        textDecorationLine: 'none',
-                                      }}
-                                      className="">
-                                      Download
-                                    </Text>
-                                  </TouchableOpacity> */}
                                   <Button
                                     style="self-end"
                                     image={require('../../assets/images/dwd2.png')}
@@ -672,7 +687,7 @@ const ChatScreen = () => {
                       style={{color: 'white'}}
                     />
                     <View className="flex flex-row self-end absolute">
-                      {param.selectedModel.name == 'Vision' && (
+                      {(param.selectedModel.name == 'Vision' || param.selectedModel.name == 'GenAI') && (
                         <TouchableOpacity
                           className=" p-2 my-auto rounded-md"
                           onPress={() => setOpenImagePickerModal(true)}>

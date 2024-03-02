@@ -1,5 +1,5 @@
 import {  ref, uploadBytes, deleteObject,getDownloadURL } from "firebase/storage";
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc, serverTimestamp, updateDoc, setDoc  } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc, serverTimestamp, updateDoc, setDoc, orderBy } from "firebase/firestore";
 import { auth, db, storage  } from "./firebase.config";
 import { ToastAndroid } from "react-native";
 import gemini from "../api/gemini";
@@ -106,38 +106,69 @@ export async function deleteImageFromStorage(fullPath) {
     }
   }
 
-  // export async function saveChatSession(userId, messages, selectedModel) {
-  //   try {
-  //     // Save the chat session
-  //     const messagesString = JSON.stringify(messages);
-  //     console.log(messagesString)
-  //     const title = await gemini("take a look at this "+ messagesString + "and tell a short title for it");
-  //     const sessionRef = await addDoc(collection(db, "chat_sessions"), {
-  //       userId,
-  //       title,
-  //       selectedModel,
-  //       createdAt: serverTimestamp(),
-  //     });
-  
-  //     // Save each message under the messages collection with a reference to the chat session
-  //     for (const message of messages) {
-  //       await addDoc(collection(db, "messages"), {
-  //         ...message,
-  //         sessionId: sessionRef.id,
-  //         createdAt: serverTimestamp(),
-  //       });
-  //     }
-  //     console.log('Chat session and messages saved');
-  //   } catch (error) {
-  //     console.error('Error saving chat session', error);
-  //   }
-  // }
+  export async function fetchChatSessions(userId, setLoading, setChatSessions) {
+    setLoading(true);
+    try {
+      const sessionsQuery = query(
+        collection(db, 'chat_sessions'),
+        where('userId', '==', userId),
+        orderBy('createdAt', 'desc'),
+      );
+      const querySnapshot = await getDocs(sessionsQuery);
+      const chatSessions = [];
+      querySnapshot.forEach(doc => {
+        chatSessions.push({id: doc.id, ...doc.data()});
+      });
+      console.log(chatSessions);
+      setChatSessions(chatSessions);
+      setLoading(false);
+    } catch (e) {
+      console.log(e)
+      setLoading(false);
+      ToastAndroid.show('Something went wrong!', ToastAndroid.SHORT);
+    }
+  }
+
+  export async function fetchMessagesForSession(sessionId, setLoading, setMessages) {
+    if (!sessionId) {
+      console.error('Session ID is undefined');
+      return;
+    }
+    setLoading(true);
+    const q = query(
+      collection(db, 'messages'),
+      where('sessionId', '==', sessionId),
+      orderBy('createdAt', 'asc'),
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log(`Found ${querySnapshot.docs.length} documents`);
+
+      const messages = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        if(data.base64String){
+          return {role: data.role, content: data.content, base64String: data.base64String};
+        }else{
+          return {role: data.role, content: data.content};
+        }
+      });
+
+      console.log('Messages:', messages); // Debug log
+      setMessages(messages);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      setLoading(false);
+    }
+}
 
 
   export async function saveChatSession(userId, messages, selectedModel, existingSessionId) {
     try {
       let sessionRef;
-      const messagesString = JSON.stringify(messages);
+      const filteredMessages = messages.map(({ base64String, ...rest }) => rest);
+      const messagesString = JSON.stringify(filteredMessages);
       console.log(messagesString);
       if (existingSessionId) {
         const sessionDocRef = doc(db, "chat_sessions", existingSessionId);
@@ -177,3 +208,37 @@ export async function deleteImageFromStorage(fullPath) {
       console.error('Error saving/updating chat session', error);
     }
   }
+
+  export async function deleteSessionAndMessages(userId, sessionId, setLoading, setChatSessions) {
+    setLoading(true);
+    const messagesRef = collection(db, "messages");
+    const messagesQuery = query(messagesRef, where("sessionId", "==", sessionId));
+  
+    try {
+      const querySnapshot = await getDocs(messagesQuery);
+      const deletePromises = [];
+      querySnapshot.forEach((document) => {
+        const deletePromise = deleteDoc(doc(db, "messages", document.id));
+        deletePromises.push(deletePromise);
+      });
+      await Promise.all(deletePromises);
+      console.log('All associated messages successfully deleted');
+    } catch (error) {
+      setLoading(false);
+      console.error('Error deleting associated messages', error);
+      return; 
+    }
+  
+    try {
+      await deleteDoc(doc(db, "chat_sessions", sessionId));
+      console.log('Session successfully deleted');
+      setLoading(false);
+      fetchChatSessions(userId, setLoading, setChatSessions);
+      ToastAndroid.show('Deletion Successful!', ToastAndroid.SHORT);
+    } catch (error) {
+      setLoading(false);
+      console.error('Error deleting session', error);
+      ToastAndroid.show('Something went wrong while deleting the session', ToastAndroid.SHORT);
+    }
+  }
+  

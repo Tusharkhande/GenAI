@@ -36,7 +36,7 @@ export default imageModels=[
         name:'Mystical Beings',
         image:mystic,
         color:'#070F6C',
-        demo:'a dog',
+        demo:'a cat dragon',
         desc:'Bring your fantasy to life!',
         models: ['playgroundai/playground-v2-1024px-aesthetic'],
         options: []

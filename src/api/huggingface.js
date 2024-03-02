@@ -4,12 +4,10 @@ import { Platform } from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import { uploadImageFromCache } from '../firebase/firebase.storage';
 
-const apiKey = STABILITY_API_KEY;
+const apiKey = 'sk-XgXPz7J9worwz4NFP0Fx6naR6jIrtEoMAhQANeSaBDKXWLXx';
 export default generateImage = async (
   para,
-  setLoading,
-  setImage,
-  setBase64Image,
+  setLoading
 ) => {
   console.log('API_KEY:', apiKey);
   setLoading(true);
@@ -40,12 +38,22 @@ export default generateImage = async (
         },
       },
     );
-    setImage(`data:image/png;base64,${response.data.artifacts[0].base64}`);
-    setBase64Image(response.data.artifacts[0].base64);
+    console.log(response.data);
+    const resp = response?.data?.artifacts[0]?.base64;
+    if(resp){
+      setLoading(false);
+      const newMessage = {role: 'assistant', content: response.data.artifacts[0].base64};
+      return newMessage;
+    }else{
+      return {role: 'assistant', content: 'I am currently experiencing high demand! Feel free to try again in a few moments.'};
+    }
+    // setImage(`data:image/png;base64,${response.data.artifacts[0].base64}`);
+    // setBase64Image(response.data.artifacts[0].base64);
   } catch (error) {
     console.error('Error generating image:', error.message);
+    setLoading(false);
+    return {role: 'assistant', content: 'I am currently experiencing high demand! Feel free to try again in a few moments.'};
   }
-  setLoading(false);
 };
 
 

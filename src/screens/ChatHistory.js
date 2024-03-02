@@ -7,7 +7,8 @@ import {
   FlatList,
   RefreshControl,
   Image,
-  ToastAndroid
+  ToastAndroid,
+  StyleSheet,
 } from 'react-native';
 import {collection, getDocs, query, where, orderBy} from 'firebase/firestore';
 import {db} from '../firebase/firebase.config';
@@ -16,7 +17,9 @@ import {auth} from '../firebase/firebase.config';
 import {select_beep} from '../constants/Sounds';
 import {useNavigation} from '@react-navigation/native';
 import Markdown from 'react-native-markdown-display';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { fetchChatSessions, deleteSessionAndMessages } from '../firebase/firebase.storage';
+
 const ChatHistory = () => {
   const user = auth.currentUser;
   const userId = user.uid;
@@ -25,9 +28,9 @@ const ChatHistory = () => {
   const navigation = useNavigation();
   const [chatSessions, setChatSessions] = useState([]);
 
-  async function fetchChatSessions() {
+ /*  async function fetchChatSessions(userId, setLoading, setChatSessions) {
     setLoading(true);
-    try{
+    try {
       const sessionsQuery = query(
         collection(db, 'chat_sessions'),
         where('userId', '==', userId),
@@ -41,14 +44,14 @@ const ChatHistory = () => {
       console.log(chatSessions);
       setChatSessions(chatSessions);
       setLoading(false);
-    }catch(e){
+    } catch (e) {
       setLoading(false);
-      ToastAndroid.show("Something went wrong!", short);
+      ToastAndroid.show('Something went wrong!', short);
     }
-  }
+  } */
 
   useEffect(() => {
-    fetchChatSessions();
+    fetchChatSessions(userId, setLoading, setChatSessions);
   }, []);
 
   const handleBackPress = () => {
@@ -79,28 +82,44 @@ const ChatHistory = () => {
         </Text>
       </View>
       {!loading ? (
-      <FlatList
-        data={chatSessions}
-        refreshControl={<RefreshControl refreshing={refresh} onRefresh={() => [fetchChatSessions(), function(){setRefresh(true); setTimeout(() => {
-          setRefresh(false);
-        }, 5000);}]} />}
-        renderItem={({item, index}) => (
-          <TouchableOpacity
-            onPress={() => [
-              navigation.navigate('Chat', {
-                sessionId: item.id,
-                selectedModel: item.selectedModel,
-              }),
-            ]}
-            className="flex flex-row items-center justify-between px-3 mx-4 py-2 my-3 bg-slate-700 rounded-xl"
-            key={index}
-          >
-            <Markdown className=" ">
-              {'**' + item.selectedModel.name + '** : ' + item.title}
-            </Markdown>
-          </TouchableOpacity>
-        )}
-      />) : (
+        <FlatList
+          data={chatSessions}
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={() => [
+                fetchChatSessions(userId, setLoading, setChatSessions),
+                function () {
+                  setRefresh(true);
+                  setTimeout(() => {
+                    setRefresh(false);
+                  }, 5000);
+                },
+              ]}
+            />
+          }
+          renderItem={({item, index}) => (
+            <>
+            <TouchableOpacity
+              onPress={() => [
+                navigation.navigate('Chat', {
+                  sessionId: item.id,
+                  selectedModel: item.selectedModel,
+                }),
+              ]}
+              className="flex px-3 mx-4 py-2 my-3 bg-slate-700 rounded-xl"
+              key={index}>
+              <Markdown style={markdownStyles}>
+                {'**' + item.selectedModel.name + '** : ' + item.title}
+              </Markdown>
+            </TouchableOpacity>
+              <View className='absolute self-end right-3 m-5'>
+                <Button image={require('../../assets/images/delete1.png')} onPress={() => [deleteSessionAndMessages(userId, item.id, setLoading, setChatSessions), select_beep()]}/>
+              </View>
+            </>
+          )}
+        />
+      ) : (
         <View className="flex bg-black h-full w-full justify-center items-center p-4 self-center">
           <Image
             source={require('../../assets/images/loading.gif')}
@@ -113,5 +132,16 @@ const ChatHistory = () => {
     </View>
   );
 };
+
+const markdownStyles = StyleSheet.create({
+  body: {
+    color: '#fff',
+    // backgroundColor: '#rgb(2 6 23)',
+    fontSize: wp(3.5),
+    width: wp(73),
+    marginTop: 0,
+  }
+});
+
 
 export default ChatHistory;
