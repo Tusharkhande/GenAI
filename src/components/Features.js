@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import features from '../constants/features';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
+import Markdown from 'react-native-markdown-display';
 
 
 export default function Features({ model, provider }) {
@@ -29,86 +30,83 @@ export default function Features({ model, provider }) {
             </View>
             {model === "Jarvis" ? (
                 <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>
-                    <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
-                            <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Jarvis</Text>
+                    <View className='bg-emerald-200 p-4 py-2 rounded-xl'>
+                        <View className='flex-row items-center'>
+                            <Image source={require('../../assets/images/chatgpt.png')} className='mr-1.5' style={{ height: hp(4), width: hp(4) }} />
+                            <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Jarvis**`}</Markdown>
                         </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            I'm powered by the legacy gpt-3.5-turbo model by OpenAI having the ability to assist you with creative ideas on a wide range of topics.
-                        </Text>
+                        <Markdown style={markdownStyles} >
+                            {`I'm powered by the legacy gpt-3.5-turbo model by OpenAI having the ability to assist you with creative ideas on a wide range of topics.`}
+                        </Markdown>
                     </View>
-                    <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            Natural Language Processing: Jarvis is built on advanced Natural Language Processing (NLP) techniques, enabling it to understand and respond to human language effectively.
-                        </Text>
+                    <View className='bg-emerald-200 p-4 py-2 rounded-xl space-y-2'>
+                        <Markdown style={markdownStyles} >
+                            **Natural Language Processing:** Jarvis is built on advanced Natural Language Processing (NLP) techniques, enabling it to understand and respond to human language effectively.
+                        </Markdown>
                     </View>
-                    <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            Instant and Knowledgeable Responses: Jarvis can provide quick and knowledgeable answers to a wide range of questions and queries.
-                        </Text>
+                    <View className='bg-emerald-200 p-4 py-2 rounded-xl space-y-2'>
+                        <Markdown style={markdownStyles} >
+                            **Instant and Knowledgeable Responses:** Jarvis can provide quick and knowledgeable answers to a wide range of questions and queries.
+                        </Markdown>
                     </View>
-                    <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            Multilingual Support: Jarvis supports multiple languages, broadening its accessibility to users around the world.            </Text>
+                    <View className='bg-emerald-200 p-4 py-2 rounded-xl space-y-2'>
+                        <Markdown style={markdownStyles} >
+                            **Multilingual Support:** Jarvis supports multiple languages, broadening its accessibility to users around the world.            </Markdown>
                     </View>
                 </ScrollView>
             ) : model === "Friday" ? (
                 <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>
-                <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
-                    <View className='flex-row items-center space-x-1'>
-                        <Image source={require('../../assets/images/dalleIcon.png')} style={{ height: hp(4), width: hp(4) }} />
-                        <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Friday</Text>
+                <View className='bg-purple-200 p-4 pb-2 rounded-xl'>
+                    <View className='flex-row items-center'>
+                        <Image source={require('../../assets/images/dalleIcon.png')} className='mr-1.5' style={{ height: hp(4), width: hp(4) }} />
+                        <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Friday**`}</Markdown>
                     </View>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    <Markdown style={markdownStyles} >
                         I'm powered by the latest DALL-E 2.0 image generation model by OpenAI having the ability to generate imaginative and diverse images from textual descriptions.
-                    </Text>
+                    </Markdown>
                 </View>
-                <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Versatility in Imagery: Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.
-                    </Text>
+                <View className='bg-purple-200 p-4 py-2 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Versatility in Imagery:** Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.
+                    </Markdown>
                 </View>
-                <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Natural Language Understanding: Similar to Jarvis (ChatGPT), Friday also demonstrates strong natural language understanding, making the interaction between textual input and visual output more intuitive.
-                    </Text>
+                <View className='bg-purple-200 p-4 py-2 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Natural Language Understanding:** Similar to Jarvis (ChatGPT), Friday also demonstrates strong natural language understanding, making the interaction between textual input and visual output more intuitive.
+                    </Markdown>
                 </View>
-                <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Fine-Grained Control: Users can provide specific instructions and control over the generated images, enabling precise adjustments to the visual output.
-                    </Text>
+                <View className='bg-purple-200 p-4 py-2 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Fine-Grained Control:** Users can provide specific instructions and control over the generated images, enabling precise adjustments to the visual output.
+                    </Markdown>
                 </View>
                 </ScrollView>
             ) : model === "GenAI" ? (
                 <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
-                    <View className='bg-emerald-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
+                    <View className='bg-emerald-200 p-4 pb-1.5 rounded-xl'>
+                        <View className='flex-row items-center'>
                             <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>ChatGPT (Jarvis)</Text>
+                            <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>GenAI</Markdown>
                         </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            ChatGPT can provide you with instant and knowledgeable responses, assist you with creative ideas on a wide range of topics.
-                        </Text>
+                        <Markdown style={markdownStyles} >
+                        I'm powered by various models like gemini-pro, gemini-pro-vision, dalle-2.0 and also stability-xl providing me multimodal capabilities.
+                        </Markdown>
                     </View>
-                    <View className='bg-purple-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
-                            <Image source={require('../../assets/images/dalleIcon.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>DALL-E (Friday)</Text>
-                        </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            DALL-E can generate imaginative and diverse images from textual descriptions, expanding the boundaries of visual creativity.
-                        </Text>
-                    </View>
-                    <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
-                        <View className='flex-row items-center space-x-1'>
-                            <Image source={require('../../assets/images/smartAI.png')} style={{ height: hp(4), width: hp(4) }} />
-                            <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>GenAI (Jarvis + Friday)</Text>
-                        </View>
-                        <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                            A powerful assistant with the abilities of ChatGPT and Dall-E, providing you the best of both worlds.
-                        </Text>
-                    </View>
+                    <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Long-Context Understanding:** This model introduces a groundbreaking feature for comprehending extended information, leading to more nuanced and accurate responses.
+                    </Markdown>
+                </View>
+                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles}>
+                    {`**Versatility in Imagery:** Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.`}
+                    </Markdown>
+                </View>
+                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Multimodal Integration:** It seamlessly integrates with text-based Gemini models, allowing for combined analysis of textual and visual data, leading to richer insights.
+                    </Markdown>
+                </View>
 
                 </ScrollView>
             ) : model === "Gemini" ? (
@@ -170,3 +168,14 @@ export default function Features({ model, provider }) {
         </View>
     );
 }
+
+const markdownStyles = StyleSheet.create({
+    body: {
+      color: '#000',
+    //   backgroundColor: '#rgb(2 6 23)',
+      fontSize: wp(3.8),
+    //   width: wp(73),
+    //   marginTop: 0,
+    },
+  });
+  

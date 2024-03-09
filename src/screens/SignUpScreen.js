@@ -2,13 +2,10 @@ import { View, Text, TouchableOpacity, Image, TextInput, ImageBackground, ToastA
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase/firebase.config';
-import { createUserWithEmailAndPassword, updateCurrentUser, updateProfile } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AvatarsModal from '../components/AvatarsModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { select_beep,err_beep } from '../constants/Sounds';
-import { assistantSpeech } from '../constants/TextToSpeech';
+import { select_beep } from '../constants/Sounds';
 import { useUser } from '../context/userContext';
 import Loader from '../components/Loader';
 

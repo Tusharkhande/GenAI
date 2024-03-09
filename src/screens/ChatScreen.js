@@ -6,14 +6,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert,
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  Linking,
   Modal,
   StyleSheet,
-  ImageBackground,
   BackHandler,
   ToastAndroid,
 } from 'react-native';
@@ -34,20 +31,12 @@ import {sweep, select_beep} from '../constants/Sounds';
 import Markdown, {MarkdownIt} from 'react-native-markdown-display';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {downloadImage} from '../constants/DownloadImage';
+import {downloadBase64Image, downloadImage} from '../constants/DownloadImage';
 import {vision} from '../api/gemini';
 import {geminiChatApiCall, gemini} from '../api/gemini';
 import {useUser} from '../context/userContext';
 import {saveChatSession} from '../firebase/firebase.storage';
 import {auth, storage} from '../firebase/firebase.config';
-import {
-  query,
-  collection,
-  getDocs,
-  where,
-  orderBy,
-  doc,
-} from 'firebase/firestore';
 import {db} from '../firebase/firebase.config';
 import generateImage from '../api/huggingface'
 import { fetchMessagesForSession } from '../firebase/firebase.storage';
@@ -229,29 +218,44 @@ const ChatScreen = () => {
               });
             }else if(text.includes('create a image') || text.includes('image') || text.includes('create an image') || text.includes('sketch') || text.includes('generate a image') || text.includes('picture') || text.includes('drawing')){
               console.log("image")
-              dalleApiCall(text, newMessages).then(res => {
-                console.log('after API Call');
-                setText('');
-                setLoading(false);
-                if (res.success) {
-                  setMessages([...res.data]);
-                  updateScrollView();
-                  setImageLoading(true);
-                  // startTextToSpeech(res.data[res.data.length - 1]);
+              // dalleApiCall(text, newMessages).then(res => {
+              //   console.log('after API Call');
+              //   setText('');
+              //   setLoading(false);
+              //   if (res.success) {
+              //     setMessages([...res.data]);
+              //     updateScrollView();
+              //     setImageLoading(true);
+              //     // startTextToSpeech(res.data[res.data.length - 1]);
   
-                  const lastMessage = res.data[res.data.length - 1];
-                  if (
-                    lastMessage.content.includes('https://oaidalleapiprodscus')
-                  ) {
-                    startTextToSpeech({
-                      role: 'assistant',
-                      content: "Sure, I'll try to create that!",
-                    });
-                  } else {
-                    startTextToSpeech(lastMessage);
-                  }
-                }
-              });
+              //     const lastMessage = res.data[res.data.length - 1];
+              //     if (
+              //       lastMessage.content.includes('https://oaidalleapiprodscus')
+              //     ) {
+              //       startTextToSpeech({
+              //         role: 'assistant',
+              //         content: "Sure, I'll try to create that!",
+              //       });
+              //     } else {
+              //       startTextToSpeech(lastMessage);
+              //     }
+              //   }
+              // });
+              generateImage(text, setLoading).then(newMessage => {
+                    setText('');
+                    setLoading(false);
+                    if (newMessage) {
+                      setMessages(prevMessages => [...prevMessages, newMessage]);
+                    } else {
+                      newMessage = {
+                        role: 'assistant',
+                        content:
+                          "I'm currently experiencing high demand! Feel free to try again in a few moments.",
+                      };
+                      setMessages(prevMessages => [...prevMessages, newMessage]);
+                    }
+                    updateScrollView();
+                });
             }else{
               const conversationHistory = messages.map(m => ({
                 role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
@@ -483,7 +487,7 @@ const ChatScreen = () => {
                   {messages.map((message, index) => {
                     if (message.role == 'assistant') {
                       if (
-                        message.content.includes('https://oaidalleapiprodscus')
+                        message.content.includes('https://oaidalleapiprodscus') || !message.content.includes(' ')
                       ) {
                         // result is an ai image
                         return (
@@ -507,9 +511,9 @@ const ChatScreen = () => {
                                   <View>
                                     <Image
                                       source={
-                                        message.content
+                                        message.content.includes('https://oaidalleapiprodscus')
                                           ? {uri: message.content}
-                                          : require('../../assets/images/loading2.gif')
+                                          : {uri:`data:image/png;base64,${message.content}`}
                                       }
                                       className="rounded-2xl self-start mr-4 z-10"
                                       resizeMode="contain"
@@ -530,8 +534,8 @@ const ChatScreen = () => {
                                     image={require('../../assets/images/dwd2.png')}
                                     isize={'h-6 w-6'}
                                     // title={'Copy'}
-                                    onPress={() =>
-                                      downloadImage(message.content)
+                                    onPress={() => message.content.includes('https://oaidalleapiprodscus')?
+                                      downloadImage(message.content) : downloadBase64Image(message.content)
                                     }
                                   />
                                 </View>

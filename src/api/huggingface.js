@@ -38,7 +38,6 @@ export default generateImage = async (
         },
       },
     );
-    console.log(response.data);
     const resp = response?.data?.artifacts[0]?.base64;
     if(resp){
       setLoading(false);

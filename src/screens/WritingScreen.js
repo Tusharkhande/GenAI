@@ -25,10 +25,7 @@ import Button from '../components/Button';
 import Clipboard from '@react-native-clipboard/clipboard';
 import gemini from '../api/gemini';
 import Tts from 'react-native-tts';
-// import Markdown from 'markdown-to-jsx';
-// import MarkdownRenderer from 'react-native-markdown-renderer';
 import Markdown from 'react-native-markdown-display';
-
 import TypeWriterEffect from 'react-native-typewriter-effect';
 import Options from '../components/Options';
 
@@ -215,7 +212,7 @@ const WritingScreen = () => {
                 )}
                 <Button
                   image={require('../../assets/images/speed.png')}
-                  onPress={() => setFinishedTyping(true)}
+                  onPress={() => [setFinishedTyping(true), updateScrollView()]}
                 />
                 <Button
                   image={require('../../assets/images/copy2.png')}
@@ -227,7 +224,7 @@ const WritingScreen = () => {
                 <TypeWriterEffect
                   content={message}
                   vibration={false}
-                  onTypingEnd={() => setFinishedTyping(true)}
+                  onTypingEnd={() => [setFinishedTyping(true), updateScrollView()]}
                   mindelay={-20}
                   maxdelay={-1}
                 />

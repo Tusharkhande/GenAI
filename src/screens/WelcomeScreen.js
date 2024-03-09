@@ -2,7 +2,6 @@ import { View, Text, Image, TouchableOpacity, ImageBackground, BackHandler, Styl
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
-import Button from '../components/Button'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { select_beep } from '../constants/Sounds';
 import AppExit from '../components/AppExit'
@@ -12,7 +11,7 @@ export default function WelcomeScreen() {
     const [exit, setExit] = useState(false);
     const handleBackPress = () => {
         setExit(true);
-        return true; // Return true to prevent the default back button behavior
+        return true;
     };
 
     useEffect(() => {
