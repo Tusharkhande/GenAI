@@ -1,21 +1,7 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  BackHandler,
-  StyleSheet,
-  Modal,
-  ImageBackground,
-  Appearance,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Models from '../constants/Models';
 import Button from '../components/Button';
@@ -27,26 +13,15 @@ import AppExit from '../components/AppExit';
 export default function HomeScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const [model, setModel] = useState([]);
   const [selectedModel, setSelectedModel] = useState([]);
   const [exit, setExit] = useState(false);
-  const [avatar, setAvatar] = useState('1');
   const {user} = useAuth();
   const {guser, gUserAvatar, name} = useUser();
   const selectedAvatar =
     route.params?.selectedAvatar || user.photoURL || gUserAvatar;
 
   useEffect(() => {
-    setModel(Models);
     setSelectedModel(Models[4]);
-  }, []);
-
-  useEffect(() => {
-    // console.log(user)
-    const colorScheme = Appearance.getColorScheme();
-    colorScheme === 'dark'
-      ? Appearance.setColorScheme('dark')
-      : Appearance.setColorScheme('dark');
   }, []);
 
   const handleBackPress = () => {
@@ -73,7 +48,10 @@ export default function HomeScreen() {
         className="flex flex-row justify-between"
         style={{width: wp(90), alignSelf: 'center'}}>
         <View className="">
-        <View className="absolute top-1.5 bg-slate-300 rounded-full -z-10 self-center" style={{height: wp(12), width: wp(12)}} />
+          <View
+            className="absolute top-1.5 bg-slate-300 rounded-full -z-10 self-center"
+            style={{height: wp(12), width: wp(12)}}
+          />
           <TouchableOpacity
             onPress={() => [navigation.navigate('Dashboard'), select_beep()]}
             className="flex top-0 px-2 py-2 my-0 rounded-3xl"
@@ -87,15 +65,11 @@ export default function HomeScreen() {
               resizeMode="contain"
             />
           </TouchableOpacity>
-
         </View>
         <View className="flex mx-auto justify-center ">
           <Text
-            style={[
-              {fontSize: wp(8)},
-              //  {color:selectedModel.primary}
-            ]}
-            className=" font-semibold text-center font-serif mt-1 text-slate-50">
+            className=" font-semibold font-[DancingScript-SemiBold] text-center mt-1 text-slate-50"
+            style={{fontSize: wp(8)}}>
             Welcome{' '}
             {user.displayName
               ? user.displayName.split(' ')[0]
@@ -115,15 +89,19 @@ export default function HomeScreen() {
         </View>
       </View>
       <View className="flex flex-col items-center  mt-0 top-0">
-        <Text
-          style={[{fontSize: wp(7)}, {color: selectedModel.primary}]}
-          className="text-center tracking-wider font-semibold  font-mono">
-          {/* A Meet with the Future */}
-          {selectedModel.name} here.
-        </Text>
+        <View className='flex-row items-center'>
+          <Text
+            style={[{fontSize: wp(7)}, {color: selectedModel.primary}]}
+            className="text-center tracking-wider font-semibold  font-[DancingScript-SemiBold]">
+            {selectedModel.name}
+          </Text>
+          <Text
+            style={[{fontSize: wp(6)}, {color: selectedModel.primary}]}
+            className="font-thin self-end"> here.</Text>
+        </View>
         <Text
           style={[{fontSize: wp(5)}, {color: selectedModel.primary}]}
-          className="text-center tracking-wider font-semibold font-mono">
+          className="text-center tracking-wider ">
           Initialize to have a Meet with the Future
           {'\n'}
           and Explore my features...
@@ -183,7 +161,7 @@ export default function HomeScreen() {
         </View>
         {/* )}
         /> */}
-        <Text className="text-slate-100 text-sm font-bold ml-5 pb-2">
+        <Text className="text-slate-100 text-sm ml-5 pb-2">
           Select your interative Assistant
         </Text>
       </View>

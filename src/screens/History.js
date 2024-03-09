@@ -1,21 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
   View,
-  ScrollView,
-  Image,
-  TouchableOpacity,
   Text,
   BackHandler,
-  RefreshControl,
 } from 'react-native';
-import {collection, getDocs, query, where} from 'firebase/firestore';
-import {getDownloadURL, ref} from 'firebase/storage';
-import {db, storage} from '../firebase/firebase.config';
 import Button from '../components/Button';
-import {auth} from '../firebase/firebase.config';
 import {select_beep} from '../constants/Sounds';
 import {useNavigation} from '@react-navigation/native';
-import Markdown from 'react-native-markdown-display';
 import Card from '../components/Card';
 import HorizontalLine from '../components/HorizontalLine';
 
@@ -54,9 +45,9 @@ const History = () => {
       <View className="p-5 w-full h-3/4 flex flex-col justify-center">
         <View className=" p-5 self-center items-center">
           <Card
-            imageSource={require('../../assets/images/phoenix.jpeg')}
+            imageSource={require('../../assets/images/imageModels/mystic.jpg')}
             text={'Images...'}
-            color={'#ffd'}
+            color={'#fff'}
             textStyle={'self-center bottom-2'}
             onPress={() => [navigation.navigate('ImageGenHistory')]}
           />

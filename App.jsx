@@ -1,4 +1,4 @@
-import { PermissionsAndroid } from 'react-native'
+import { PermissionsAndroid, StatusBar } from 'react-native'
 import React, { useEffect } from 'react'
 import AppNavigation from './src/navigation';
 import { getAuth } from 'firebase/auth';
@@ -40,6 +40,14 @@ export default function App() {
 
   return (
     <Context>
+      <StatusBar
+      animated={true}
+      translucent={true}
+        backgroundColor="transparent"
+        // barStyle="light-content"
+        showHideTransition="fade"
+        hidden={true}
+      />
       <AppNavigation />
     </Context>
   )
