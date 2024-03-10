@@ -56,7 +56,7 @@ export default function Features({ model, provider }) {
                 </ScrollView>
             ) : model === "Friday" ? (
                 <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>
-                <View className='bg-purple-200 p-4 pb-2 rounded-xl'>
+                <View className='bg-purple-200 p-4 py-2 rounded-xl'>
                     <View className='flex-row items-center'>
                         <Image source={require('../../assets/images/dalleIcon.png')} className='mr-1.5' style={{ height: hp(4), width: hp(4) }} />
                         <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Friday**`}</Markdown>
@@ -83,26 +83,26 @@ export default function Features({ model, provider }) {
                 </ScrollView>
             ) : model === "GenAI" ? (
                 <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
-                    <View className='bg-emerald-200 p-4 pb-1.5 rounded-xl'>
+                    <View className='bg-cyan-200 p-4 py-2 rounded-xl'>
                         <View className='flex-row items-center'>
-                            <Image source={require('../../assets/images/chatgpt.png')} style={{ height: hp(4), width: hp(4) }} />
+                            <Image source={require('../../assets/images/chatgpt.png')} className='mr-1.5' style={{ height: hp(4), width: hp(4) }} />
                             <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>GenAI</Markdown>
                         </View>
                         <Markdown style={markdownStyles} >
                         I'm powered by various models like gemini-pro, gemini-pro-vision, dalle-2.0 and also stability-xl providing me multimodal capabilities.
                         </Markdown>
                     </View>
-                    <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
                     <Markdown style={markdownStyles} >
                     **Long-Context Understanding:** This model introduces a groundbreaking feature for comprehending extended information, leading to more nuanced and accurate responses.
                     </Markdown>
                 </View>
-                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
                     <Markdown style={markdownStyles}>
                     {`**Versatility in Imagery:** Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.`}
                     </Markdown>
                 </View>
-                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
                     <Markdown style={markdownStyles} >
                     **Multimodal Integration:** It seamlessly integrates with text-based Gemini models, allowing for combined analysis of textual and visual data, leading to richer insights.
                     </Markdown>
@@ -111,57 +111,57 @@ export default function Features({ model, provider }) {
                 </ScrollView>
             ) : model === "Gemini" ? (
                 <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
-                    <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
-                    <View className='flex-row items-center space-x-1'>
+                    <View className='bg-blue-200 p-4 py-2 rounded-xl'>
+                    <View className='flex-row items-center'>
                         <Image source={require('../../assets/images/writeModels/gemini.png')} style={{ height: hp(4), width: hp(4) }} />
-                        <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Gemini</Text>
+                        <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Gemini**`}</Markdown>
                     </View>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    <Markdown style={markdownStyles} >
                         I'm powered by the latest gemini-pro model by Google AI which excels at handling a wide range of tasks, making it a versatile choice for various applications.
-                    </Text>
+                    </Markdown>
                 </View>
-                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Long-Context Understanding: This model introduces a groundbreaking feature for comprehending extended information, leading to more nuanced and accurate responses.
-                    </Text>
+                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Long-Context Understanding:** This model introduces a groundbreaking feature for comprehending extended information, leading to more nuanced and accurate responses.
+                    </Markdown>
                 </View>
-                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    State-of-the-Art Capabilities: represents Google's most advanced AI model to date, offering superior performance in tasks like text generation, problem-solving, and information retrieval.
-                    </Text>
+                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **State-of-the-Art Capabilities:** represents Google's most advanced AI model to date, offering superior performance in tasks like text generation, problem-solving, and information retrieval.
+                    </Markdown>
                 </View>
-                <View className='bg-blue-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Multilingual Support: Gemini supports multiple languages, broadening its accessibility to users around the world.
-                    </Text>
+                <View className='bg-blue-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Multilingual Support:** Gemini supports multiple languages, broadening its accessibility to users around the world.
+                    </Markdown>
                 </View>
 
                 </ScrollView>
             ) : (
                 <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
-                    <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
-                    <View className='flex-row items-center space-x-1'>
-                        <Image className='rounded-full' source={require('../../assets/images/eye.jpg')} style={{ height: hp(2), width: hp(4) }} />
-                        <Text style={{ fontSize: wp(4.8) }} className='font-semibold text-gray-700'>Vision</Text>
+                    <View className='bg-cyan-200 p-4 py-2 rounded-xl'>
+                    <View className='flex-row items-center'>
+                        <Image className='rounded-full mr-1.5' source={require('../../assets/images/eye.jpg')} style={{ height: hp(2), width: hp(4) }} />
+                        <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Vision**`}</Markdown>
                     </View>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
+                    <Markdown style={markdownStyles} >
                         I'm powered by the latest gemini-pro-vision model by Google AI which can handle large amounts of text input, enabling it to process complex descriptions and instructions related to images.
-                    </Text>
+                    </Markdown>
                 </View>
-                <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Image Processing: Vision specializes in tasks involving images, allowing for functionalities like object detection, image captioning, and content generation based on visual input.
-                    </Text>
+                <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles}>
+                    **Image Processing:** Vision specializes in tasks involving images, allowing for functionalities like object detection, image captioning, and content generation based on visual input.
+                    </Markdown>
                 </View>
-                <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Multimodal Integration: It seamlessly integrates with text-based Gemini models, allowing for combined analysis of textual and visual data, leading to richer insights.
-                    </Text>
+                <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Multimodal Integration:** It seamlessly integrates with text-based Gemini models, allowing for combined analysis of textual and visual data, leading to richer insights.
+                    </Markdown>
                 </View>
-                <View className='bg-cyan-200 p-4 rounded-xl space-y-2'>
-                    <Text style={{ fontSize: wp(3.8) }} className='text-gray-700 font-medium'>
-                    Scalability and Efficiency: Similar to the general Gemini Pro model, Vision offers a balance between performance and resource usage, making it accessible for various applications.
-                    </Text>
+                <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
+                    <Markdown style={markdownStyles} >
+                    **Scalability and Efficiency:** Similar to the general Gemini Pro model, Vision offers a balance between performance and resource usage, making it accessible for various applications.
+                    </Markdown>
                 </View>
                 </ScrollView>
             )}
