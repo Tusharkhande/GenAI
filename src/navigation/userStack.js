@@ -11,6 +11,7 @@ import WritingScreen from "../screens/WritingScreen";
 import ImageGenHistory from "../screens/ImageGenHistory";
 import ChatHistory from "../screens/ChatHistory";
 import History from "../screens/History";
+import Documentation from "../screens/Documentation";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export default function UserStack() {
                 <Stack.Screen name='ExploreAI' component={ExploreAiScreen} />
                 <Stack.Screen name='StabilityImageGen' component={StabilityImageGen} />
                 <Stack.Screen name='Writing' component={WritingScreen} />
+                <Stack.Screen name='Documentation' component={Documentation} />
             </Stack.Navigator>
         </NavigationContainer>
     );

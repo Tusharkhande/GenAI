@@ -1,6 +1,4 @@
 import bot from '../../assets/images/ai2.png';
-import dalle from '../../assets/images/dalle2.png';
-import chatgptIcon from '../../assets/images/chatgpt.png';
 import vision from '../../assets/images/vision.jpeg';
 import friday from '../../assets/images/friday.jpeg';
 import jarvis from '../../assets/images/jarvis.jpeg';
@@ -16,7 +14,7 @@ export default model=[
     },
     {
         id:3,
-        name:'Friday',
+        name:'Picasso',
         image:friday,
         primary:'#CBC3E3',
         secondary:'black',
@@ -45,6 +43,6 @@ export default model=[
         image:bot,
         primary:'#3B96D2',
         secondary:'black',
-        provider:'gpt-3.5-turbo, dalle-2'
+        provider:'gemini-pro, dalle-2'
     },
 ]

@@ -114,7 +114,7 @@ export default function HomeScreen() {
           source={
             selectedModel
               ? selectedModel.image
-              : require('../../assets/images/bot3.png')
+              : require('../../assets/images/gemini.jpeg')
           }
           style={{height: wp(30), width: wp(30)}}
           resizeMode="contain"

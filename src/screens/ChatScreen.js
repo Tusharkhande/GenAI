@@ -175,7 +175,7 @@ const ChatScreen = () => {
                 // }
               }
             });
-          } else if (param.selectedModel.name == 'Friday') {
+          } else if (param.selectedModel.name == 'Picasso') {
             dalleApiCall(text, newMessages).then(res => {
               console.log('after API Call');
               setText('');
@@ -397,12 +397,12 @@ const ChatScreen = () => {
       assistantSpeech(
         "Hello Boss, I'm Jarvis. I'm powered by the legacy gpt-3.5-turbo model by open-AI. Please feel free to ask me anything!",
       );
-    } else if (param.selectedModel.name == 'Friday') {
+    } else if (param.selectedModel.name == 'Picasso') {
       Tts.setDefaultLanguage('en-US');
       // Tts.setDefaultRate(0.6);
       Tts.setDefaultPitch(1.0);
       assistantSpeech(
-        "Hello Boss, I'm Friday. I'm powered by the legacy Dall-E 2.0 model by OPEN-A I. Anything you can imagine, I can create!",
+        "Hello Boss, I'm Picasso. I'm powered by the legacy Dall-E 2.0 model by OPEN-A I. Anything you can imagine, I can create!",
       );
     } else if (param.selectedModel.name == 'Gemini') {
       Tts.setDefaultLanguage('en-US');
@@ -445,7 +445,7 @@ const ChatScreen = () => {
                 source={
                   param.selectedModel
                     ? param.selectedModel.image
-                    : require('../../assets/images/bot3.png')
+                    : require('../../assets/images/gemini.jpeg')
                 }
                 style={{height: hp(14), width: hp(14)}}
                 className="rounded-full"

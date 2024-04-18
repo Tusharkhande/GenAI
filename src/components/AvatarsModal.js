@@ -22,7 +22,7 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
   };
   return (
     
-    <Modal visible={modalVisible} animationType="fade" transparent>
+    <Modal visible={modalVisible} animationType="fade" transparent onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={{ width: wp(80)}}
             className="flex flex-col bg-transparent">

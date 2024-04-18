@@ -36,6 +36,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useUser} from '../context/userContext';
 import useAuth from '../firebase/useAuth';
 import Loader from '../components/Loader';
+import Info from '../components/Info';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -130,14 +131,14 @@ const Dashboard = () => {
           // size={'w-4 h-4'}
         />
       </View>
-      <View className="flex absolute flex-row self-end p-3">
+      {/* <View className="flex absolute flex-row self-end p-3">
         <Button
           image={require('../../assets/images/about.png')}
           onPress={() => [navigation.navigate('About'), select_beep()]}
           isize={'w-8 h-8'}
         />
-      </View>
-      <ScrollView className=" mt-8" showsVerticalScrollIndicator={false}>
+      </View> */}
+      <ScrollView className=" mt-2" showsVerticalScrollIndicator={false}>
         <TouchableOpacity
           onPress={() => [setModalVisible(true), select_beep()]}
           className="self-center flex justify-center mt-0 mb-8">
@@ -207,6 +208,11 @@ const Dashboard = () => {
           <Text className="font-mono text-base font-medium mt-5 mb-5 text-slate-300">
             Email: {email}
           </Text>
+        </View>
+
+        <HorizontalLine text="Info" />
+        <View className="self-center">
+          <Info navigation={navigation} />
         </View>
 
         <HorizontalLine text="Contact" />

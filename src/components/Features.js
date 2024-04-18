@@ -54,7 +54,7 @@ export default function Features({ model, provider }) {
                             **Multilingual Support:** Jarvis supports multiple languages, broadening its accessibility to users around the world.            </Markdown>
                     </View>
                 </ScrollView>
-            ) : model === "Friday" ? (
+            ) : model === "Picasso" ? (
                 <ScrollView className="space-y-4"  showsVerticalScrollIndicator={false}>
                 <View className='bg-purple-200 p-4 py-2 rounded-xl'>
                     <View className='flex-row items-center'>

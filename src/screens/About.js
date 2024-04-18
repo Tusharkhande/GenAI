@@ -18,14 +18,15 @@ const About = () => {
   - **Image detection**  
   \nThese modes enhance the versatility of GenAI, making it a comprehensive tool for creative and interactive AI-powered tasks.
   \nTo ensure a seamless and secure user experience, GenAI incorporates **Firebase Authentication and Firestore** for robust data management and user personalization.
-  \nOur mission is to provide an innovative and engaging AI-powered platform that constantly evolves. GenAI is committed to regular updates and improvements, aiming to deliver state-of-the-art AI functionalities and an unmatched user experience.`
+  \n **Mission**:
+  \n Our mission is to provide an innovative and engaging AI-powered platform that constantly evolves. GenAI is committed to regular updates and improvements, aiming to deliver state-of-the-art AI functionalities and an unmatched user experience.`
   const navigation = useNavigation();
   return (
     <View className="flex bg-slate-950 flex-1 justify-normal ">
       <View className="flex absolute flex-row self-start p-3 pt-2">
         <Button
           image={require('../../assets/images/back.png')}
-          onPress={() => [navigation.goBack(), select_beep()]}
+          onPress={() => [navigation.navigate('Dashboard'), select_beep()]}
         />
       </View>
       <ScrollView
@@ -41,7 +42,7 @@ const About = () => {
         <Text className="text-base text-slate-400 text-center m-5 mb-0">
           About GenAI
         </Text>
-        <View className="text-justify text-slate-400 text-sm p-10 pt-2 pb-3">
+        <View className="text-justify text-slate-400 text-sm p-7 pt-2 pb-3">
           <Markdown style={markdownStyles}>
             {text}
           </Markdown>
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
 const markdownStyles = StyleSheet.create({
   body: {
     color: '#999999',
-    fontSize: wp(3.1),
+    fontSize: wp(3.5),
     marginTop: 0,
   },
 });
