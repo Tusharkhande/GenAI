@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Button from '../components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {select_beep} from '../constants/Sounds';
 import Markdown from 'react-native-markdown-display';
 
@@ -18,6 +18,12 @@ const Documentation = () => {
   const navigation = useNavigation();
   const [viewImg, setViewImg] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+
+  const handleImagePress = (image) => {
+    setSelectedImage(image);
+    setViewImg(true);
+  };
+
   return (
     <View className="flex bg-slate-950 flex-1 justify-normal ">
       <View className="flex absolute flex-row self-start p-3 pt-1">
@@ -52,7 +58,7 @@ const Documentation = () => {
             {`**GenAI** is a cutting-edge AI assistant that engages users in dynamic conversations and produces captivating AI-generated images and artwork.
               \n #### Chat Assistants:`}
           </Markdown>
-          <TouchableOpacity className="py-2 self-center">
+          <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/chatAssistants.jpg'))} className="py-2 self-center">
             <Image
               source={require('../../assets/images/documentation/chatAssistants.jpg')}
               style={{height: wp(70), width: wp(35)}}
@@ -70,7 +76,7 @@ const Documentation = () => {
               `}
           </Markdown>
           <View className="py-2 pb-4 self-center flex-row ">
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/chatAssistants-demo.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-demo.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -78,7 +84,7 @@ const Documentation = () => {
               />
               <Text className="self-center text-xs">GenAI</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/chatAssistants-vision.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-vision.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -91,7 +97,7 @@ const Documentation = () => {
             {`#### Image Generation using various models: **(Explore AI section)**`}
           </Markdown>
           <View className="py-2 pb-4 self-center flex-row ">
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/chatAssistants-exploreAi.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-exploreAi.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -99,7 +105,7 @@ const Documentation = () => {
               />
               <Text className="self-center text-xs">ExploreAI</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/chatAssistants-exploreAIScreen.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-exploreAIScreen.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -126,7 +132,7 @@ const Documentation = () => {
                 - *animefull-latest*`}
           </Markdown>
           <View className="py-2 pb-4 self-center flex-row ">
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/exploreai-mystic.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/exploreai-mystic.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -134,7 +140,7 @@ const Documentation = () => {
               />
               <Text className="self-center text-xs">Mystic Art</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/exploreai-timetravel.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/exploreai-timetravel.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -151,7 +157,7 @@ const Documentation = () => {
             \n+ *GenAI*.`}
           </Markdown>
           <View className="py-2 pb-4 self-center flex-row ">
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/imagedetection.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/imagedetection.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -159,7 +165,7 @@ const Documentation = () => {
               />
               <Text className="self-center text-xs">Mystic Art</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/imagedetection-open.jpg'))} className="">
               <Image
                 source={require('../../assets/images/documentation/imagedetection-open.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -180,7 +186,7 @@ const Documentation = () => {
             \n+ *Home Screen in the upper right corner*`}
           </Markdown>
           <View className="py-2 pb-4 self-center flex-row flex-wrap justify-center">
-            <TouchableOpacity className="m-2">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/history-chatscreen.jpg'))} className="m-2">
               <Image
                 source={require('../../assets/images/documentation/history-chatscreen.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -190,7 +196,7 @@ const Documentation = () => {
                 ChatScreen-History
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity className="m-2">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/history-exploreai.jpg'))} className="m-2">
               <Image
                 source={require('../../assets/images/documentation/history-exploreai.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -200,7 +206,7 @@ const Documentation = () => {
                 ExploreAIScreen-History
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity className="m-2">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/history-homescreen.jpg'))} className="m-2">
               <Image
                 source={require('../../assets/images/documentation/history-homescreen.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -208,7 +214,7 @@ const Documentation = () => {
               />
               <Text className="self-center text-xs mt-2">Time Travel Art</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="m-2">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/history.jpg'))} className="m-2">
               <Image
                 source={require('../../assets/images/documentation/history.jpg')}
                 style={{height: wp(70), width: wp(35)}}
@@ -221,21 +227,21 @@ const Documentation = () => {
             {`From the history icon on the homescreen both the chat history and image generation history can be accessed.`}
           </Markdown>
           <View className="py-2 pb-4 self-center flex-row ">
-            <TouchableOpacity className="m-2">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/chathistory.jpg'))} className="m-2">
               <Image
                 source={require('../../assets/images/documentation/chathistory.jpg')}
                 style={{height: wp(70), width: wp(35)}}
                 className="rounded-sm mx-auto"
               />
-              <Text className="self-center text-xs">Home</Text>
+              <Text className="self-center text-xs">Chat-History</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="m-2">
+            <TouchableOpacity onPress={() => handleImagePress(require('../../assets/images/documentation/imagegenhistory.jpg'))} className="m-2">
               <Image
                 source={require('../../assets/images/documentation/imagegenhistory.jpg')}
                 style={{height: wp(70), width: wp(35)}}
                 className="rounded-sm mx-auto"
               />
-              <Text className="self-center text-xs"></Text>
+              <Text className="self-center text-xs">Generation-History</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -245,17 +251,17 @@ const Documentation = () => {
       </ScrollView>
       <Modal visible={viewImg} animationType="fade" transparent onRequestClose={() => setViewImg(false)}>
       <View className="flex h-full bg-black/70 items-center justify-center self-center w-full">
-      <View className="flex absolute flex-row self-start top-0 p-3">
+      <View className="flex absolute flex-row self-start top-0 p-3 pt-1">
         <Button
           image={require('../../assets/images/back.png')}
-          onPress={() => setViewImage(false)}
+          onPress={() => setViewImg(false)}
         />
       </View>
         <View
           style={{ width: wp(80), height: wp(35) }}
           className="flex flex-col justify-center rounded-3xl"
         >
-          <Image source={selectedImage} className="self-center mb-5 rounded-3xl"  style={{ width: wp(60), height: wp(60) }} />
+          <Image source={selectedImage} className="self-center mb-5 rounded-3xl"  style={{ width: wp(70), height: hp(70) }} />
         </View>
       </View>
     </Modal>
