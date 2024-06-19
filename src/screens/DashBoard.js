@@ -240,7 +240,6 @@ const Dashboard = () => {
           deleteAccount={() =>
             deleteAccount(
               setDelModalVisible,
-              navigation,
               setLoading,
               email,
               password,

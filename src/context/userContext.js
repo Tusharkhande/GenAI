@@ -247,7 +247,7 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
     setLoading(false);
   };
 
-  const deleteAccount = async (setDelModalVisible,navigation, setLoading, email, password) => {
+  const deleteAccount = async (setDelModalVisible, setLoading, email, password) => {
     select_beep();
     setLoading(true);
     try {
@@ -262,11 +262,9 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
           // ToastAndroid.show("User deleted successfully", ToastAndroid.SHORT);
           // navigation.navigate('Welcome');
         })
-        .catch(error => {
-          console.log('Error deleting user', error);
-        });
     } catch (e) {
       console.log(e);
+      ToastAndroid.show('Wrong Password!', ToastAndroid.SHORT);
     } finally {
       setLoading(false);
     }

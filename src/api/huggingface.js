@@ -6,7 +6,7 @@ import {uploadImageFromCache} from '../firebase/firebase.storage';
 import base64 from 'base-64';
 
 export default generateImage = async (data, setLoading) => {
-  const models = ['stabilityai/stable-diffusion-xl-base-1.0','playgroundai/playground-v2-1024px-aesthetic','Corcelio/mobius', 'fluently/Fluently-XL-Final', 'runwayml/stable-diffusion-v1-5'];
+  const models = ['playgroundai/playground-v2-1024px-aesthetic','stabilityai/stable-diffusion-xl-base-1.0','Corcelio/mobius', 'fluently/Fluently-XL-Final', 'runwayml/stable-diffusion-v1-5'];
   for(let model of models){
     console.log(model)
     try {
