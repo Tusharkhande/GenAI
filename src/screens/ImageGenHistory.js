@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Text,
   BackHandler,
-  RefreshControl
+  RefreshControl,
 } from 'react-native';
 import {collection, getDocs, query, where} from 'firebase/firestore';
 import {getDownloadURL, ref} from 'firebase/storage';
@@ -97,9 +97,23 @@ const ImageGenHistory = () => {
         </Text>
       </View>
       {!loading ? (
-        <ScrollView className="flex bg-slate-950" showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refresh} onRefresh={() => [fetchUserImages(userId), function(){setRefresh(true); setTimeout(() => {
-          setRefresh(false);
-        }, 5000);}]} />}>
+        <ScrollView
+          className="flex bg-slate-950"
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={() => [
+                fetchUserImages(userId),
+                function () {
+                  setRefresh(true);
+                  setTimeout(() => {
+                    setRefresh(false);
+                  }, 5000);
+                },
+              ]}
+            />
+          }>
           <View className="flex flex-row flex-wrap justify-around p-4 mt-2">
             {images.map(image => (
               <TouchableOpacity key={image.date} className="mx-1 my-2">
@@ -109,9 +123,7 @@ const ImageGenHistory = () => {
                   date={image.date}
                   color={'#fff'}
                   textStyle={'text-sm bottom-1 ml-1'}
-                  onPress={() => [
-                    setViewImage(true), setImage(image)
-                  ]}
+                  onPress={() => [setViewImage(true), setImage(image)]}
                 />
               </TouchableOpacity>
             ))}
@@ -129,9 +141,8 @@ const ImageGenHistory = () => {
                     style={{height: wp(60), width: wp(60)}}
                   />
                 </View> */}
-                <View className='p-5'>
-                <Card
-                imageSource={require('../../assets/images/oho.gif')}/>
+                <View className="p-5">
+                  <Card imageSource={require('../../assets/images/oho.gif')} />
                 </View>
                 <Text className="text-white p-5 text-center">
                   You have not generated any images yet!

@@ -18,7 +18,11 @@ import {select_beep} from '../constants/Sounds';
 import {useNavigation} from '@react-navigation/native';
 import Markdown from 'react-native-markdown-display';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import { fetchChatSessions, deleteSessionAndMessages } from '../firebase/firebase.storage';
+import {
+  fetchChatSessions,
+  deleteSessionAndMessages,
+} from '../firebase/firebase.storage';
+import Card from '../components/Card';
 
 const ChatHistory = () => {
   const user = auth.currentUser;
@@ -28,7 +32,7 @@ const ChatHistory = () => {
   const navigation = useNavigation();
   const [chatSessions, setChatSessions] = useState([]);
 
- /*  async function fetchChatSessions(userId, setLoading, setChatSessions) {
+  /*  async function fetchChatSessions(userId, setLoading, setChatSessions) {
     setLoading(true);
     try {
       const sessionsQuery = query(
@@ -82,43 +86,65 @@ const ChatHistory = () => {
         </Text>
       </View>
       {!loading ? (
-        <FlatList
-          data={chatSessions}
-          refreshControl={
-            <RefreshControl
-              refreshing={refresh}
-              onRefresh={() => [
-                fetchChatSessions(userId, setLoading, setChatSessions),
-                function () {
-                  setRefresh(true);
-                  setTimeout(() => {
-                    setRefresh(false);
-                  }, 5000);
-                },
-              ]}
-            />
-          }
-          renderItem={({item, index}) => (
-            <>
-            <TouchableOpacity
-              onPress={() => [
-                navigation.navigate('Chat', {
-                  sessionId: item.id,
-                  selectedModel: item.selectedModel,
-                }),
-              ]}
-              className="flex px-3 mx-4 py-2 my-3 bg-slate-700 rounded-xl"
-              key={index}>
-              <Markdown style={markdownStyles}>
-                {'**' + item.selectedModel.name + '** : ' + item.title}
-              </Markdown>
-            </TouchableOpacity>
-              <View className='absolute self-end right-3 m-5'>
-                <Button image={require('../../assets/images/delete1.png')} onPress={() => [deleteSessionAndMessages(userId, item.id, setLoading, setChatSessions), select_beep()]}/>
-              </View>
-            </>
-          )}
-        />
+        chatSessions.length > 0 ? (
+          <FlatList
+            data={chatSessions}
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={() => [
+                  fetchChatSessions(userId, setLoading, setChatSessions),
+                  function () {
+                    setRefresh(true);
+                    setTimeout(() => {
+                      setRefresh(false);
+                    }, 5000);
+                  },
+                ]}
+              />
+            }
+            renderItem={({item, index}) => (
+              <>
+                <TouchableOpacity
+                  onPress={() => [
+                    navigation.navigate('Chat', {
+                      sessionId: item.id,
+                      selectedModel: item.selectedModel,
+                    }),
+                  ]}
+                  className="flex px-3 mx-4 py-2 my-3 bg-slate-700 rounded-xl"
+                  key={index}>
+                  <Markdown style={markdownStyles}>
+                    {'**' + item.selectedModel.name + '** : ' + item.title}
+                  </Markdown>
+                </TouchableOpacity>
+                <View className="absolute self-end right-3 m-5">
+                  <Button
+                    image={require('../../assets/images/delete1.png')}
+                    onPress={() => [
+                      deleteSessionAndMessages(
+                        userId,
+                        item.id,
+                        setLoading,
+                        setChatSessions,
+                      ),
+                      select_beep(),
+                    ]}
+                  />
+                </View>
+              </>
+            )}
+          />
+        ) : (
+          <View className="flex top-5 p-4 h-full w-full items-center">
+            <View className="p-5">
+              <Card imageSource={require('../../assets/images/oho.gif')} />
+            </View>
+            <Text className="text-white p-5 text-center">
+              No chats yet!
+            </Text>
+          </View>
+        )
       ) : (
         <View className="flex bg-black h-full w-full justify-center items-center p-4 self-center">
           <Image
@@ -140,8 +166,7 @@ const markdownStyles = StyleSheet.create({
     fontSize: wp(3.5),
     width: wp(73),
     marginTop: 0,
-  }
+  },
 });
-
 
 export default ChatHistory;
