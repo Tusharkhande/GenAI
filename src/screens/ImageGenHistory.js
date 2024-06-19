@@ -154,6 +154,8 @@ const ImageGenHistory = () => {
         viewImage={viewImage}
         image={image}
         setViewImage={setViewImage}
+        fetchUserImages={fetchUserImages}
+        userId={userId}
         // text={prompt}
       />
     </View>

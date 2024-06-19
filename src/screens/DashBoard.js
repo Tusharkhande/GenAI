@@ -123,7 +123,7 @@ const Dashboard = () => {
   };
 
   return (
-    <View style={styles.container} className="flex-1 bg-slate-950 p-7">
+    <View className="flex-1 bg-slate-950 p-7">
       <View className="flex absolute flex-row self-start p-3">
         <Button
           image={require('../../assets/images/back.png')}
@@ -161,7 +161,6 @@ const Dashboard = () => {
               <>
                 <TextInput
                   placeholder="Name"
-                  style={styles.input}
                   value={newName}
                   onChangeText={setNewName}
                   multiline={false}
@@ -264,16 +263,5 @@ const Dashboard = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  input: {
-    // width: '60%',
-    // // height: 40,
-    // marginBottom: 20,
-    // borderWidth: 1,
-    // borderColor: '#ddd',
-    // borderRadius: 5,
-    // paddingLeft: 10,
-  },
-});
 
 export default Dashboard;

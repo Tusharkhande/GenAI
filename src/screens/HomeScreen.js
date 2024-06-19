@@ -1,4 +1,4 @@
-import {View, Text, Image, TouchableOpacity, BackHandler} from 'react-native';
+import {View, Text, Image, TouchableOpacity, BackHandler, StyleSheet} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
@@ -107,7 +107,7 @@ export default function HomeScreen() {
           and Explore my features...
         </Text>
       </View>
-      <View className="flex items-center justify-center">
+      <View className="flex items-center justify-center" >
         <Image
           // source={require('../../assets/images/bot3.png')}
           // source={selectedModel.image}
@@ -132,7 +132,7 @@ export default function HomeScreen() {
         </View>
       </View>
       <View
-        className="flex items-center self-center justify-center bg-slate-900 rounded-3xl"
+        className="flex items-center self-center justify-center bg-slate-950 rounded-3xl"
         style={{width: wp(100)}}>
         {/* <FlatList
           data={model}
@@ -144,6 +144,7 @@ export default function HomeScreen() {
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
               className="flex flex-row items-center justify-between px-2 mx-4 py-2 my-2 rounded-full"
+              style={[styles.shadow]}
               key={index}
               // style={{ backgroundColor: item.primary }}
             >
@@ -153,6 +154,7 @@ export default function HomeScreen() {
                   style={{height: wp(12), width: wp(12)}}
                   resizeMode="contain"
                   className="rounded-full"
+
                 />
                 {/* <Text className="text-white text-xl font-bold ml-5">{item.name}</Text> */}
               </View>
@@ -161,7 +163,7 @@ export default function HomeScreen() {
         </View>
         {/* )}
         /> */}
-        <Text className="text-slate-100 text-sm ml-5 pb-2">
+        <Text className="text-slate-100 text-sm ml-2 pb-2">
           Select your interative Assistant
         </Text>
       </View>
@@ -186,3 +188,13 @@ export default function HomeScreen() {
     // </ImageBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#A6A9D1',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 19,
+  },
+});

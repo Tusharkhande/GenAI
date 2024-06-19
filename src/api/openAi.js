@@ -9,7 +9,8 @@ const client = axios.create({
     }
 })
 
-const chatgptUrl = 'https://api.openai.com/v1/chat/completions';
+// const chatgptUrl = 'https://api.openai.com/v1/chat/completions';
+const chatgptUrl = 'https://api.pawan.krd/v1/chat/completions';
 const chatCompletionUrl = 'https://api.openai.com/v1/completions';
 const dalleUrl = 'https://api.openai.com/v1/images/generations';
 const imageVarUrl = 'https://api.openai.com/v1/images/variations';
@@ -90,7 +91,7 @@ export const apiCall = async (prompt, messages) => {
 export const chatgptApiCall = async (prompt, messages) => {
     try {
         const res = await client.post(chatgptUrl, {
-            model: "gpt-3.5-turbo",
+            model: "pai-001-light",
             messages
         })
 

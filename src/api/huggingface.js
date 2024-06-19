@@ -1,76 +1,74 @@
 import axios from 'axios';
 import {STABILITY_API_KEY, HUGGING_API_KEY} from '@env';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
-import { uploadImageFromCache } from '../firebase/firebase.storage';
+import {uploadImageFromCache} from '../firebase/firebase.storage';
+import base64 from 'base-64';
 
-const apiKey = 'sk-XgXPz7J9worwz4NFP0Fx6naR6jIrtEoMAhQANeSaBDKXWLXx';
-export default generateImage = async (
-  para,
-  setLoading
-) => {
-  console.log('API_KEY:', apiKey);
-  setLoading(true);
-  try {
-    if (!apiKey) {
-      throw new Error('Missing Stability API key.');
-    }
-
-    const response = await axios.post(
-      `https://api.stability.ai/v1/generation/stable-diffusion-v1-6/text-to-image`,
-      {
-        text_prompts: [
-          {
-            text: para,
+export default generateImage = async (data, setLoading) => {
+  const models = ['stabilityai/stable-diffusion-xl-base-1.0','playgroundai/playground-v2-1024px-aesthetic','Corcelio/mobius', 'fluently/Fluently-XL-Final', 'runwayml/stable-diffusion-v1-5'];
+  for(let model of models){
+    console.log(model)
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `https://api-inference.huggingface.co/models/${model}`,
+        data,
+        {
+          headers: {
+            Authorization: 'Bearer ' + HUGGING_API_KEY,
           },
-        ],
-        cfg_scale: 7,
-        height: 512,
-        width: 512,
-        steps: 30,
-        samples: 1,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${apiKey}`,
+          responseType: 'arraybuffer', // Use arraybuffer to handle binary data
         },
-      },
-    );
-    const resp = response?.data?.artifacts[0]?.base64;
-    if(resp){
+      );
+      let binary = '';
+      const bytes = new Uint8Array(response.data);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      base64String = await base64.encode(binary);
+      if (base64String) {
+        setLoading(false);
+        const newMessage = {
+          role: 'assistant',
+          content: base64String,
+        };
+        return newMessage;
+      }
+    } catch (error) {
       setLoading(false);
-      const newMessage = {role: 'assistant', content: response.data.artifacts[0].base64};
-      return newMessage;
-    }else{
-      return {role: 'assistant', content: 'I am currently experiencing high demand! Feel free to try again in a few moments.'};
+      // return {
+      //   role: 'assistant',
+      //   content:
+      //     'I am currently experiencing high demand! Feel free to try again in a few moments.',
+      // };
     }
-    // setImage(`data:image/png;base64,${response.data.artifacts[0].base64}`);
-    // setBase64Image(response.data.artifacts[0].base64);
-  } catch (error) {
-    console.error('Error generating image:', error.message);
-    setLoading(false);
-    return {role: 'assistant', content: 'I am currently experiencing high demand! Feel free to try again in a few moments.'};
   }
 };
 
-
-export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage, blobImage, selectedModel) => {
+export const stableDiffusionXL = async (
+  data,
+  setLoading,
+  setImage,
+  setBlobImage,
+  blobImage,
+  selectedModel,
+) => {
   setLoading(true);
-  console.log(selectedModel)
-  const models = [selectedModel, 'stabilityai/stable-diffusion-xl-base-1.0'];
-  const error = 'Something went wrong please try later or select another model'
-  for(let model of models){
-    console.log(model)
-    try{
+  console.log(selectedModel);
+  const models = [selectedModel, 'stabilityai/stable-diffusion-xl-base-1.0','playgroundai/playground-v2-1024px-aesthetic', 'fluently/Fluently-XL-Final','Corcelio/mobius', 'runwayml/stable-diffusion-v1-5'];
+  const error = 'Something went wrong please try later or select another model';
+  for (let model of models) {
+    console.log(model);
+    try {
       const response = await RNFetchBlob.config({
         fileCache: true,
       }).fetch(
         'POST',
         `https://api-inference.huggingface.co/models/${model}`,
         // 'https://api-inference.huggingface.co/models/dataautogpt3/ProteusV0.2',
-        // 'https://api-inference.huggingface.co/models/kviai/Paint-Diffuion-V2', 
+        // 'https://api-inference.huggingface.co/models/kviai/Paint-Diffuion-V2',
         // 'https://api-inference.huggingface.co/models/h94/IP-Adapter-FaceID',
         // 'https://api-inference.huggingface.co/models/briaai/BRIA-2.2',
         // 'https://api-inference.huggingface.co/models/playgroundai/playground-v2-1024px-aesthetic',
@@ -80,24 +78,26 @@ export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage
         },
         JSON.stringify(data),
       );
-      
+
       const contentType = response.respInfo.headers['content-type'];
-      console.log(response.respInfo)
-      console.log(contentType)
-      if(!contentType.includes('image')){
+      console.log(response.respInfo);
+      console.log(contentType);
+      if (!contentType.includes('image')) {
         // throw new Error('Something went wrong please try later or select another model');
         error = 'Something went wrong please try later or select another model';
       }
       setLoading(false);
       const imagePath =
-        Platform.OS === 'android' ? `file://${response.path()}` : response.path();
-        console.log(imagePath)
-        setImage(imagePath);
-        setBlobImage(imagePath);
-       await uploadImageFromCache(imagePath, data.inputs);
+        Platform.OS === 'android'
+          ? `file://${response.path()}`
+          : response.path();
+      console.log(imagePath);
+      setImage(imagePath);
+      setBlobImage(imagePath);
+      await uploadImageFromCache(imagePath, data.inputs);
       return imagePath;
-    }catch(e){
-      console.log(e)
+    } catch (e) {
+      console.log(e);
       continue;
     }
   }
@@ -152,22 +152,21 @@ export const stableDiffusionXL = async (data, setLoading, setImage, setBlobImage
   } */
 };
 
-
 export async function gpt2(data) {
   try {
-      const response = await axios.post(
-          "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf",
-          data, 
-          {
-              headers: { Authorization: 'Bearer ' + HUGGING_API_KEY }
-          }
-      );
-      console.log("response is", response.data);
-      
-      return response.data[0].generated_text;
+    const response = await axios.post(
+      'https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf',
+      data,
+      {
+        headers: {Authorization: 'Bearer ' + HUGGING_API_KEY},
+      },
+    );
+    console.log('response is', response.data);
+
+    return response.data[0].generated_text;
   } catch (error) {
-      console.error("An error occurred while querying the API:", error);
-      // throw error; 
-      return "Conversation...";
+    console.error('An error occurred while querying the API:', error);
+    // throw error;
+    return 'Conversation...';
   }
 }

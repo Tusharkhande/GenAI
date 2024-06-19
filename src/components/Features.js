@@ -2,7 +2,6 @@
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import React from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import features from '../constants/features';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
 import Markdown from 'react-native-markdown-display';
@@ -59,7 +58,7 @@ export default function Features({ model, provider }) {
                 <View className='bg-purple-200 p-4 py-2 rounded-xl'>
                     <View className='flex-row items-center'>
                         <Image source={require('../../assets/images/dalleIcon.png')} className='mr-1.5' style={{ height: hp(4), width: hp(4) }} />
-                        <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Friday**`}</Markdown>
+                        <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>{`**Picasso**`}</Markdown>
                     </View>
                     <Markdown style={markdownStyles} >
                         I'm powered by the latest DALL-E 2.0 image generation model by OpenAI having the ability to generate imaginative and diverse images from textual descriptions.
@@ -67,12 +66,12 @@ export default function Features({ model, provider }) {
                 </View>
                 <View className='bg-purple-200 p-4 py-2 rounded-xl space-y-2'>
                     <Markdown style={markdownStyles} >
-                    **Versatility in Imagery:** Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.
+                    **Versatility in Imagery:** Picasso can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.
                     </Markdown>
                 </View>
                 <View className='bg-purple-200 p-4 py-2 rounded-xl space-y-2'>
                     <Markdown style={markdownStyles} >
-                    **Natural Language Understanding:** Similar to Jarvis (ChatGPT), Friday also demonstrates strong natural language understanding, making the interaction between textual input and visual output more intuitive.
+                    **Natural Language Understanding:** Similar to Jarvis (ChatGPT), Picasso also demonstrates strong natural language understanding, making the interaction between textual input and visual output more intuitive.
                     </Markdown>
                 </View>
                 <View className='bg-purple-200 p-4 py-2 rounded-xl space-y-2'>
@@ -89,7 +88,7 @@ export default function Features({ model, provider }) {
                             <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>GenAI</Markdown>
                         </View>
                         <Markdown style={markdownStyles} >
-                        I'm powered by various models like gemini-pro, gemini-pro-vision, dalle-2.0 and also stability-xl providing me multimodal capabilities.
+                        I'm powered by various models like **gemini-pro**, **gemini-pro-vision**, **dalle-2.0** and also **stability-xl** providing me multimodal capabilities.
                         </Markdown>
                     </View>
                     <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
@@ -99,7 +98,7 @@ export default function Features({ model, provider }) {
                 </View>
                 <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>
                     <Markdown style={markdownStyles}>
-                    {`**Versatility in Imagery:** Friday can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.`}
+                    {`**Versatility in Imagery:** GenAI can generate a wide range of images, including scenes, objects, creatures, abstract concepts, and more, making it a versatile tool for artistic expression.`}
                     </Markdown>
                 </View>
                 <View className='bg-cyan-200 p-4 py-1.5 rounded-xl space-y-2'>

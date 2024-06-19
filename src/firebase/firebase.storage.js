@@ -167,7 +167,14 @@ export async function deleteImageFromStorage(fullPath) {
   export async function saveChatSession(userId, messages, selectedModel, existingSessionId) {
     try {
       let sessionRef;
-      const filteredMessages = messages.map(({ base64String, ...rest }) => rest);
+      let filteredMessages = messages.map(({ base64String, ...rest }) => rest);
+      if(selectedModel.name ==='GenAI' || selectedModel.name ==='Picasso'){
+        filteredMessages = messages.map(({ content, role, ...rest }) => ({
+          content: role === "assistant" && content.length > 2000 ? "https://th.bing.com/th/id/OIG2.ifBa_Tkj1cGKx5Do3YLd?pid=ImgGn" : content,
+          role,
+          ...rest,
+        }));
+      }
       const messagesString = JSON.stringify(filteredMessages);
       console.log(messagesString);
       if (existingSessionId) {

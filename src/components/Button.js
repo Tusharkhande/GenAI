@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, Image, Pressable } from 'react-native';
 
-export default function Button({ title, onPress, image, isize, style, textStyle, appExit }) {
+export default function Button({ title, onPress, image, isize, style, textStyle, pressAble }) {
   return (
-    appExit ? (
+    pressAble ? (
       <Pressable android_ripple={{color:'#fff', borderless: true}} className={`${style ? style : 'flex-row items-center justify-center h-10'}`} onPress={onPress} >
       {image && <Image source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
       {title && <Text className={`${textStyle ? textStyle : 'text-center self-center'}`} >{title}</Text>}

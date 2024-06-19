@@ -38,8 +38,8 @@ import {useUser} from '../context/userContext';
 import {saveChatSession} from '../firebase/firebase.storage';
 import {auth, storage} from '../firebase/firebase.config';
 import {db} from '../firebase/firebase.config';
-import generateImage from '../api/huggingface'
-import { fetchMessagesForSession } from '../firebase/firebase.storage';
+import generateImage from '../api/huggingface';
+import {fetchMessagesForSession} from '../firebase/firebase.storage';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -56,8 +56,10 @@ const ChatScreen = () => {
   const user = auth.currentUser;
   const userId = user.uid;
   const sessionId = param.sessionId ? param.sessionId : '';
-  const selectedAvatar = param.selectedAvatar || gUserAvatar || require('../../assets/images/avatars/thor.jpeg');
-
+  const selectedAvatar =
+    param.selectedAvatar ||
+    gUserAvatar ||
+    require('../../assets/images/avatars/thor.jpeg');
 
   useEffect(() => {
     console.log(param.selectedModel.name);
@@ -65,14 +67,12 @@ const ChatScreen = () => {
 
   const handleBackPress = () => {
     console.log(messages.length);
-    if (
-      messages.length >= 2
-    ) {
+    if (messages.length >= 2) {
       saveChatSession(user.uid, messages, param.selectedModel, param.sessionId);
     }
-    navigation.goBack(); 
+    navigation.goBack();
     Tts.stop();
-    return true; 
+    return true;
   };
 
   useEffect(() => {
@@ -87,7 +87,7 @@ const ChatScreen = () => {
       console.log(param.sessionId.trim());
       fetchMessagesForSession(param.sessionId, setLoading, setMessages);
     }
-  }, [param.sessionId]); 
+  }, [param.sessionId]);
 
   const clear = () => {
     sweep();
@@ -95,7 +95,7 @@ const ChatScreen = () => {
     setLoading(false);
     setMessages([]);
   };
-/* 
+  /* 
   async function fetchMessagesForSession(sessionId) {
     if (!sessionId) {
       console.error('Session ID is undefined');
@@ -176,6 +176,7 @@ const ChatScreen = () => {
               }
             });
           } else if (param.selectedModel.name == 'Picasso') {
+            /* 
             dalleApiCall(text, newMessages).then(res => {
               console.log('after API Call');
               setText('');
@@ -199,10 +200,26 @@ const ChatScreen = () => {
                 }
               }
             });
+            */
+            generateImage(text, setLoading).then(newMessage => {
+              setText('');
+              setLoading(false);
+              if (newMessage) {
+                setMessages(prevMessages => [...prevMessages, newMessage]);
+              } else {
+                newMessage = {
+                  role: 'assistant',
+                  content:
+                    "I'm currently experiencing high demand! Feel free to try again in a few moments.",
+                };
+                setMessages(prevMessages => [...prevMessages, newMessage]);
+              }
+              updateScrollView();
+          });
           } else if (param.selectedModel.name == 'GenAI') {
-            console.log("first")
-            if(base64String){
-              console.log("vis")
+            console.log('first');
+            if (base64String) {
+              console.log('vis');
               vision(text, base64String).then(res => {
                 console.log('after API Call');
                 setText('');
@@ -216,47 +233,32 @@ const ChatScreen = () => {
                   assistantSpeech(res.data);
                 }
               });
-            }else if(text.includes('create a image') || text.includes('image') || text.includes('create an image') || text.includes('sketch') || text.includes('generate a image') || text.includes('picture') || text.includes('drawing')){
-              console.log("image")
-              // dalleApiCall(text, newMessages).then(res => {
-              //   console.log('after API Call');
-              //   setText('');
-              //   setLoading(false);
-              //   if (res.success) {
-              //     setMessages([...res.data]);
-              //     updateScrollView();
-              //     setImageLoading(true);
-              //     // startTextToSpeech(res.data[res.data.length - 1]);
-  
-              //     const lastMessage = res.data[res.data.length - 1];
-              //     if (
-              //       lastMessage.content.includes('https://oaidalleapiprodscus')
-              //     ) {
-              //       startTextToSpeech({
-              //         role: 'assistant',
-              //         content: "Sure, I'll try to create that!",
-              //       });
-              //     } else {
-              //       startTextToSpeech(lastMessage);
-              //     }
-              //   }
-              // });
+            } else if (
+              text.includes('create a image') ||
+              text.includes('image') ||
+              text.includes('create an image') ||
+              text.includes('sketch') ||
+              text.includes('generate a image') ||
+              text.includes('picture') ||
+              text.includes('drawing')
+            ) {
+              console.log('image');
               generateImage(text, setLoading).then(newMessage => {
-                    setText('');
-                    setLoading(false);
-                    if (newMessage) {
-                      setMessages(prevMessages => [...prevMessages, newMessage]);
-                    } else {
-                      newMessage = {
-                        role: 'assistant',
-                        content:
-                          "I'm currently experiencing high demand! Feel free to try again in a few moments.",
-                      };
-                      setMessages(prevMessages => [...prevMessages, newMessage]);
-                    }
-                    updateScrollView();
-                });
-            }else{
+                setText('');
+                setLoading(false);
+                if (newMessage) {
+                  setMessages(prevMessages => [...prevMessages, newMessage]);
+                } else {
+                  newMessage = {
+                    role: 'assistant',
+                    content:
+                      "I'm currently experiencing high demand! Feel free to try again in a few moments.",
+                  };
+                  setMessages(prevMessages => [...prevMessages, newMessage]);
+                }
+                updateScrollView();
+              });
+            } else {
               const conversationHistory = messages.map(m => ({
                 role: m.role === 'assistant' ? 'model' : 'user', // Map 'assistant' to 'model'
                 parts: [{text: m.content}],
@@ -487,7 +489,10 @@ const ChatScreen = () => {
                   {messages.map((message, index) => {
                     if (message.role == 'assistant') {
                       if (
-                        message.content.includes('https://oaidalleapiprodscus') || !message.content.includes(' ')
+                        message.content.includes(
+                          'https://oaidalleapiprodscus',
+                        ) ||
+                        !message.content.includes(' ')
                       ) {
                         // result is an ai image
                         return (
@@ -511,9 +516,13 @@ const ChatScreen = () => {
                                   <View>
                                     <Image
                                       source={
-                                        message.content.includes('https://oaidalleapiprodscus')
+                                        message.content.includes(
+                                          'https://oaidalleapiprodscus',
+                                        )
                                           ? {uri: message.content}
-                                          : {uri:`data:image/png;base64,${message.content}`}
+                                          : {
+                                              uri: `data:image/png;base64,${message.content}`,
+                                            }
                                       }
                                       className="rounded-2xl self-start mr-4 z-10"
                                       resizeMode="contain"
@@ -534,8 +543,12 @@ const ChatScreen = () => {
                                     image={require('../../assets/images/dwd2.png')}
                                     isize={'h-6 w-6'}
                                     // title={'Copy'}
-                                    onPress={() => message.content.includes('https://oaidalleapiprodscus')?
-                                      downloadImage(message.content) : downloadBase64Image(message.content)
+                                    onPress={() =>
+                                      message.content.includes(
+                                        'https://oaidalleapiprodscus',
+                                      )
+                                        ? downloadImage(message.content)
+                                        : downloadBase64Image(message.content)
                                     }
                                   />
                                 </View>
@@ -691,7 +704,8 @@ const ChatScreen = () => {
                       style={{color: 'white'}}
                     />
                     <View className="flex flex-row self-end absolute">
-                      {(param.selectedModel.name == 'Vision' || param.selectedModel.name == 'GenAI') && (
+                      {(param.selectedModel.name == 'Vision' ||
+                        param.selectedModel.name == 'GenAI') && (
                         <TouchableOpacity
                           className=" p-2 my-auto rounded-md"
                           onPress={() => setOpenImagePickerModal(true)}>

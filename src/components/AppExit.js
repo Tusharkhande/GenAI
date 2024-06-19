@@ -30,7 +30,7 @@ const AppExit = ({exit, setExit}) => {
               className=" rounded-3xl mb-0">
               <Button
                 title="No"
-                appExit={true}
+                pressAble={true}
                 textStyle={'text-sm'}
                 onPress={() => [setExit(false), select_beep()]}
               />

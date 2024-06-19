@@ -162,7 +162,7 @@ const ImageGenScreen = () => {
             />
           )}
           <Text className="text-white text-xs mr-6 mt-3 font-thin self-end">
-            {param.imageModel.models[0].split('/')[1]}
+            {selectedModel.split('/')[1]}
           </Text>
           <View className="flex-row mt-4 mb-4 justify-around">
             <TextInput

@@ -6,7 +6,7 @@ import { downloadImage } from '../constants/DownloadImage';
 import { deleteImageFromStorage } from '../firebase/firebase.storage';
 import Markdown from 'react-native-markdown-display';
 
-const ViewImage = ({ viewImage, image, setViewImage, text, fetchUserImages, userId }) => {
+const ViewImage = ({ viewImage, image, setViewImage, fetchUserImages, userId }) => {
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
