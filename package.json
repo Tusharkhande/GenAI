@@ -17,6 +17,7 @@
     "@react-native-firebase/firestore": "^18.9.0",
     "@react-native-firebase/storage": "^18.9.0",
     "@react-native-google-signin/google-signin": "^10.1.1",
+    "@react-native-voice/voice": "^3.2.4",
     "@react-navigation/material-top-tabs": "^6.6.5",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",

@@ -10,7 +10,7 @@ import {
   statusCodes,
   
 } from '@react-native-google-signin/google-signin';
-import { ToastAndroid } from 'react-native';
+import { PermissionsAndroid, ToastAndroid } from 'react-native';
 
 const UserContext = createContext();
 
@@ -32,6 +32,23 @@ export function Context({children}) {
     });
     // getUserData();
   }, []);
+
+  const permission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Record audio permission granted');
+        return true;
+      } else {
+        console.log('Record audio permission denied');
+        return false;
+      }
+    } catch (error) {
+      console.log('Error while requesting record audio permission:', error);
+    }
+  };
 
   const login = async (
     email,
@@ -272,7 +289,7 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
 
 
   return (
-    <UserContext.Provider value={{user, setUser, guser,name, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
+    <UserContext.Provider value={{permission, user, setUser, guser,name, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
       {children}
     </UserContext.Provider>
   );

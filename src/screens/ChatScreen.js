@@ -49,13 +49,12 @@ const ChatScreen = () => {
   const [base64String, setBase64String] = useState('');
   const [file, setFile] = useState('');
   const [openImagePickerModal, setOpenImagePickerModal] = useState(false);
+  const [recording, setRecording] = useState(false);
   const param = useRoute().params;
   const scrollViewRef = useRef();
   const navigation = useNavigation();
   const {gUserAvatar} = useUser;
   const user = auth.currentUser;
-  const userId = user.uid;
-  const sessionId = param.sessionId ? param.sessionId : '';
   const selectedAvatar =
     param.selectedAvatar ||
     gUserAvatar ||
@@ -653,7 +652,7 @@ const ChatScreen = () => {
             </KeyboardAvoidingView>
           )}
 
-          <MultiInput loading={loading} base64String={base64String} fetchResponse={fetchResponse} param={param} messages={messages} setText={setText} text={text} clear={clear} setOpenImagePickerModal={setOpenImagePickerModal}/>
+          <MultiInput loading={loading} base64String={base64String} fetchResponse={fetchResponse} param={param} messages={messages} setText={setText} text={text} clear={clear} setOpenImagePickerModal={setOpenImagePickerModal} setRecording={setRecording} recording={recording} />
         </SafeAreaView>
         {/* </ImageBackground> */}
       </View>
