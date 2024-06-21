@@ -17,7 +17,7 @@ import Button from '../components/Button';
 import {signInWithEmailAndPassword, updateProfile} from 'firebase/auth';
 // import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 // import ImagePicker from 'react-native-image-crop-picker';
-import { theme } from '../constants/Theme';
+import {theme} from '../constants/Theme';
 
 import avatar from '../constants/Avatars';
 import {
@@ -38,7 +38,8 @@ import {useUser} from '../context/userContext';
 import useAuth from '../firebase/useAuth';
 import Loader from '../components/Loader';
 import Info from '../components/Info';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import ThemeSwitch from '../components/ThemeSwitch';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -142,9 +143,7 @@ const Dashboard = () => {
             // size={'w-4 h-4'}
           />
         </View>
-        <View className="self-center p-3 pb-0 right-2">
-          <Switch value={colorScheme == 'dark'} onChange={toggleColorScheme} />
-        </View>
+       <ThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme} />
       </View>
       <ScrollView className="p-7 pt-0" showsVerticalScrollIndicator={false}>
         <>
@@ -255,7 +254,9 @@ const Dashboard = () => {
         </View>
 
         <View className="self-center mt-8">
-          <Text className=" text-slate-900 dark:text-slate-400">© 2024 @ktushar</Text>
+          <Text className=" text-slate-900 dark:text-slate-400">
+            © 2024 @ktushar
+          </Text>
         </View>
 
         <DeleteAccModal

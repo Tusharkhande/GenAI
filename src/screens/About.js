@@ -6,6 +6,7 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {select_beep} from '../constants/Sounds';
 import Markdown from 'react-native-markdown-display';
 import { useUser } from '../context/userContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const About = () => {
   const text = `**GenAI** is a cutting-edge AI assistant that engages users in dynamic conversations and produces captivating AI-generated images and artwork. Utilizing a range of advanced AI models, including:  
@@ -32,7 +33,7 @@ const About = () => {
   });
 
   return (
-    <View className="flex bg-slate-50 dark:bg-slate-950 flex-1 justify-normal ">
+    <SafeAreaView className="flex bg-slate-50 dark:bg-slate-950 flex-1 justify-normal ">
       <View className="flex absolute self-start p-3 pt-2 mt-8">
         <Button
           image={require('../../assets/images/back.png')}
@@ -43,7 +44,7 @@ const About = () => {
       <ScrollView
         className="space-y-4 mt-8"
         showsVerticalScrollIndicator={false}>
-        <View className="flex-row justify-center mt-6">
+        <View className="flex-row justify-center ">
           <Image
             source={require('../../assets/images/ai2.png')}
             style={{width: wp(20), height: wp(20)}}
@@ -62,7 +63,7 @@ const About = () => {
           <Text className=" text-slate-800 dark:text-slate-400 text-xs">© 2023 @ktushar</Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
