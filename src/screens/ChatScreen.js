@@ -14,8 +14,7 @@ import {
   BackHandler,
   ToastAndroid,
 } from 'react-native';
-
-// import Voice from '@react-native-community/voice';
+import { theme } from '../constants/Theme';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -53,7 +52,7 @@ const ChatScreen = () => {
   const param = useRoute().params;
   const scrollViewRef = useRef();
   const navigation = useNavigation();
-  const {gUserAvatar} = useUser;
+  const {gUserAvatar, colorScheme} = useUser();
   const user = auth.currentUser;
   const selectedAvatar =
     param.selectedAvatar ||
@@ -94,41 +93,7 @@ const ChatScreen = () => {
     setLoading(false);
     setMessages([]);
   };
-  /* 
-  async function fetchMessagesForSession(sessionId) {
-    if (!sessionId) {
-      console.error('Session ID is undefined');
-      return;
-    }
-    setLoading(true);
-    const q = query(
-      collection(db, 'messages'),
-      where('sessionId', '==', sessionId),
-      orderBy('createdAt', 'asc'),
-    );
-
-    try {
-      const querySnapshot = await getDocs(q);
-      console.log(`Found ${querySnapshot.docs.length} documents`);
-
-      const messages = querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        if(data.base64String){
-          return {role: data.role, content: data.content, base64String: data.base64String};
-        }else{
-          return {role: data.role, content: data.content};
-        }
-      });
-
-      console.log('Messages:', messages); // Debug log
-      setMessages(messages);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      setLoading(false);
-    }
-}
- */
+ 
   const fetchResponse = async () => {
     try {
       if (text.trim().length > 0) {
@@ -433,12 +398,12 @@ const ChatScreen = () => {
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View className="flex-1 bg-slate-950">
+      <View className="flex-1 bg-slate-50 dark:bg-slate-950">
         {/* <ImageBackground
       source={require("../../assets/images/bg1.jpg")}
       style={{ flex: 1 }}
       > */}
-        <SafeAreaView className="flex-1 flex mx-5 pt-3">
+        <SafeAreaView className="flex-1 flex mx-5 mt-10 pt-3">
           {messages.length == 0 && (
             <View className="flex-row justify-center">
               <Image
@@ -459,13 +424,13 @@ const ChatScreen = () => {
             <View className="space-y-5 flex-1">
               <View className="flex-row justify-between">
                 <Text
-                  className="text-white font-semibold ml-1"
+                  className="text-slate-900 dark:text-slate-200 font-semibold ml-1"
                   style={{fontSize: wp(5)}}>
                   {param.selectedModel.name}
                 </Text>
                 <View className="flex flex-row items-center">
                   <Text
-                    className="text-white font-thin mr-2"
+                    className="text-slate-900 dark:text-slate-200 font-thin mr-2"
                     style={{fontSize: wp(3)}}>
                     {param.selectedModel.provider}
                   </Text>
@@ -473,13 +438,14 @@ const ChatScreen = () => {
                     image={require('../../assets/images/history1.png')}
                     onPress={() => navigation.navigate('ChatHistory')}
                     style={'h-6 w-6 mr-1'}
+                    colorScheme={colorScheme}
                   />
                 </View>
               </View>
 
               <View
                 style={{height: hp(76)}}
-                className="bg-slate-400 rounded-3xl p-4 pl-1 pr-1">
+                className="bg-slate-200 dark:bg-slate-400 rounded-3xl p-4 pl-1 pr-1">
                 <ScrollView
                   ref={scrollViewRef}
                   bounces={false}
@@ -661,9 +627,9 @@ const ChatScreen = () => {
         <View className="flex flex-1 bg-black/50 items-center justify-end">
           <View
             style={{width: wp(90), height: wp(40)}}
-            className="flex flex-col bg-slate-800 p-2 justify-normal rounded-3xl">
+            className="flex flex-col bg-slate-50 dark:bg-slate-800 p-2 justify-normal rounded-3xl">
             <View className="flex flex-row justify-between">
-              <Text className="font-mono text-base self-start text-center text-slate-100 m-5 mt-2">
+              <Text className="font-mono text-base self-start text-center text-slate-900 dark:text-slate-100 m-5 mt-2">
                 Please select an option:
               </Text>
               <TouchableOpacity
@@ -672,6 +638,7 @@ const ChatScreen = () => {
                 <Image
                   source={require('../../assets/images/close.png')}
                   className="h-6 w-6"
+                  style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]}
                 />
               </TouchableOpacity>
             </View>
@@ -683,7 +650,7 @@ const ChatScreen = () => {
                   source={require('../../assets/images/gallery.png')}
                   className="h-10 w-10 self-center"
                 />
-                <Text className="text-white">Gallery</Text>
+                <Text className="text-slate-900 dark:text-slate-200">Gallery</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex flex-col justify-center"
@@ -692,7 +659,7 @@ const ChatScreen = () => {
                   source={require('../../assets/images/camera.png')}
                   className="h-10 w-10 self-center"
                 />
-                <Text className="text-white">Camera</Text>
+                <Text className="text-slate-900 dark:text-slate-200">Camera</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -703,12 +670,6 @@ const ChatScreen = () => {
 };
 
 export default ChatScreen;
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-});
 
 const markdownStyles = StyleSheet.create({
   body: {

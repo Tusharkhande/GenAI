@@ -11,6 +11,7 @@ import {
   
 } from '@react-native-google-signin/google-signin';
 import { PermissionsAndroid, ToastAndroid } from 'react-native';
+import { useColorScheme } from 'nativewind';
 
 const UserContext = createContext();
 
@@ -24,6 +25,7 @@ export function Context({children}) {
   const [gUserAvatar, setGUserAvatar] = useState('9');
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [name, setName] = useState('Sir');
+  const {colorScheme, toggleColorScheme} = useColorScheme();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -289,7 +291,7 @@ const loginWithGoogle = async (navigation, setIsLoading) => {
 
 
   return (
-    <UserContext.Provider value={{permission, user, setUser, guser,name, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
+    <UserContext.Provider value={{colorScheme, toggleColorScheme, permission, user, setUser, guser,name, login, loginWithGoogle, createUser, getUserData, setGUserAvatar, gUserAvatar, isLoggedin, signOut, deleteAccount}}>
       {children}
     </UserContext.Provider>
   );

@@ -5,18 +5,20 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
 import Markdown from 'react-native-markdown-display';
+import { useUser } from '../context/userContext';
 
 
 export default function Features({ model, provider }) {
     const navigation = useNavigation();
+    const {colorScheme} = useUser();
     return (
         
         <View style={{ height: hp(68) }} className="space-y-4 pt-0">
             <View className='flex-row justify-between'>
-            <Text style={{ fontSize: wp(6.5) }} className="font-semibold text-neutral-100">Features</Text>
+            <Text style={{ fontSize: wp(6.5) }} className="font-semibold text-slate-900 dark:text-slate-200">Features</Text>
             <View className="flex flex-row items-center">
                   <Text
-                    className="text-white font-thin mr-2"
+                    className="text-slate-900 dark:text-slate-200 font-thin mr-2"
                     style={{fontSize: wp(3)}}>
                     {provider}
                   </Text>
@@ -24,6 +26,7 @@ export default function Features({ model, provider }) {
                     image={require('../../assets/images/history1.png')}
                     onPress={() => navigation.navigate('ChatHistory')}
                     style={'h-6 w-6 mr-1'}
+                    colorScheme={colorScheme}
                   />
                 </View>
             </View>

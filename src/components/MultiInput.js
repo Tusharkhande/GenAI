@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ToastAndroid,
+  Linking
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -14,6 +15,7 @@ import {
 import Voice from '@react-native-voice/voice';
 import {useUser} from '../context/userContext';
 import { assistantSpeech } from '../constants/TextToSpeech';
+import { theme } from '../constants/Theme';
 
 const MultiInput = ({
   loading,
@@ -28,7 +30,7 @@ const MultiInput = ({
   recording,
   setRecording,
 }) => {
-  const {permission} = useUser();
+  const {permission, colorScheme} = useUser();
 
   const onSpeechStart = e => {
     console.log('onSpeechStart: ', e);
@@ -55,8 +57,9 @@ const MultiInput = ({
   const startRecording = async () => {
     const status = await permission();
     if(!status){
-      assistantSpeech('Please enable Audio Permission from the settings or restart the app to proceed!');
+      assistantSpeech('Please enable Audio Permission from the settings to proceed!');
       ToastAndroid.show('Audio Permission Denied!', ToastAndroid.SHORT);
+      Linking.openSettings();
       return;
     }
     setRecording(true);
@@ -91,7 +94,7 @@ const MultiInput = ({
   };
 
   return (
-    <View className="flex bg-slate-950 justify-center ">
+    <View className="flex bg-slate-50 dark:bg-slate-950 justify-center ">
       {loading ? (
         <Image
           source={require('../../assets/images/loading2.gif')}
@@ -125,6 +128,7 @@ const MultiInput = ({
                 <Image
                   source={require('../../assets/images/clear2.png')}
                   className="h-7 w-7 ml-0"
+                  style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]}
                 />
               </TouchableOpacity>
             )}
@@ -135,12 +139,13 @@ const MultiInput = ({
                   // className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-gray-700 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs'
                   className="flex flex-col justify-center">
                   <TextInput
-                    className="m-0 border-slate-500 border-opacity-5 border-solid border rounded-xl bg-slate-800 p-3 text-white"
+                    className="m-0 border-slate-400 dark:border-slate-500 border-opacity-5 border-solid border rounded-xl bg-slate-200 dark:bg-slate-800 p-3"
                     onChangeText={setText}
-                    placeholder="Send a message"
+                    placeholder="Ask me anything..."
+                    placeholderTextColor={colorScheme == 'light' ? '#1e293b' : '#Cbd5e1'}
                     multiline={true}
                     numberOfLines={1}
-                    style={{color: 'white'}}
+                    style={{color: colorScheme == 'light' ? '#1e293b' : '#Cbd5e1'}}
                   />
                   <View className="flex flex-row self-end absolute">
                     {(param.selectedModel.name == 'Vision' ||
@@ -161,6 +166,7 @@ const MultiInput = ({
                       <Image
                         source={require('../../assets/images/send-2.png')}
                         className="h-6 w-6"
+                        style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]}
                       />
                     </TouchableOpacity>
                   </View>
@@ -170,12 +176,9 @@ const MultiInput = ({
                     className=" pl-2 py-2 my-auto rounded-md"
                     onPress={startRecording}>
                     <Image
-                      source={
-                        !recording
-                          ? require('../../assets/images/mic.png')
-                          : require('../../assets/images/rec.gif')
-                      }
+                      source={require('../../assets/images/mic.png')}
                       className="h-7 w-7"
+                      style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]}
                     />
                   </TouchableOpacity>
                 </View>

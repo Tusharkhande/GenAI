@@ -15,6 +15,7 @@ import {select_beep} from '../constants/Sounds';
 import Button from '../components/Button';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import TextCard from '../components/TextCard';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const AIPainting = ({imageModel, navigation}) => (
   <ScrollView
@@ -95,34 +96,40 @@ const ExploreAiScreen = () => {
   );
 
   return (
-    <View className="flex bg-slate-950 w-full h-full">
-      <View className="flex absolute flex-row self-start p-3 pt-1">
-        <Button
-          image={require('../../assets/images/back.png')}
-          onPress={handleBackPress}
-        />
-      </View>
-      <View className="flex flex-row flex-wrap justify-center mt-2">
-        <Text
-          className={`font-semibold text-left font-mono mt-1 mb-2 text-xl text-slate-50`}>
-          Explore AI
-        </Text>
-      </View>
-      <View className='absolute self-end p-3'>
+    <SafeAreaView className="flex bg-slate-950 w-full h-full">
+      <View className=" flex-row justify-between items-center w-full">
+        <View className="flex  self-start p-3 pt-2">
+          <Button
+            image={require('../../assets/images/back.png')}
+            onPress={handleBackPress}
+          />
+        </View>
+        {/* <View className="flex flex-row flex-wrap justify-center mt-2"> */}
+          <Text
+            className={`font-semibold self-center text-left font-mono mt-1 mb-2 text-xl text-slate-50`}>
+            Explore AI
+          </Text>
+        {/* </View> */}
+        <View className=" self-end p-3">
           <Button
             style={'top-0 px-2 my-auto mx-auto'}
             image={require('../../assets/images/history1.png')}
             isize={'w-8 h-8'}
-            onPress={() => [navigation.navigate('ImageGenHistory'), select_beep()]}
+            onPress={() => [
+              navigation.navigate('ImageGenHistory'),
+              select_beep(),
+            ]}
           />
         </View>
+      </View>
+
       <Tab.Navigator
         screenOptions={{
           tabBarActiveTintColor: '#e91e63',
-          tabBarInactiveTintColor: 'gray', 
-          tabBarLabelStyle: {fontSize: 12}, 
-          tabBarStyle: {backgroundColor: 'rgb(2 6 23)'}, 
-          tabBarIndicatorStyle: {backgroundColor: '#e91e63'}, 
+          tabBarInactiveTintColor: 'gray',
+          tabBarLabelStyle: {fontSize: 12},
+          tabBarStyle: {backgroundColor: 'rgb(2 6 23)'},
+          tabBarIndicatorStyle: {backgroundColor: '#e91e63'},
         }}>
         <Tab.Screen name="AI Painting">{AIPaintingScreen}</Tab.Screen>
         <Tab.Screen name="Writing">{WritingScreen}</Tab.Screen>
@@ -133,7 +140,7 @@ const ExploreAiScreen = () => {
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
     /> */}
-    </View>
+    </SafeAreaView>
   );
 };
 

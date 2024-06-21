@@ -1,28 +1,27 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, Image, Pressable } from 'react-native';
 
-export default function Button({ title, onPress, image, isize, style, textStyle, pressAble }) {
+export default function Button({ title, onPress, image, isize, style, textStyle, pressAble, colorScheme }) {
   return (
     pressAble ? (
       <Pressable android_ripple={{color:'#fff', borderless: true}} className={`${style ? style : 'flex-row items-center justify-center h-10'}`} onPress={onPress} >
-      {image && <Image source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
+      {image && <Image style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]} source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
       {title && <Text className={`${textStyle ? textStyle : 'text-center self-center'}`} >{title}</Text>}
     </Pressable>
     ) : (
       <TouchableOpacity className={`${style ? style : 'flex-row items-center justify-center h-10'}`} onPress={onPress} >
-      {image && <Image source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
+      {image && <Image style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]} source={image} className={`${isize ? isize : 'w-7 h-7'}`} />}
       {title && <Text className={`${textStyle ? textStyle : 'text-center self-center'}`} >{title}</Text>}
     </TouchableOpacity>
     )
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
+const theme = StyleSheet.create({
+  light: {
+    tintColor: 'black',
   },
-
+  dark: {
+    tintColor: 'white',
+  },
 });
