@@ -4,26 +4,16 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  ImageBackground,
-  ToastAndroid,
-  Modal,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
-import {useEffect, useState} from 'react';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {auth} from '../firebase/firebase.config';
+import {useState} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
-import {select_beep, err_beep} from '../constants/Sounds';
-// import EncryptedStorage from 'react-native-encrypted-storage';
-import {assistantSpeech} from '../constants/TextToSpeech';
+import {select_beep} from '../constants/Sounds';
 import { useUser } from '../context/userContext';
 import Loader from '../components/Loader';
 
@@ -34,19 +24,14 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const [loading, setIsLoading] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const {user, guser,login, loginWithGoogle} = useUser();
+  const {login, loginWithGoogle, colorScheme} = useUser();
 
   const togglePasswordVisibility = () => {
     setPasswordVisibility(!passwordVisibility);
   };
 
   return (
-    <View className="flex flex-1 bg-slate-900 ">
-      {/* <ImageBackground
-        source={require("../../assets/images/bg1.jpg")}
-        style={{ flex: 1 }}
-      > */}
-      <SafeAreaView className="flex">
+      <SafeAreaView className="flex-1 justify-start bg-slate-50 dark:bg-slate-950">
         {/* <View className="flex-row justify-start">
             <TouchableOpacity 
                 onPress={()=> navigation.goBack()}
@@ -55,22 +40,22 @@ export default function LoginScreen() {
                 <ArrowLeftIcon size="20" color="black" />
             </TouchableOpacity>
         </View> */}
-        <View className="flex-row justify-center mt-6 rounded-full">
+        <View className="flex self-center mt-10">
           <Image
           className=' rounded-full'
             source={require('../../assets/images/ai2.png')}
-            style={{width: wp(30), height: wp(30)}}
+            style={{width: wp(26), height: wp(26)}}
           />
         </View>
-      </SafeAreaView>
-      <View
-        className="flex-1 px-8 pt-5 mt-10"
+      
+      <KeyboardAvoidingView
+        className="flex px-8 pt-5 mt-10 justify-center"
         style={{borderTopLeftRadius: 50, borderTopRightRadius: 50}}>
-        <View className="form space-y-8">
+        <View className=" space-y-8">
           <View className="flex flex-row justify-start">
             <Image
               source={require('../../assets/images/email.png')}
-              style={{ width: wp(7), height: wp(7) }}
+              style={[{ width: wp(7), height: wp(7) }, {tintColor: colorScheme === 'dark' ? '#fff' : '#000'}]}
               className="w-10 h-10  pt-4 m-2"
             />
             <TextInput
@@ -89,7 +74,7 @@ export default function LoginScreen() {
           <View className="flex flex-row">
             <Image
               source={require('../../assets/images/password.png')}
-              style={{ width: wp(7), height: wp(7) }}
+              style={[{ width: wp(7), height: wp(7) }, {tintColor: colorScheme === 'dark' ? '#fff' : '#000'}]}
               className="w-10 h-10 pt-4 m-2"
             />
             <TextInput
@@ -104,7 +89,7 @@ export default function LoginScreen() {
             />
             <TouchableOpacity onPress={togglePasswordVisibility}>
             <Image
-              source={require('../../assets/images/viewPass.png')}
+              source={passwordVisibility ? require('../../assets/images/viewPass.png') : require('../../assets/images/hidePass.png')}
               style={{width: wp(6), height: wp(6)}}
               className="absolute self-end top-2 right-1 m-1"
             />
@@ -112,7 +97,7 @@ export default function LoginScreen() {
           </View>
 
           {errorMessage !== '' && (
-            <Text className="text-red-300 mt-0 mb-0 ml-4 text-xs">
+            <Text className=" text-red-500 dark:text-red-300 mt-0 mb-0 ml-4 text-xs">
               {errorMessage}
             </Text>
           )}
@@ -120,13 +105,13 @@ export default function LoginScreen() {
             <TouchableOpacity
               className="py-3 w-52 bg-blue-400 rounded-xl"
               onPress={() => login(email, password, setErrorMessage, errorMessage, setIsLoading)}>
-              <Text className="text-base font-bold text-center text-gray-700">
+              <Text className="text-base font-bold text-center text-slate-900 dark:text-slate-200">
                 Sign In
               </Text>
             </TouchableOpacity>
           </View>
         </View>
-        <Text className="text-base text-blue-200 font-mono text-center py-5">
+        <Text className="text-base text-slate-900 dark:text-slate-200 font-mono text-center py-5">
           Or
         </Text>
         <View className="flex-row justify-center space-x-12">
@@ -138,24 +123,9 @@ export default function LoginScreen() {
               className="w-10 h-10"
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity className="p-2 bg-blue-200 rounded-2xl">
-            <Image
-              source={require('../../assets/images/apple.png')}
-              className="w-10 h-10"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-2 bg-blue-200 rounded-2xl">
-            <Image
-              source={require('../../assets/images/facebook.png')}
-              className="w-10 h-10"
-            />
-          </TouchableOpacity> */}
         </View> 
-        <Text className="text-base text-blue-200 font-mono text-center py-2">
-          Or
-        </Text>
-        <View className="flex-row justify-center">
-          <Text className="text-blue-200 text-sm font-semibold">
+        <View className="flex-row justify-center mt-4">
+          <Text className=" text-slate-900 dark:text-blue-200 text-sm font-semibold">
             Don't have an account?
           </Text>
           <TouchableOpacity
@@ -166,8 +136,8 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
       <Loader loading={loading}/>
-    </View>
+      </SafeAreaView>
   );
 }

@@ -1,4 +1,11 @@
-import {View, Text, Image, TouchableOpacity, BackHandler, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  BackHandler,
+  StyleSheet,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
@@ -90,7 +97,7 @@ export default function HomeScreen() {
         </View>
       </View>
       <View className="flex flex-col items-center  mt-0 top-0">
-        <View className='flex-row items-center'>
+        <View className="flex-row items-center">
           <Text
             style={[{fontSize: wp(7)}, {color: selectedModel.primary}]}
             className="text-center tracking-wider font-semibold  font-[DancingScript-SemiBold]">
@@ -98,7 +105,10 @@ export default function HomeScreen() {
           </Text>
           <Text
             style={[{fontSize: wp(6)}, {color: selectedModel.primary}]}
-            className="font-thin self-end"> here.</Text>
+            className="font-thin self-end">
+            {' '}
+            here.
+          </Text>
         </View>
         <Text
           style={[{fontSize: wp(5)}, {color: selectedModel.primary}]}
@@ -108,7 +118,11 @@ export default function HomeScreen() {
           and Explore my features...
         </Text>
       </View>
-      <View className="flex items-center justify-center" >
+      <View className="flex items-center justify-center">
+        <View
+          className="absolute bg-slate-600 dark:bg-slate-300 rounded-full -z-10 self-center"
+          style={{height: wp(31), width: wp(31)}}
+        />
         <Image
           // source={require('../../assets/images/bot3.png')}
           // source={selectedModel.image}
@@ -126,7 +140,9 @@ export default function HomeScreen() {
         <View className="">
           <Button
             title={'Explore AI'}
-            textStyle={'text-center self-center text-slate-900 dark:text-slate-200 font-semibold'}
+            textStyle={
+              'text-center self-center text-slate-900 dark:text-slate-200 font-semibold'
+            }
             image={require('../../assets/images/explore.gif')}
             onPress={() => [navigation.navigate('ExploreAI'), select_beep()]}
             isize={'w-10 h-10'}
@@ -146,7 +162,11 @@ export default function HomeScreen() {
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
               className="flex flex-row items-center justify-between px-2 mx-4 py-2 my-2 rounded-full"
-              style={colorScheme === 'light' ? styles.shadow_light : styles.shadow_dark}
+              style={
+                colorScheme === 'light'
+                  ? styles.shadow_light
+                  : styles.shadow_dark
+              }
               key={index}
               // style={{ backgroundColor: item.primary }}
             >
@@ -156,7 +176,6 @@ export default function HomeScreen() {
                   style={{height: wp(12), width: wp(12)}}
                   resizeMode="contain"
                   className="rounded-full"
-
                 />
                 {/* <Text className="text-white self-center text-xs ml-5">{item.name}</Text> */}
               </View>
@@ -178,7 +197,10 @@ export default function HomeScreen() {
           select_beep(),
         ]}
         className="mt-0 mx-24 rounded-3xl p-3 border-r-8 border-l-8 mb-10" //bg-blue-800
-        style={{backgroundColor: selectedModel.primary, borderColor: selectedModel.primary}}>
+        style={{
+          backgroundColor: selectedModel.primary,
+          borderColor: selectedModel.primary,
+        }}>
         <Text
           className="text-center font-bold text-xl"
           style={{color: selectedModel.secondary}}>
@@ -194,17 +216,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   shadow_dark: {
     shadowColor: '#A6A9D1',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 19,
   },
   shadow_light: {
-    shadowColor: '#0F172A', 
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowColor: '#000',
     elevation: 19,
   },
-  
 });
