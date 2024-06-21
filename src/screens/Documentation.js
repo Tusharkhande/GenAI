@@ -86,13 +86,13 @@ const Documentation = () => {
                 require('../../assets/images/documentation/chatAssistants.jpg'),
               )
             }
-            className="py-2 self-center">
+            className="py-2 self-center rounded-md">
             <Image
               source={require('../../assets/images/documentation/chatAssistants.jpg')}
               style={{height: wp(70), width: wp(35)}}
-              className="rounded-sm mx-auto"
+              className="rounded-md mx-auto"
             />
-            <Text className="self-center text-xs">Chat Assistants</Text>
+            <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Chat Assistants</Text>
           </TouchableOpacity>
           <Markdown style={markdownStyles}>
             {`\n It includes 5 interactive chat assistants, each designed with unique capabilities that cater to different user needs.
@@ -110,13 +110,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/chatAssistants-demo.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-demo.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">GenAI</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">GenAI</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -124,13 +124,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/chatAssistants-vision.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-vision.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
-              />
-              <Text className="self-center text-xs">Vision</Text>
+                className="rounded-md mx-auto"
+                />
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Vision</Text>
             </TouchableOpacity>
           </View>
           <Markdown style={markdownStyles}>
@@ -143,13 +143,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/chatAssistants-exploreAi.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-exploreAi.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">ExploreAI</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">ExploreAI</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -157,13 +157,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/chatAssistants-exploreAIScreen.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/chatAssistants-exploreAIScreen.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Vision</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Vision</Text>
             </TouchableOpacity>
           </View>
           <Markdown style={markdownStyles}>
@@ -190,13 +190,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/exploreai-mystic.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/exploreai-mystic.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Mystic Art</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Mystic Art</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -204,13 +204,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/exploreai-timetravel.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/exploreai-timetravel.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Time Travel Art</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Time Travel Art</Text>
             </TouchableOpacity>
           </View>
 
@@ -227,13 +227,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/imagedetection.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/imagedetection.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Mystic Art</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Mystic Art</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -241,13 +241,13 @@ const Documentation = () => {
                   require('../../assets/images/documentation/imagedetection-open.jpg'),
                 )
               }
-              className="">
+              className="m-2">
               <Image
                 source={require('../../assets/images/documentation/imagedetection-open.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Time Travel Art</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Time Travel Art</Text>
             </TouchableOpacity>
           </View>
           <Markdown style={markdownStyles}>
@@ -272,9 +272,9 @@ const Documentation = () => {
               <Image
                 source={require('../../assets/images/documentation/history-chatscreen.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs mt-2">
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200 mt-2">
                 ChatScreen-History
               </Text>
             </TouchableOpacity>
@@ -288,9 +288,9 @@ const Documentation = () => {
               <Image
                 source={require('../../assets/images/documentation/history-exploreai.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs mt-2">
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200 mt-2">
                 ExploreAIScreen-History
               </Text>
             </TouchableOpacity>
@@ -304,9 +304,9 @@ const Documentation = () => {
               <Image
                 source={require('../../assets/images/documentation/history-homescreen.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs mt-2">Time Travel Art</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200 mt-2">Time Travel Art</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -318,9 +318,9 @@ const Documentation = () => {
               <Image
                 source={require('../../assets/images/documentation/history.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs mt-2">Time Travel Art</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200 mt-2">Time Travel Art</Text>
             </TouchableOpacity>
           </View>
           <Markdown style={markdownStyles}>
@@ -337,9 +337,9 @@ const Documentation = () => {
               <Image
                 source={require('../../assets/images/documentation/chathistory.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Chat-History</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Chat-History</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
@@ -351,9 +351,9 @@ const Documentation = () => {
               <Image
                 source={require('../../assets/images/documentation/imagegenhistory.jpg')}
                 style={{height: wp(70), width: wp(35)}}
-                className="rounded-sm mx-auto"
+                className="rounded-md mx-auto"
               />
-              <Text className="self-center text-xs">Generation-History</Text>
+              <Text className="self-center text-xs  text-slate-900 dark:text-slate-200">Generation-History</Text>
             </TouchableOpacity>
           </View>
         </View>

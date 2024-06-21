@@ -16,7 +16,7 @@ export default model=[
         id:3,
         name:'Picasso',
         image:friday,
-        primary:'#CBC3E3',
+        primary:'#008080',
         secondary:'black',
         provider:'dalle-2'
     },
@@ -25,7 +25,7 @@ export default model=[
         id:4,
         name:'Vision',
         image:vision,
-        primary:'#fff',
+        primary:'#6A5ACD',
         secondary:'#000',
         provider:'gemini-pro-vision'
     },
@@ -41,7 +41,7 @@ export default model=[
         id:2,
         name:'GenAI',
         image:bot,
-        primary:'#3B96D2',
+        primary:'#4682B4',
         secondary:'black',
         provider:'gemini-pro, dalle-2'
     },

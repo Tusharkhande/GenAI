@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const [selectedModel, setSelectedModel] = useState([]);
   const [exit, setExit] = useState(false);
   const {user} = useAuth();
-  const {guser, gUserAvatar, name} = useUser();
+  const {guser, gUserAvatar, name, colorScheme} = useUser();
   const selectedAvatar =
     route.params?.selectedAvatar || user.photoURL || gUserAvatar;
 
@@ -42,14 +42,14 @@ export default function HomeScreen() {
     //     style={{ flex: 1 }}
     //   >
     <SafeAreaView
-      className="flex-1 font-mono flex justify-around bg-slate-950"
+      className="flex-1 font-mono flex justify-around bg-slate-50 dark:bg-slate-950"
       style={{width: wp(100), height: wp(100)}}>
       <View
         className="flex flex-row justify-between"
         style={{width: wp(90), alignSelf: 'center'}}>
         <View className="">
           <View
-            className="absolute top-1.5 bg-slate-300 rounded-full -z-10 self-center"
+            className="absolute top-1.5 bg-slate-600 dark:bg-slate-300 rounded-full -z-10 self-center"
             style={{height: wp(12), width: wp(12)}}
           />
           <TouchableOpacity
@@ -68,7 +68,7 @@ export default function HomeScreen() {
         </View>
         <View className="flex mx-auto justify-center ">
           <Text
-            className=" font-semibold font-[DancingScript-SemiBold] text-center mt-1 text-slate-50"
+            className=" font-semibold font-[DancingScript-SemiBold] text-center mt-1 text-slate-900 dark:text-slate-200"
             style={{fontSize: wp(8)}}>
             Welcome{' '}
             {user.displayName
@@ -85,6 +85,7 @@ export default function HomeScreen() {
             image={require('../../assets/images/history1.png')}
             isize={'w-9 h-9'}
             onPress={() => [navigation.navigate('History'), select_beep()]}
+            colorScheme={colorScheme}
           />
         </View>
       </View>
@@ -125,6 +126,7 @@ export default function HomeScreen() {
         <View className="">
           <Button
             title={'Explore AI'}
+            textStyle={'text-center self-center text-slate-900 dark:text-slate-200 font-semibold'}
             image={require('../../assets/images/explore.gif')}
             onPress={() => [navigation.navigate('ExploreAI'), select_beep()]}
             isize={'w-10 h-10'}
@@ -132,7 +134,7 @@ export default function HomeScreen() {
         </View>
       </View>
       <View
-        className="flex items-center self-center justify-center bg-slate-950 rounded-3xl"
+        className="flex items-center self-center justify-center bg-slate-50 dark:bg-slate-950 rounded-3xl"
         style={{width: wp(100)}}>
         {/* <FlatList
           data={model}
@@ -144,11 +146,11 @@ export default function HomeScreen() {
             <TouchableOpacity
               onPress={() => [setSelectedModel(item), select_beep()]}
               className="flex flex-row items-center justify-between px-2 mx-4 py-2 my-2 rounded-full"
-              style={[styles.shadow]}
+              style={colorScheme === 'light' ? styles.shadow_light : styles.shadow_dark}
               key={index}
               // style={{ backgroundColor: item.primary }}
             >
-              <View className="">
+              <View className="flex flex-col justify-center">
                 <Image
                   source={item.image}
                   style={{height: wp(12), width: wp(12)}}
@@ -156,14 +158,14 @@ export default function HomeScreen() {
                   className="rounded-full"
 
                 />
-                {/* <Text className="text-white text-xl font-bold ml-5">{item.name}</Text> */}
+                {/* <Text className="text-white self-center text-xs ml-5">{item.name}</Text> */}
               </View>
             </TouchableOpacity>
           ))}
         </View>
         {/* )}
         /> */}
-        <Text className="text-slate-100 text-sm ml-2 pb-2">
+        <Text className=" text-slate-900 dark:text-slate-200 text-sm ml-2 pb-2">
           Select your interative Assistant
         </Text>
       </View>
@@ -176,7 +178,7 @@ export default function HomeScreen() {
           select_beep(),
         ]}
         className="mt-0 mx-24 rounded-3xl p-3 border-r-8 border-l-8 mb-10" //bg-blue-800
-        style={{backgroundColor: selectedModel.primary}}>
+        style={{backgroundColor: selectedModel.primary, borderColor: selectedModel.primary}}>
         <Text
           className="text-center font-bold text-xl"
           style={{color: selectedModel.secondary}}>
@@ -190,11 +192,19 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  shadow: {
+  shadow_dark: {
     shadowColor: '#A6A9D1',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 19,
   },
+  shadow_light: {
+    shadowColor: '#0F172A', 
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 19,
+  },
+  
 });
