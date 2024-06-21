@@ -26,8 +26,8 @@ export async function fetchUserImages(userId, setImages, setLoading) {
 
   for (const doc of querySnapshot.docs) {
     const data = doc.data();
-    console.log(data);
-    console.log(storage, data.fullPath);
+    // console.log(data);
+    // console.log(storage, data.fullPath);
     const imageRef = ref(storage, data.fullPath);
     const imageUrl = await getDownloadURL(imageRef);
     images.push({
@@ -40,7 +40,7 @@ export async function fetchUserImages(userId, setImages, setLoading) {
   }
   const sortedImages = images.sort((a, b) => b.date - a.date);
   setImages(sortedImages);
-  // console.log(images);
+  console.log(images);
   setLoading(false);
 
   // return images;

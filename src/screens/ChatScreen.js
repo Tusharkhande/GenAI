@@ -6,15 +6,12 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
-  Modal,
   StyleSheet,
   BackHandler,
   ToastAndroid,
 } from 'react-native';
-import { theme } from '../constants/Theme';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -40,6 +37,7 @@ import generateImage from '../api/huggingface';
 import {fetchMessagesForSession} from '../firebase/firebase.storage';
 import MultiInput from '../components/MultiInput';
 import ImagePickerModal from '../components/ImagePickerModal';
+import ViewImage from '../components/ViewImage';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -47,9 +45,10 @@ const ChatScreen = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [text, setText] = useState('');
   const [base64String, setBase64String] = useState('');
-  const [file, setFile] = useState('');
   const [openImagePickerModal, setOpenImagePickerModal] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [viewImage, setViewImage] = useState(false);
+  const [image, setImage] = useState({prompt: 'Try Again', url: require('../../assets/images/dallePlaceholder.png')});
   const param = useRoute().params;
   const scrollViewRef = useRef();
   const navigation = useNavigation();
@@ -394,6 +393,7 @@ const ChatScreen = () => {
       );
     }
   }, []);
+  console.log(messages)
 
   return (
     <KeyboardAvoidingView
@@ -479,7 +479,7 @@ const ChatScreen = () => {
                                   <Markdown style={markdownStyles}>
                                     Sure, I'll try to create that!
                                   </Markdown>
-                                  <View>
+                                  <TouchableOpacity onPress={()=>[setViewImage(true), setImage({url: message.content, prompt: messages[index-1].content})]}>
                                     <Image
                                       source={
                                         message.content.includes(
@@ -503,7 +503,7 @@ const ChatScreen = () => {
                                         style={{height: wp(60), width: wp(60)}}
                                       />
                                     )}
-                                  </View>
+                                  </TouchableOpacity>
                                   <Button
                                     style="self-end"
                                     image={require('../../assets/images/dwd2.png')}
@@ -624,48 +624,7 @@ const ChatScreen = () => {
         {/* </ImageBackground> */}
       </View>
       <ImagePickerModal openImagePickerModal={openImagePickerModal} setOpenImagePickerModal={setOpenImagePickerModal} setBase64String={setBase64String} colorScheme={colorScheme}/>
-      {/* <Modal visible={openImagePickerModal} animationType="slide" transparent>
-        <View className="flex flex-1 bg-black/50 items-center justify-end">
-          <View
-            style={{width: wp(90), height: wp(40)}}
-            className="flex flex-col bg-slate-50 dark:bg-slate-800 p-2 justify-normal rounded-3xl">
-            <View className="flex flex-row justify-between">
-              <Text className="font-mono text-base self-start text-center text-slate-900 dark:text-slate-100 m-5 mt-2">
-                Please select an option:
-              </Text>
-              <TouchableOpacity
-                className="self-start"
-                onPress={() => setOpenImagePickerModal(false)}>
-                <Image
-                  source={require('../../assets/images/close.png')}
-                  className="h-6 w-6"
-                  style={colorScheme && [colorScheme=='light' ? theme &&  theme.light : theme &&  theme.dark]}
-                />
-              </TouchableOpacity>
-            </View>
-            <View className="flex flex-row justify-center self-center gap-8">
-              <TouchableOpacity
-                className="flex flex-col justify-center"
-                onPress={gallery}>
-                <Image
-                  source={require('../../assets/images/gallery.png')}
-                  className="h-10 w-10 self-center"
-                />
-                <Text className="text-slate-900 dark:text-slate-200">Gallery</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="flex flex-col justify-center"
-                onPress={camera}>
-                <Image
-                  source={require('../../assets/images/camera.png')}
-                  className="h-10 w-10 self-center"
-                />
-                <Text className="text-slate-900 dark:text-slate-200">Camera</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal> */}
+      <ViewImage viewImage={viewImage} setViewImage={setViewImage} image={image} message={image}/>
     </KeyboardAvoidingView>
   );
 };
