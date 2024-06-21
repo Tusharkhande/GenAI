@@ -125,10 +125,11 @@ const ChatHistory = () => {
                     image={require('../../assets/images/delete1.png')}
                     onPress={() => [
                       deleteSessionAndMessages(
-                        userId,
+                        // userId,
                         item.id,
                         setLoading,
                         setChatSessions,
+                        chatSessions
                       ),
                       select_beep(),
                     ]}
@@ -139,7 +140,7 @@ const ChatHistory = () => {
             )}
           />
         ) : (
-          <View className="flex top-5 p-4 h-full w-full items-center">
+          (!loading && !chatSessions.length>0) &&<View className="flex top-5 p-4 h-full w-full items-center">
             <View className="p-5">
               <Card imageSource={require('../../assets/images/oho.gif')} />
             </View>

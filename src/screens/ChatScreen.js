@@ -39,6 +39,7 @@ import {auth} from '../firebase/firebase.config';
 import generateImage from '../api/huggingface';
 import {fetchMessagesForSession} from '../firebase/firebase.storage';
 import MultiInput from '../components/MultiInput';
+import ImagePickerModal from '../components/ImagePickerModal';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -622,8 +623,8 @@ const ChatScreen = () => {
         </SafeAreaView>
         {/* </ImageBackground> */}
       </View>
-      {/* <ImagePickerModal openImagePickerModal={openImagePickerModal} setOpenImagePickerModal={setOpenImagePickerModal} /> */}
-      <Modal visible={openImagePickerModal} animationType="slide" transparent>
+      <ImagePickerModal openImagePickerModal={openImagePickerModal} setOpenImagePickerModal={setOpenImagePickerModal} setBase64String={setBase64String} colorScheme={colorScheme}/>
+      {/* <Modal visible={openImagePickerModal} animationType="slide" transparent>
         <View className="flex flex-1 bg-black/50 items-center justify-end">
           <View
             style={{width: wp(90), height: wp(40)}}
@@ -664,7 +665,7 @@ const ChatScreen = () => {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </KeyboardAvoidingView>
   );
 };

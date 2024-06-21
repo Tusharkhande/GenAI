@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { Modal, View, Text, Image, StyleSheet } from 'react-native';
+import React from 'react';
+import { Modal, View, Image } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Button from './Button';
 import { downloadImage } from '../constants/DownloadImage';
 import { deleteImageFromStorage } from '../firebase/firebase.storage';
 import Markdown from 'react-native-markdown-display';
 
-const ViewImage = ({ viewImage, image, setViewImage, fetchUserImages, userId }) => {
+const ViewImage = ({ viewImage, image, setViewImage, images, setImages }) => {
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -33,9 +33,7 @@ const ViewImage = ({ viewImage, image, setViewImage, fetchUserImages, userId }) 
         </View>
         <Button
           image={require('../../assets/images/delete1.png')}
-          onPress={() => [deleteImageFromStorage(image.path), setViewImage(false), setTimeout(() => {
-            fetchUserImages(userId)
-          }, 2000)]}
+          onPress={() => [deleteImageFromStorage(image.path, images, setImages), setViewImage(false)]}
           isize={'w-7 h-6'}
         />
       </View>

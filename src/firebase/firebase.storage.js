@@ -9,15 +9,14 @@ import {
   doc,
   serverTimestamp,
   updateDoc,
-  setDoc,
   orderBy,
 } from 'firebase/firestore';
 import {auth, db, storage} from './firebase.config';
 import {ToastAndroid} from 'react-native';
 import gemini from '../api/gemini';
 
-export async function fetchUserImages(userId, setImages) {
-  // setLoading(true);
+export async function fetchUserImages(userId, setImages, setLoading) {
+  setLoading(true);
   const images = [];
   const imagesQuery = query(
     collection(db, 'user_images'),
@@ -27,8 +26,8 @@ export async function fetchUserImages(userId, setImages) {
 
   for (const doc of querySnapshot.docs) {
     const data = doc.data();
-    // console.log(data);
-    // console.log(storage, data.fullPath);
+    console.log(data);
+    console.log(storage, data.fullPath);
     const imageRef = ref(storage, data.fullPath);
     const imageUrl = await getDownloadURL(imageRef);
     images.push({
@@ -42,7 +41,7 @@ export async function fetchUserImages(userId, setImages) {
   const sortedImages = images.sort((a, b) => b.date - a.date);
   setImages(sortedImages);
   // console.log(images);
-  // setLoading(false);
+  setLoading(false);
 
   // return images;
 }
@@ -100,17 +99,20 @@ async function deleteImageMetadata(fullPath) {
   }
 }
 
-export async function deleteImageFromStorage(fullPath) {
+export async function deleteImageFromStorage(fullPath, images, setImages) {
   const imageRef = ref(storage, fullPath);
 
   try {
     await deleteObject(imageRef);
     await deleteImageMetadata(fullPath);
     ToastAndroid.show('Deletion Successful!', ToastAndroid.SHORT);
-    console.log('Image successfully deleted from storage');
+    const updatedImages = images.filter(image => image.path !== fullPath);
+    const sortedImages = updatedImages.sort((a, b) => b.date - a.date);
+    setImages(sortedImages);
+    console.log('Image successfully deleted');
   } catch (error) {
     ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
-    console.error('Error deleting image from storage', error);
+    console.error('Error deleting image ', error);
   }
 }
 
@@ -189,9 +191,10 @@ export async function saveChatSession(
     let sessionRef;
     let filteredMessages = messages.map(({base64String, ...rest}) => rest);
     if (selectedModel.name === 'GenAI' || selectedModel.name === 'Vision') {
-      const base64Pattern = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+      const base64Pattern =
+        /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
-      filteredMessages = messages.map(({content,role}) => ({
+      filteredMessages = messages.map(({content, role}) => ({
         content:
           role === 'assistant' && base64Pattern.test(content)
             ? 'https://th.bing.com/th/id/OIG2.ifBa_Tkj1cGKx5Do3YLd?pid=ImgGn'
@@ -247,10 +250,11 @@ export async function saveChatSession(
 }
 
 export async function deleteSessionAndMessages(
-  userId,
+  // userId,
   sessionId,
   setLoading,
   setChatSessions,
+  chatSessions,
 ) {
   setLoading(true);
   const messagesRef = collection(db, 'messages');
@@ -275,7 +279,11 @@ export async function deleteSessionAndMessages(
     await deleteDoc(doc(db, 'chat_sessions', sessionId));
     console.log('Session successfully deleted');
     setLoading(false);
-    fetchChatSessions(userId, setLoading, setChatSessions);
+    // fetchChatSessions(userId, setLoading, setChatSessions);
+    const updatedChatSessions = chatSessions.filter(
+      session => session.id !== sessionId,
+    );
+    setChatSessions(updatedChatSessions);
     ToastAndroid.show('Deletion Successful!', ToastAndroid.SHORT);
   } catch (error) {
     setLoading(false);
