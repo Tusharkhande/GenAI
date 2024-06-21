@@ -23,6 +23,9 @@ import {
   deleteSessionAndMessages,
 } from '../firebase/firebase.storage';
 import Card from '../components/Card';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useUser} from '../context/userContext';
+import Loader from '../components/Loader';
 
 const ChatHistory = () => {
   const user = auth.currentUser;
@@ -31,28 +34,7 @@ const ChatHistory = () => {
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation();
   const [chatSessions, setChatSessions] = useState([]);
-
-  /*  async function fetchChatSessions(userId, setLoading, setChatSessions) {
-    setLoading(true);
-    try {
-      const sessionsQuery = query(
-        collection(db, 'chat_sessions'),
-        where('userId', '==', userId),
-        orderBy('createdAt', 'desc'),
-      );
-      const querySnapshot = await getDocs(sessionsQuery);
-      const chatSessions = [];
-      querySnapshot.forEach(doc => {
-        chatSessions.push({id: doc.id, ...doc.data()});
-      });
-      console.log(chatSessions);
-      setChatSessions(chatSessions);
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      ToastAndroid.show('Something went wrong!', short);
-    }
-  } */
+  const {colorScheme} = useUser();
 
   useEffect(() => {
     fetchChatSessions(userId, setLoading, setChatSessions);
@@ -64,6 +46,14 @@ const ChatHistory = () => {
     return true;
   };
 
+  const handleRefresh = () => {
+    setRefresh(true);
+    fetchChatSessions(userId, setLoading, setChatSessions);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 5000);
+  };
+
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
     return () => {
@@ -71,19 +61,31 @@ const ChatHistory = () => {
     };
   }, []);
 
+  const markdownStyles = StyleSheet.create({
+    body: {
+      color: `${colorScheme == 'light' ? '#0F172A' : '#cbd5e1'}`,
+      fontSize: wp(3.5),
+      width: wp(73),
+      marginTop: 0,
+    },
+  });
+
   return (
-    <View className="flex bg-slate-950 w-full h-full">
-      <View className="flex absolute flex-row self-start p-3">
-        <Button
-          image={require('../../assets/images/back.png')}
-          onPress={handleBackPress}
-        />
-      </View>
-      <View className="flex flex-row flex-wrap justify-center p-2 mt-2 mb-2">
-        <Text
-          className={`font-semibold text-left font-mono mt-1 mb-2 text-xl text-slate-50`}>
-          Chat History
-        </Text>
+    <SafeAreaView className="flex bg-slate-50 dark:bg-slate-950 w-full h-full">
+      <View className="flex">
+        <View className="flex absolute flex-row self-start p-3">
+          <Button
+            image={require('../../assets/images/back.png')}
+            onPress={handleBackPress}
+            colorScheme={colorScheme}
+          />
+        </View>
+        <View className="flex flex-row flex-wrap justify-center p-2 mt-2">
+          <Text
+            className={`font-semibold text-left font-mono mt-1 mb-2 text-xl text-slate-900 dark:text-slate-200`}>
+            Chat History
+          </Text>
+        </View>
       </View>
       {!loading ? (
         chatSessions.length > 0 ? (
@@ -112,7 +114,7 @@ const ChatHistory = () => {
                       selectedModel: item.selectedModel,
                     }),
                   ]}
-                  className="flex px-3 mx-4 py-2 my-3 bg-slate-700 rounded-xl"
+                  className="flex px-3 mx-6 py-2 my-3 bg-slate-200 dark:bg-slate-700 rounded-xl"
                   key={index}>
                   <Markdown style={markdownStyles}>
                     {'**' + item.selectedModel.name + '** : ' + item.title}
@@ -130,6 +132,7 @@ const ChatHistory = () => {
                       ),
                       select_beep(),
                     ]}
+                    colorScheme={colorScheme}
                   />
                 </View>
               </>
@@ -140,33 +143,40 @@ const ChatHistory = () => {
             <View className="p-5">
               <Card imageSource={require('../../assets/images/oho.gif')} />
             </View>
-            <Text className="text-white p-5 text-center">
+            <Text className=" text-slate-900 dark:text-slate-200 p-5 text-center">
               No chats yet!
             </Text>
           </View>
         )
       ) : (
-        <View className="flex bg-black h-full w-full justify-center items-center p-4 self-center">
+        colorScheme == 'dark' ? <View className="flex bg-black h-full w-full justify-center items-center p-4 self-center">
           <Image
             source={require('../../assets/images/loading.gif')}
             className="rounded-2xl"
             resizeMode="contain"
             style={{height: wp(70), width: wp(70)}}
           />
-        </View>
+        </View> : <Loader />
       )}
-    </View>
+      {!loading && chatSessions.length === 0 && (
+        <RefreshControl
+          refreshing={refresh}
+          onRefresh={handleRefresh}
+          style={{position: 'absolute', top: 0, width: '100%'}}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
-const markdownStyles = StyleSheet.create({
-  body: {
-    color: '#fff',
-    // backgroundColor: '#rgb(2 6 23)',
-    fontSize: wp(3.5),
-    width: wp(73),
-    marginTop: 0,
-  },
-});
+// const markdownStyles = StyleSheet.create({
+//   body: {
+//     color: '#fff',
+//     // backgroundColor: '#rgb(2 6 23)',
+//     fontSize: wp(3.5),
+//     width: wp(73),
+//     marginTop: 0,
+//   },
+// });
 
 export default ChatHistory;

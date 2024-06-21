@@ -9,10 +9,12 @@ import {select_beep} from '../constants/Sounds';
 import {useNavigation} from '@react-navigation/native';
 import Card from '../components/Card';
 import HorizontalLine from '../components/HorizontalLine';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../context/userContext';
 
 const History = () => {
   const navigation = useNavigation();
-
+  const {colorScheme} = useUser();
   const handleBackPress = () => {
     select_beep();
     navigation.goBack();
@@ -27,17 +29,18 @@ const History = () => {
   }, []);
 
   return (
-    <View className="flex bg-slate-950 w-full h-full">
+    <SafeAreaView className="flex bg-slate-100 dark:bg-slate-950 w-full h-full">
       <View className='flex'>
         <View className="flex absolute flex-row self-start p-3">
           <Button
             image={require('../../assets/images/back.png')}
             onPress={handleBackPress}
+            colorScheme={colorScheme}
           />
         </View>
         <View className="flex flex-row flex-wrap justify-center p-2 mt-2">
           <Text
-            className={`font-semibold text-left font-mono mt-1 mb-2 text-xl text-slate-50`}>
+            className={`font-semibold text-left font-mono mt-1 mb-2 text-xl text-slate-900 dark:text-slate-200`}>
             History
           </Text>
         </View>
@@ -63,7 +66,7 @@ const History = () => {
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

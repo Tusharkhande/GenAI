@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-const HorizontalLine = ({text, colorScheme}) => {
+const HorizontalLine = ({text}) => {
   return (
     <View className='w-full flex-row items-center my-2'>
         <View className='flex-1 h-px bg-slate-950 dark:bg-slate-400' />

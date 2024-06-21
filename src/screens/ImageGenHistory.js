@@ -18,6 +18,9 @@ import {useNavigation} from '@react-navigation/native';
 import Card from '../components/Card';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import ViewImage from '../components/ViewImage';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../context/userContext';
+import Loader from '../components/Loader';
 
 const ImageGenHistory = () => {
   const user = auth.currentUser;
@@ -28,6 +31,7 @@ const ImageGenHistory = () => {
   const [image, setImage] = useState('');
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation();
+  const {colorScheme} = useUser();
 
   async function fetchUserImages(userId) {
     setLoading(true);
@@ -83,22 +87,25 @@ const ImageGenHistory = () => {
   }, [viewImage]);
 
   return (
-    <View className="flex bg-slate-950 w-full h-full">
+    <SafeAreaView className="flex bg-slate-50 dark:bg-slate-950 w-full h-full">
+      <View className='flex'>
       <View className="flex absolute flex-row self-start p-3">
         <Button
           image={require('../../assets/images/back.png')}
           onPress={handleBackPress}
+          colorScheme={colorScheme}
         />
       </View>
       <View className="flex flex-row flex-wrap justify-center p-2 mt-2">
         <Text
-          className={`font-semibold text-left font-mono mt-1 mb-2 text-xl text-slate-50`}>
+          className={`font-semibold text-left font-mono mb-2 text-xl text-slate-900 dark:text-slate-200`}>
           Generation History
         </Text>
       </View>
+      </View>
       {!loading ? (
         <ScrollView
-          className="flex bg-slate-950"
+          className="flex bg-slate-50 dark:bg-slate-950"
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -152,14 +159,14 @@ const ImageGenHistory = () => {
           </View>
         </ScrollView>
       ) : (
-        <View className="flex bg-black h-full w-full justify-center items-center p-4 self-center">
+        colorScheme == 'dark' ? <View className="flex bg-black h-full w-full justify-center items-center p-4 self-center">
           <Image
             source={require('../../assets/images/loading.gif')}
             className="rounded-2xl"
             resizeMode="contain"
             style={{height: wp(70), width: wp(70)}}
           />
-        </View>
+        </View> : <Loader />
       )}
       <ViewImage
         viewImage={viewImage}
@@ -169,7 +176,7 @@ const ImageGenHistory = () => {
         userId={userId}
         // text={prompt}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
