@@ -4,10 +4,8 @@ import AppNavigation from './src/navigation';
 import { getAuth } from 'firebase/auth';
 import { assistantSpeech } from './src/constants/TextToSpeech';
 import { Context } from './src/context/userContext';
-import { useColorScheme } from 'nativewind';
 
 export default function App() {
-  const {colorScheme} = useColorScheme();
   const permission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -42,14 +40,6 @@ export default function App() {
 
   return (
     <Context>
-      <StatusBar
-      animated={true}
-      translucent={true}
-      backgroundColor={colorScheme === 'dark' ? 'black' : 'white'}
-      barStyle={colorScheme === 'dark' ? 'dark-content' : 'light-content'}
-        showHideTransition="fade"
-        // hidden={true}
-      />
       <AppNavigation />
     </Context>
   )

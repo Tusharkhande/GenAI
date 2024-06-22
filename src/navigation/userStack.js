@@ -12,11 +12,23 @@ import ImageGenHistory from "../screens/ImageGenHistory";
 import ChatHistory from "../screens/ChatHistory";
 import History from "../screens/History";
 import Documentation from "../screens/Documentation";
+import { StatusBar } from "react-native";
+import { useUser } from "../context/userContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function UserStack() {
+    const { colorScheme } = useUser();
     return (
+        <>
+      <StatusBar
+        animated={true}
+        translucent={true}
+        backgroundColor={colorScheme === 'dark' ? 'black' : 'white'}
+        barStyle={colorScheme === 'dark' ? 'dark-content' : 'light-content'}
+        showHideTransition="fade"
+        // hidden={true}
+      />
         <NavigationContainer>
             {console.log("user")}
             <Stack.Navigator initialRouteName='Home' screenOptions={{headerShown:false}}>
@@ -33,5 +45,6 @@ export default function UserStack() {
                 <Stack.Screen name='Documentation' component={Documentation} />
             </Stack.Navigator>
         </NavigationContainer>
+        </>
     );
 }

@@ -8,8 +8,6 @@ import {
   ToastAndroid,
   ScrollView,
   TextInput,
-  Switch,
-  StyleSheet,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {auth} from '../firebase/firebase.config';

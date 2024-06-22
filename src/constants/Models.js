@@ -43,6 +43,6 @@ export default model=[
         image:bot,
         primary:'#4682B4',
         secondary:'black',
-        provider:'gemini-pro, dalle-2'
+        provider:'gemini-pro, gemini-pro-vision, stability-diff'
     },
 ]

@@ -87,7 +87,7 @@ export default function Features({ model, provider }) {
                 <ScrollView style={{ height: hp(60) }}  showsVerticalScrollIndicator={false} className="space-y-4">
                     <View className='bg-cyan-200 p-4 py-2 rounded-xl'>
                         <View className='flex-row items-center'>
-                            <Image source={require('../../assets/images/chatgpt.png')} className='mr-1.5' style={{ height: hp(4), width: hp(4) }} />
+                            <Image source={require('../../assets/images/ai2.png')} className='mr-1.5 rounded-full' style={{ height: hp(4), width: hp(4) }} />
                             <Markdown style={{body: {color: '#393434', fontSize: wp(5), marginBottom:'0'}}}>GenAI</Markdown>
                         </View>
                         <Markdown style={markdownStyles} >

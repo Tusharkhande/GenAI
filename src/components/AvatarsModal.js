@@ -3,60 +3,45 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, ToastAndroid } 
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Button from './Button';
 import { select_beep } from '../constants/Sounds';
-import { launchImageLibrary } from 'react-native-image-picker';
 
 const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelectedAvatar,selectedAvatar}) => {
-  
-  const gallery = async () => {
-    const options = {
-      includeBase64: true,
-      maxWidth: 512,
-      maxHeight: 512,
-    };
-    const result = await launchImageLibrary(options);
-    if (!result.didCancel) {
-      setSelectedAvatar(result.assets[0].base64);
-    } else {
-      ToastAndroid.show('No image selected!', ToastAndroid.SHORT);
-    }
-  };
+
   return (
     
     <Modal visible={modalVisible} animationType="fade" transparent onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalContainer}>
+        <View className='bg-black/80 dark:bg-black/70 justify-center flex-1 items-center w-full' >
           <View style={{ width: wp(80)}}
             className="flex flex-col bg-transparent">
             <Image
               // source={require('../../assets/images/loki1.jpg')}
               // source={selectedAvatar ? { uri: selectedAvatar } : require('../../assets/images/user.png')}
               source={selectedAvatar ? selectedAvatar : require('../../assets/images/avatars/arc.jpg')}
-              // style={styles.profileImage}
-              className="rounded-full w-16 h-16 mx-auto"
+              style={{width: wp(20), height: wp(20)}}
+              className="rounded-full w-16 h-16 mx-auto mb-1"
             />
-            <Text className="font-mono text-xl text-center mb-5 mt-0">Select an Avatar!!!</Text>
+            <Text className="font-mono text-base text-slate-50 dark:text-slate-200 text-center mt-0">Select an Avatar!!!</Text>
             <View
-              className="flex flex-row flex-wrap justify-center gap-5 "
+              className="flex flex-row flex-wrap justify-center gap-6 mt-4"
             >
               {avatar.map((avt) => {
                 return <TouchableOpacity key={avt.id} onPress={() => [setSelectedAvatar(avt.image), select_beep()]}>
                   <Image
                     source={avt.image}
-                    // source={{ uri: avt.image }}
-                    style={styles.profileImage}
+                    className='w-14 h-14 rounded-full mb-5'
                   />
                 </TouchableOpacity>
               })
               }
 
             </View>
-            <View className='flex flex-row justify-center gap-8'>
+            <View className='flex flex-row justify-center gap-8 mt-4'>
               <View style={{ width: wp(20) }}
                 className="bg-slate rounded-3xl flex justify-center text-center">
-                <Button pressAble={true} title="Confirm" onPress={() => handleProfileImg()} />
+                <Button textStyle={'text-slate-200'} pressAble={true} title="Confirm" onPress={() => handleProfileImg()} />
               </View>
               <View style={{ width: wp(20) }}
                 className="bg-slate rounded-3xl flex justify-center text-center">
-                <Button pressAble={true} title="Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
+                <Button textStyle={'text-slate-200'} pressAble={true} title="Cancel" onPress={() => [setModalVisible(false), select_beep()]} />
               </View>
             </View>
           </View>
@@ -67,20 +52,6 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
 
 
 const styles = StyleSheet.create({
-    profileImage: {
-      width: 100,
-      height: 100,
-      borderRadius: 50, // To make it a circular image
-      marginBottom: 20,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      
-    },
     modalTitle: {
       fontSize: 22,
       textAlign: 'center',

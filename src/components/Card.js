@@ -52,7 +52,7 @@ const Card = ({
       <Text 
         style={color? { color: color } : {}} 
         className={`mt-2 ml-2 text-sm ${textStyle}  font-semibold ${
-          variant == 'textCard' ? 'text-slate-900 dark:text-slate-300' : ` absolute opacity-100 mx-auto ml-2`
+          variant == 'textCard' ? 'text-slate-900 dark:text-slate-300' : ` absolute opacity-100 mx-auto ml-2 mr-1`
         }`}>
         {truncateText(text, truncateLength)}
       </Text>
