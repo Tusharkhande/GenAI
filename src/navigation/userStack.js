@@ -36,13 +36,13 @@ export default function UserStack() {
                 <Stack.Screen name='Chat' component={ChatScreen} />
                 <Stack.Screen name='Dashboard' component={Dashboard} />
                 <Stack.Screen name='About' component={About} />
+                <Stack.Screen name='Documentation' component={Documentation} />
                 <Stack.Screen name='ImageGenHistory' component={ImageGenHistory} />
                 <Stack.Screen name='ChatHistory' component={ChatHistory} />
                 <Stack.Screen name='History' component={History} />
                 <Stack.Screen name='ExploreAI' component={ExploreAiScreen} />
                 <Stack.Screen name='StabilityImageGen' component={StabilityImageGen} />
                 <Stack.Screen name='Writing' component={WritingScreen} />
-                <Stack.Screen name='Documentation' component={Documentation} />
             </Stack.Navigator>
         </NavigationContainer>
         </>

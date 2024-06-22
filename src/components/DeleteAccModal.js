@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { select_beep } from '../constants/Sounds';
 
-const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, setPassword, password }) => {
+const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, setPassword, password, colorScheme }) => {
   
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
@@ -18,8 +18,8 @@ const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, se
       <View className="flex flex-1 bg-black/50 items-center justify-center self-center w-full">
         <View
           style={{width: wp(80), height: wp(40)}}
-          className="flex flex-col bg-slate-800 p-5 pb-2 w-96 justify-around rounded-3xl">
-          <Text className="font-mono text-sm text-start text-slate-300 mb-5 mt-0">Are you sure you wanna delete your account?</Text>
+          className="flex flex-col bg-slate-100 dark:bg-slate-800 p-5 pb-2 w-96 justify-around rounded-3xl">
+          <Text className="font-mono text-sm text-start text-slate-700 dark:text-slate-300 mb-5 mt-0">Are you sure you wanna delete your account?</Text>
           <View className='flex flex-row self-center'>
 
           <TextInput
@@ -31,22 +31,30 @@ const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, se
             />
             <TouchableOpacity onPress={togglePasswordVisibility}>
             <Image
-              source={require('../../assets/images/viewPass.png')}
+              source={
+                passwordVisibility
+                  ? require('../../assets/images/viewPass.png')
+                  : require('../../assets/images/hidePass.png')
+              }
               style={{width: wp(5.6), height: wp(5.6)}}
               className="absolute self-end top-2.5 right-1"
             />
             </TouchableOpacity>
             </View>
           <View className='flex flex-row justify-center self-end gap-x-1'>
-            <Pressable style={{ width: wp(20) }} disabled={password.length < 6 ? true : false}
+            {/* <Pressable style={{ width: wp(20) }} disabled={password.length < 6 ? true : false}
               onPress={deleteAccount}
               className={`${password.length < 6 ? '' : 'bg-red-900'} rounded-3xl flex justify-center text-center`}>
-              {/* <Button title="Confirm" onPress={() => deleteAccount()} /> */}
+              {/* <Button title="Confirm" onPress={() => deleteAccount()} /> 
               <Text className='text-center'>Confirm</Text>
-            </Pressable>
+            </Pressable> */}
             <View style={{ width: wp(20) }}
               className=" rounded-3xl flex justify-center text-center">
-              <Button pressAble={true} title="Cancel" onPress={() => [setDelModalVisible(false), select_beep()]} />
+              <Button disabled={password.length < 6 ? true : false} style={`${password.length < 6 ? 'bg-red-30' : 'bg-red-900'}`} pressAble={true} title="Confirm" onPress={deleteAccount} />
+            </View>
+            <View style={{ width: wp(20) }}
+              className=" rounded-3xl flex justify-center text-center">
+              <Button pressAble={true} title="Cancel" onPress={() => [setDelModalVisible(false), select_beep(), setPassword('')]} />
             </View>
           </View>
         </View>

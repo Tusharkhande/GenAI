@@ -9,7 +9,8 @@ const Card = ({
   textStyle, 
   variant = 'default',
   truncate = true,
-  truncateLength = 35
+  truncateLength = 35,
+  opacity
 }) => {
   const [imageLoading, setImageLoading] = React.useState(true);
 
@@ -38,7 +39,7 @@ const Card = ({
         <Image 
           source={isUrl(imageSource)? { uri: imageSource } : imageSource} 
           onLoad={() => setImageLoading(false)} 
-          className={`mx-auto transition-opacity ease-in duration-1000 opacity-90 -z-10 ${
+          className={`mx-auto transition-opacity ease-in duration-1000 ${opacity ? opacity : 'opacity-90'} -z-10 ${
             variant === 'default' ? 'w-full h-full' : 'w-12 h-12'
           }`} 
         />

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  BackHandler,
 } from 'react-native';
 import Button from '../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -30,6 +31,19 @@ const Documentation = () => {
     setViewImg(true);
   };
 
+  const handleBackPress = () => {
+    select_beep();
+    navigation.goBack();
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+
   const markdownStyles = StyleSheet.create({
     body: {
       color: `${colorScheme == 'light' ? '#0F172A' : '#cbd5e1'}`,
@@ -49,7 +63,7 @@ const Documentation = () => {
       <View className="flex absolute self-start p-3 pt-1 left-2 ">
         <Button
           image={require('../../assets/images/back.png')}
-          onPress={() => [navigation.navigate('Dashboard'), select_beep()]}
+          onPress={handleBackPress}
           colorScheme={colorScheme}
         />
       </View>

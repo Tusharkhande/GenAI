@@ -36,6 +36,7 @@ const AIPainting = ({imageModel, navigation, colorScheme}) => (
             ]}
             colorScheme={colorScheme}
             variant='default'
+            opacity={'opacity-70'}
           />
         </TouchableOpacity>
       ))}

@@ -238,7 +238,7 @@ const Dashboard = () => {
           <Contact colorScheme={colorScheme} theme={theme} />
         </View>
 
-        <HorizontalLine colorScheme={colorScheme} text="Settings" />
+        <HorizontalLine colorScheme={colorScheme} text="Manage Account" />
 
         <View className="self-center">
           {/* <Switch value={colorScheme=='dark'} onChange={toggleColorScheme} /> */}
@@ -265,6 +265,7 @@ const Dashboard = () => {
           }
           setPassword={setPassword}
           password={password}
+          colorScheme={colorScheme}
         />
         <AvatarsModal
           setModalVisible={setModalVisible}

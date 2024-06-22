@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
+import React, { useEffect } from 'react';
+import {View, Text, StyleSheet, Image, ScrollView, BackHandler} from 'react-native';
 import Button from '../components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
@@ -32,14 +32,29 @@ const About = () => {
     },
   });
 
+  const handleBackPress = () => {
+    select_beep();
+    navigation.goBack();
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+
   return (
     <SafeAreaView className="flex bg-slate-50 dark:bg-slate-950 flex-1 justify-normal ">
-      <View className="flex absolute self-start p-3 pt-2 mt-8">
+      <View className='flex-row justify-center'>
+      <View className="flex absolute self-start p-3 pt-1 left-2 ">
         <Button
           image={require('../../assets/images/back.png')}
-          onPress={() => [navigation.navigate('Dashboard'), select_beep()]}
+          onPress={handleBackPress}
           colorScheme={colorScheme}
         />
+      </View>
       </View>
       <ScrollView
         className="space-y-4 mt-8"
