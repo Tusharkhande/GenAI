@@ -1,8 +1,16 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
-const Card = ({ imageSource, text, color, onPress, textStyle, colorScheme }) => {
+const Card = ({ 
+  imageSource, 
+  text, 
+  color, 
+  onPress, 
+  textStyle, 
+  variant = 'default',
+  truncate = true,
+  truncateLength = 35
+}) => {
   const [imageLoading, setImageLoading] = React.useState(true);
 
   const isUrl = (source) => {
@@ -10,30 +18,44 @@ const Card = ({ imageSource, text, color, onPress, textStyle, colorScheme }) => 
   };
 
   const truncateText = (text, no) => {
-    if (typeof text === 'string' && text.length > 0) {
+    if (truncate && typeof text === 'string' && text.length > 0) {
       if (text.length > no) {
         return text.slice(0, no) + '...';
       } else {
         return text;
       }
     } else {
-      return '';
+      return text;
     }
   };
-  
 
   return (
-    <TouchableOpacity onPress={onPress} className={`w-40 h-40 rounded-xl border-2 border-slate-900 dark:border-slate-200 overflow-hidden`}>
-      {isUrl(imageSource) ? (<Image source={{uri : imageSource}} onLoad={() => setImageLoading(false)} className='mx-auto transition-opacity ease-in duration-1000 opacity-90 -z-10 w-full h-full'/>)
-      : (<Image source={imageSource} onLoad={() => setImageLoading(false)} className='mx-auto transition-opacity ease-in duration-1000 opacity-90 -z-10 w-full h-full'/>)}
-      {imageLoading && (
+    <TouchableOpacity 
+      onPress={onPress} 
+      className={`rounded-xl border-2 border-slate-900 dark:border-slate-200 overflow-hidden ${
+        variant === 'default' ? 'w-40 h-40' : 'w-40 h-32 justify-center bg-slate-300 dark:bg-slate-900'
+      }`}>
+        <Image 
+          source={isUrl(imageSource)? { uri: imageSource } : imageSource} 
+          onLoad={() => setImageLoading(false)} 
+          className={`mx-auto transition-opacity ease-in duration-1000 opacity-90 -z-10 ${
+            variant === 'default' ? 'w-full h-full' : 'w-12 h-12'
+          }`} 
+        />
+      {imageLoading && variant === 'default' && (
         <Image
-        source={require('../../assets/images/placeholder2.png')}
-        className="absolute rounded-2xl self-start mr-4 w-full h-full"
-        resizeMode="contain"
-      />      
+          source={require('../../assets/images/placeholder2.png')}
+          className="absolute rounded-2xl self-start mr-4 w-full h-full"
+          resizeMode="contain"
+        />
       )}
-      <Text style={{color: color}} className={`${textStyle ? textStyle : ' mt-2 ml-2 text-base'} absolute opacity-100 font-semibold mx-auto `}>{truncateText(text, 35)}</Text>
+      <Text 
+        style={color? { color: color } : {}} 
+        className={`mt-2 ml-2 text-sm ${textStyle}  font-semibold ${
+          variant == 'textCard' ? 'text-slate-900 dark:text-slate-300' : ` absolute opacity-100 mx-auto ml-2`
+        }`}>
+        {truncateText(text, truncateLength)}
+      </Text>
     </TouchableOpacity>
   );
 };

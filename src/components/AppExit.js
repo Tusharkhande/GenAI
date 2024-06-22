@@ -3,6 +3,7 @@ import {Modal, View, Text, BackHandler} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import Button from './Button';
 import {select_beep} from '../constants/Sounds';
+import { useUser } from '../context/userContext';
 
 const AppExit = ({exit, setExit}) => {
     const handleModal = () => {
@@ -10,6 +11,8 @@ const AppExit = ({exit, setExit}) => {
         select_beep();
         BackHandler.exitApp();
     };
+
+    const {colorScheme} = useUser();
   return (
     <Modal visible={exit} animationType="fade" transparent>
       <View className="flex flex-1 bg-black/50 items-center justify-center self-center w-full">
@@ -23,7 +26,7 @@ const AppExit = ({exit, setExit}) => {
             <View
               style={{width: wp(15)}}
               className="rounded-3xl flex justify-center text-center">
-              <Button textStyle={'text-sm'} pressAble={true} title="Yes" onPress={() => handleModal()} />
+              <Button textStyle={'text-sm'} pressAble={true} title="Yes" onPress={() => handleModal()} colorScheme={colorScheme} />
             </View>
             <View
               style={{width: wp(15)}}
@@ -33,6 +36,7 @@ const AppExit = ({exit, setExit}) => {
                 pressAble={true}
                 textStyle={'text-sm'}
                 onPress={() => [setExit(false), select_beep()]}
+                colorScheme={colorScheme}
               />
             </View>
           </View>

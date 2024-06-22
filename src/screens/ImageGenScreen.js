@@ -199,7 +199,7 @@ const ImageGenScreen = () => {
           </TouchableOpacity>
           <View className="flex mx-auto justify-center mt-6 mb-4">
             <View
-              className= {`flex rounded-2xl ${colorScheme ==' dark' ? 'bg-black' : 'bg-slate-600'} p-4 justify-center items-center`}
+              className= {`flex rounded-2xl ${colorScheme =='dark' ? 'bg-black' : 'bg-slate-600'} p-4 justify-center items-center`}
               // style={[{backgroundColor:param.selectedModel.primary}]}
             >
               {image && !loading ? (

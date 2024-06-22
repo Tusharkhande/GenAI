@@ -14,7 +14,6 @@ import {useNavigation} from '@react-navigation/native';
 import {select_beep} from '../constants/Sounds';
 import Button from '../components/Button';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import TextCard from '../components/TextCard';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useUser } from '../context/userContext';
 
@@ -36,6 +35,7 @@ const AIPainting = ({imageModel, navigation, colorScheme}) => (
               select_beep(),
             ]}
             colorScheme={colorScheme}
+            variant='default'
           />
         </TouchableOpacity>
       ))}
@@ -51,7 +51,7 @@ const Writing = ({writingModel, navigation, colorScheme}) => (
     <View className="flex flex-row flex-wrap justify-evenly mt-2">
       {writingModel.map(writingModel => (
         <TouchableOpacity key={writingModel.id} className="mx-1 my-2">
-          <TextCard
+          <Card
             imageSource={writingModel.image}
             text={writingModel.name}
             // color={writingModel.color}
@@ -59,6 +59,7 @@ const Writing = ({writingModel, navigation, colorScheme}) => (
               navigation.navigate('Writing', {writingModel: writingModel}),
               select_beep(),
             ]}
+            variant='textCard'
           />
         </TouchableOpacity>
       ))}
