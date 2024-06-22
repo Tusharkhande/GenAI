@@ -18,7 +18,7 @@ import TextCard from '../components/TextCard';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useUser } from '../context/userContext';
 
-const AIPainting = ({imageModel, navigation}) => (
+const AIPainting = ({imageModel, navigation, colorScheme}) => (
   <ScrollView
     className="flex bg-slate-50 dark:bg-slate-950"
     showsVerticalScrollIndicator={false}>
@@ -35,6 +35,7 @@ const AIPainting = ({imageModel, navigation}) => (
               }),
               select_beep(),
             ]}
+            colorScheme={colorScheme}
           />
         </TouchableOpacity>
       ))}
@@ -42,7 +43,7 @@ const AIPainting = ({imageModel, navigation}) => (
   </ScrollView>
 );
 
-const Writing = ({writingModel, navigation}) => (
+const Writing = ({writingModel, navigation, colorScheme}) => (
   // <View style={{flex: 1, backgroundColor: '#673ab7'}} />
   <ScrollView
     className="flex bg-slate-50 dark:bg-slate-950"
@@ -91,10 +92,10 @@ const ExploreAiScreen = () => {
 
   const Tab = createMaterialTopTabNavigator();
   const AIPaintingScreen = () => (
-    <AIPainting imageModel={imageModel} navigation={navigation} />
+    <AIPainting imageModel={imageModel} navigation={navigation} colorScheme={colorScheme} />
   );
   const WritingScreen = () => (
-    <Writing writingModel={writingModel} navigation={navigation} />
+    <Writing writingModel={writingModel} navigation={navigation} colorScheme={colorScheme} />
   );
 
   return (

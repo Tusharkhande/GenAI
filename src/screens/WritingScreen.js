@@ -28,6 +28,8 @@ import Tts from 'react-native-tts';
 import Markdown from 'react-native-markdown-display';
 import TypeWriterEffect from 'react-native-typewriter-effect';
 import Options from '../components/Options';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../context/userContext';
 
 const WritingScreen = () => {
   const [prompt, setPrompt] = useState('');
@@ -39,16 +41,12 @@ const WritingScreen = () => {
   const param = useRoute().params;
   const [selectedOption, setSelectedOption] = useState('');
   const scrollViewRef = useRef();
+  const {colorScheme} = useUser();
 
   const updateScrollView = () => {
     setTimeout(() => {
       scrollViewRef?.current?.scrollToEnd({animated: true});
     }, 200);
-  };
-
-  const onOptionSelect = option => {
-    setSelectedOption(option);
-    console.log('Selected option:', option);
   };
 
   const copyToClipboard = () => {
@@ -83,6 +81,15 @@ const WritingScreen = () => {
       setIsSpeaking(false),
     ]);
   }, []);
+
+  useEffect(() => {
+    if (param.writingModel.models && param.writingModel.models.length > 0) {
+      setSelectedModel(param.writingModel.models[0]);
+    }
+    if (param.writingModel.options) {
+      setSelectedOption(param.writingModel.options[0]);
+    }
+  }, [param.writingModel.models]);
 
   const initiate = async () => {
     setMessage('');
@@ -119,19 +126,36 @@ const WritingScreen = () => {
     }
   };
 
-  const styles = {
-    code_block: {
-      backgroundColor: 'transparent',
-      color: 'white',
+  const markdownStyles = StyleSheet.create({
+    body: {
+      color: colorScheme === 'dark' ? '#fff' : '#000',
+      backgroundColor: colorScheme === 'dark' ? '#rgb(2 6 23)' : 'rgb(248 250 252)',
     },
-  };
+    fence: {
+      color: colorScheme === 'dark' ? '#fff' : '#000',
+      fontSize: 10,
+      backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
+      overflow: 'hidden',
+      padding: 10,
+      borderRadius: 5,
+    },
+    code_block: {
+      color: colorScheme === 'dark' ? '#fff' : '#000',
+      fontSize: 10,
+      backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
+      overflow: 'hidden',
+      padding: 10,
+      borderRadius: 5,
+    },
+  });
 
   return (
-    <View className="flex-1 bg-slate-950 justify-normal">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950 justify-normal">
       <View className="flex flex-row self-start p-3">
           <Button
             image={require('../../assets/images/back.png')}
             onPress={handleBackPress}
+            colorScheme={colorScheme}
           />
       </View>
       <ScrollView
@@ -140,13 +164,11 @@ const WritingScreen = () => {
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
         <View
-          className={`flex mt-1 self-start p-5 pb-0 ${
-            param.writingModel.options.length > 0 ? 'p-5 pb-0' : 'p-5 pb-0'
-          }`}>
-          <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
+          className={`flex mt-1 self-start px-5`}>
+          <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-950 dark:text-slate-50">
             {param.writingModel.name}
           </Text>
-          <Text className="font-semibold text-left font-mono mt-1 text-sm text-slate-200">
+          <Text className="font-semibold text-left font-mono mt-1 text-sm text-slate-950 dark:text-slate-200">
             {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
             {param.writingModel.desc}
           </Text>
@@ -167,18 +189,18 @@ const WritingScreen = () => {
                 ? 'p-5 pt-2 pb-0'
                 : 'p-5 pt-0'
             }`}>
-            <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-200">
+            <Text className="font-semibold text-left font-mono mt-1 mb-1 text-sm text-slate-800 dark:text-slate-200">
               {param.writingModel.textInputDesc}
             </Text>
             <TextInput
               className="h-24 rounded-xl border-solid border-2 border-indigo-800"
               onChangeText={setPrompt}
               placeholder={param.writingModel.demo}
-              // placeholder={'Enter'}
+              placeholderTextColor={colorScheme=='dark' ? 'rgb(229 231 235)' : 'rgb(107 114 128)'}
               multiline={true}
               // numberOfLines={3}
-              style={{color: 'white', textAlignVertical: 'top', width: wp(90)}}
-            />
+              style={{color: colorScheme=='dark' ? 'white' : 'black' , textAlignVertical: 'top', width: wp(90)}}
+            /> 
           </View>
 
           <TouchableOpacity
@@ -227,6 +249,7 @@ const WritingScreen = () => {
                   onTypingEnd={() => [setFinishedTyping(true), updateScrollView()]}
                   mindelay={-20}
                   maxdelay={-1}
+                  style={colorScheme === 'dark' ? {color: '#fff'} : {color: '#000'}}
                 />
               ) : (
                 // <MarkdownRenderer>{}</MarkdownRenderer>
@@ -249,31 +272,10 @@ const WritingScreen = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
-const markdownStyles = StyleSheet.create({
-  body: {
-    color: '#fff',
-    backgroundColor: '#rgb(2 6 23)',
-  },
-  fence: {
-    color: '#fff',
-    fontSize: 10,
-    backgroundColor: '#000',
-    overflow: 'hidden',
-    padding: 10,
-    borderRadius: 5,
-  },
-  code_block: {
-    color: '#fff',
-    fontSize: 10,
-    backgroundColor: '#000',
-    overflow: 'hidden',
-    padding: 10,
-    borderRadius: 5,
-  },
-});
+
 
 export default WritingScreen;

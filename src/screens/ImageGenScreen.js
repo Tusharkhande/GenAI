@@ -6,7 +6,6 @@ import {
   Image,
   TextInput,
   BackHandler,
-  TouchableHighlight,
   ScrollView,
   ToastAndroid,
 } from 'react-native';
@@ -14,13 +13,14 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {select_beep} from '../constants/Sounds';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
-import RNFetchBlob from 'rn-fetch-blob';
 import {
   downloadBase64Image,
   downloadBlobImage,
 } from '../constants/DownloadImage';
-import generateImage, {stableDiffusionXL} from '../api/huggingface';
+import {stableDiffusionXL} from '../api/huggingface';
 import Options from '../components/Options';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../context/userContext';
 
 const ImageGenScreen = () => {
   const [prompt, setPrompt] = useState('');
@@ -33,6 +33,7 @@ const ImageGenScreen = () => {
   const navigation = useNavigation();
   const scrollViewRef = useRef();
   const param = useRoute().params;
+  const {colorScheme} = useUser();
   console.log(param);
 
   const handleBackPress = () => {
@@ -120,11 +121,12 @@ const ImageGenScreen = () => {
   };
 
   return (
-    <View className="flex-1 bg-slate-950 justify-normal">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950 justify-normal">
       <View className="flex flex-row self-start p-3">
         <Button
           image={require('../../assets/images/back.png')}
           onPress={handleBackPress}
+          colorScheme={colorScheme}
         />
       </View>
       <ScrollView
@@ -132,12 +134,12 @@ const ImageGenScreen = () => {
         // bounces={false}
         className="space-y-4"
         showsVerticalScrollIndicator={false}>
-        <View className={`flex mt-1 self-start p-5 pb-0`}>
-          <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-50">
+        <View className={`flex mt-1 self-start p-5 pt-0 pb-0`}>
+          <Text className="font-semibold text-left font-mono mt-1 text-xl text-slate-950 dark:text-slate-50">
             {/* Cyberpunk Avatars */}
             {param.imageModel.name}
           </Text>
-          <Text className="font-semibold text-left font-mono mt-1 text-sm text-slate-200">
+          <Text className="font-semibold text-left font-mono mt-1 text-sm text-slate-800 dark:text-slate-200">
             {/* Design futuristic, edgy avatars in the Cyberpunk Genre */}
             {param.imageModel.desc}
           </Text>
@@ -150,6 +152,7 @@ const ImageGenScreen = () => {
               options={param.imageModel.models}
               selectedOption={selectedModel}
               setSelectedOption={setSelectedModel}
+              colorScheme={colorScheme}
             />
           )}
           {param.imageModel.options.length > 0 && (
@@ -159,6 +162,7 @@ const ImageGenScreen = () => {
               options={param.imageModel.options}
               selectedOption={selectedOption}
               setSelectedOption={setSelectedOption}
+              colorScheme={colorScheme}
             />
           )}
           <Text className="text-white text-xs mr-6 mt-3 font-thin self-end">
@@ -166,14 +170,16 @@ const ImageGenScreen = () => {
           </Text>
           <View className="flex-row mt-4 mb-4 justify-around">
             <TextInput
-              className="h-24 rounded-xl border-solid border-2 border-indigo-800"
+              className="h-24 rounded-xl border-solid border-2 p-2 border-indigo-800"
               onChangeText={setPrompt}
               placeholder={param.imageModel.demo}
               multiline={true}
+              cursorColor={'blue'}
+              placeholderTextColor={colorScheme=='dark' ? 'rgb(229 231 235)' : 'rgb(107 114 128)'}
               // numberOfLines={1}
               returnKeyType="send"
               onSubmitEditing={initiate}
-              style={{color: 'white', textAlignVertical: 'top', width: wp(90)}}
+              style={{color: colorScheme=='dark' ? 'white' : 'black', textAlignVertical: 'top', width: wp(90)}}
             />
           </View>
           <TouchableOpacity
@@ -193,7 +199,7 @@ const ImageGenScreen = () => {
           </TouchableOpacity>
           <View className="flex mx-auto justify-center mt-6 mb-4">
             <View
-              className=" flex rounded-2xl bg-black p-4 justify-center items-center"
+              className= {`flex rounded-2xl ${colorScheme ==' dark' ? 'bg-black' : 'bg-slate-600'} p-4 justify-center items-center`}
               // style={[{backgroundColor:param.selectedModel.primary}]}
             >
               {image && !loading ? (
@@ -218,7 +224,8 @@ const ImageGenScreen = () => {
               )}
               {loading && (
                 <Image
-                  source={require('../../assets/images/loading.gif')}
+                  // source={require('../../assets/images/loading.gif')}
+                  source={colorScheme === 'dark' ? require('../../assets/images/loading.gif') : require("../../assets/images/arc2.gif")}
                   className="rounded-2xl"
                   resizeMode="contain"
                   style={{height: wp(60), width: wp(60)}}
@@ -254,7 +261,7 @@ const ImageGenScreen = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

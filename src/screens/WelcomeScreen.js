@@ -28,7 +28,7 @@ export default function WelcomeScreen() {
         //     source={require("../../assets/images/bg6.gif")}
         //     style={{ flex: 1 }}
         // >
-        <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" >
+        <SafeAreaView className="flex-1 bg-slate-50 dark:bg-black" >
             <View className="flex-1 flex justify-center my-4">
                 <Text
                     className="text-slate-900 dark:text-slate-200 font-mono font-bold text-4xl text-center"

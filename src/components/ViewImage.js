@@ -91,7 +91,7 @@ const ViewImage = ({
             {!message && (
               <Markdown
                 style={{fontSize: wp(4)}}
-                className="text-center text-slate-200 font-mono p-5">
+                className="text-center text-slate-900 dark:text-slate-200 font-mono p-5">
                 {'**Created at :** ' + formatDate(image.date)}
               </Markdown>
             )}
