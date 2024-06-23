@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {View, Text, StyleSheet, Image, ScrollView, BackHandler} from 'react-native';
 import Button from '../components/Button';
 import {useNavigation} from '@react-navigation/native';
@@ -7,8 +7,10 @@ import {select_beep} from '../constants/Sounds';
 import Markdown from 'react-native-markdown-display';
 import { useUser } from '../context/userContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Loader from '../components/Loader';
 
 const About = () => {
+  const [loading, setLoading] = useState(true);
   const text = `**GenAI** is a cutting-edge AI assistant that engages users in dynamic conversations and produces captivating AI-generated images and artwork. Utilizing a range of advanced AI models, including:  
   \n+ OpenAI's **GPT-3.5** and **DALL·E 2.0**  
   \n+ Google's **Gemini**  
@@ -45,6 +47,12 @@ const About = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+
   return (
     <SafeAreaView className="flex bg-slate-50 dark:bg-slate-950 flex-1 justify-normal ">
       <View className='flex-row justify-center'>
@@ -70,9 +78,9 @@ const About = () => {
           About GenAI
         </Text>
         <View className="text-justify text-sm p-7 pt-2 pb-3">
-          <Markdown style={markdownStyles}>
+          {!loading ? <Markdown style={markdownStyles}>
             {text}
-          </Markdown>
+          </Markdown> : <Loader/>}
         </View>
         <View className="justify-end mb-0 self-center p-10 pt-2">
           <Text className=" text-slate-800 dark:text-slate-400 text-xs">© 2023 @ktushar</Text>

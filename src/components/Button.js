@@ -1,4 +1,3 @@
-import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, Image, Pressable } from 'react-native';
 
 export default function Button({ title, onPress, image, isize, style, textStyle, pressAble, colorScheme, disabled }) {

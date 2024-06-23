@@ -6,7 +6,7 @@ import {
   BackHandler,
   StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -118,7 +118,7 @@ export default function HomeScreen() {
           and Explore my features...
         </Text>
       </View>
-      <View className="flex items-center justify-center">
+      <View className="flex items-center justify-center bg-blend-darken">
         <View
           className="absolute bg-slate-600 dark:bg-slate-300 rounded-full -z-10 self-center"
           style={{height: wp(31), width: wp(31)}}
@@ -196,7 +196,7 @@ export default function HomeScreen() {
           }),
           select_beep(),
         ]}
-        className="mt-0 mx-24 rounded-3xl p-3 border-r-8 border-l-8 mb-10" //bg-blue-800
+        className="mt-0 mx-24 rounded-3xl p-3  mb-10" //bg-blue-800
         style={{
           backgroundColor: selectedModel.primary,
           borderColor: selectedModel.primary,

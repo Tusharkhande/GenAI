@@ -1,8 +1,6 @@
 import Tts from "react-native-tts";
-import { useEffect } from "react";
 
 const assistantSpeech = msg => {
-    // Tts.getInitStatus().then(() => {
         Tts.setDefaultRate(0.6);
         Tts.speak(msg, {
             androidParams: {
@@ -11,7 +9,6 @@ const assistantSpeech = msg => {
                 KEY_PARAM_STREAM: 'STREAM_MUSIC',
             },
         });
-    // });
 };
 
 const startTextToSpeech = message => {

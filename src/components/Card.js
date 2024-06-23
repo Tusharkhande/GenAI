@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { Text, Image, TouchableOpacity } from 'react-native';
 
 const Card = ({ 
   imageSource, 
@@ -12,11 +12,12 @@ const Card = ({
   truncateLength = 35,
   opacity
 }) => {
-  const [imageLoading, setImageLoading] = React.useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const isUrl = (source) => {
     return typeof source === 'string' && (source.startsWith('http://') || source.startsWith('https://'));
   };
+  
 
   const truncateText = (text, no) => {
     if (truncate && typeof text === 'string' && text.length > 0) {

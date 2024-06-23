@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {STABILITY_API_KEY, HUGGING_API_KEY} from '@env';
+import {HUGGING_API_KEY} from '@env';
 import {Platform} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {uploadImageFromCache} from '../firebase/firebase.storage';
@@ -38,11 +38,6 @@ export default generateImage = async (data, setLoading) => {
       }
     } catch (error) {
       setLoading(false);
-      // return {
-      //   role: 'assistant',
-      //   content:
-      //     'I am currently experiencing high demand! Feel free to try again in a few moments.',
-      // };
     }
   }
 };
@@ -103,53 +98,6 @@ export const stableDiffusionXL = async (
   }
   setLoading(false);
   throw new Error(error);
-  /* try {
-    // const cacheDirPath = RNFetchBlob.fs.dirs.CacheDir;
-    // console.log("cacheDirPath", cacheDirPath);
-    // if(blobImage.length>0){
-    //   await RNFetchBlob.fs.unlink(blobImage).then(() => {
-    //     console.log("Cache cleaned successfully!");
-    //   })
-    // }
-    const response = await RNFetchBlob.config({
-      fileCache: true,
-    }).fetch(
-      'POST',
-      `https://api-inference.huggingface.co/models/${selectedModel}`,
-      // 'https://api-inference.huggingface.co/models/dataautogpt3/ProteusV0.2',
-      // 'https://api-inference.huggingface.co/models/kviai/Paint-Diffuion-V2', 
-      // 'https://api-inference.huggingface.co/models/h94/IP-Adapter-FaceID',
-      // 'https://api-inference.huggingface.co/models/briaai/BRIA-2.2',
-      // 'https://api-inference.huggingface.co/models/playgroundai/playground-v2-1024px-aesthetic',
-      // 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.0',
-      {
-        Authorization: 'Bearer ' + HUGGING_API_KEY,
-      },
-      JSON.stringify(data),
-    );
-    
-    const contentType = response.respInfo.headers['content-type'];
-    console.log(response.respInfo)
-    console.log(contentType)
-    if(!contentType.includes('image')){
-      throw new Error('Something went wrong please try later or select another model');
-    }
-    const imagePath =
-      Platform.OS === 'android' ? `file://${response.path()}` : response.path();
-      console.log(imagePath)
-      setImage(imagePath);
-      setBlobImage(imagePath);
-    return imagePath;
-  } catch (error) {
-    // console.error('Error fetching and saving image:', error);
-    try{
-      return stableDiffusionXL(data, setLoading, setImage, setBlobImage, blobImage, 'stabilityai/stable-diffusion-xl-base-1.0')
-    }catch{
-      throw error;
-    }
-  } finally {
-    setLoading(false);
-  } */
 };
 
 export async function gpt2(data) {

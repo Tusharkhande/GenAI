@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 
 const Info = ({navigation, colorScheme, theme}) => {

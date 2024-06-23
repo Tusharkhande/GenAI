@@ -1,8 +1,5 @@
 import axios from 'axios';
-// import api from '.';
 import {GEMINI_API_KEY} from '@env';
-import {ToastAndroid} from 'react-native';
-import {chatCompletion, gpt2} from './openAi';
 
 const API_KEY = GEMINI_API_KEY;
 const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;

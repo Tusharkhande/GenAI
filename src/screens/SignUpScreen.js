@@ -9,11 +9,9 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useEffect, useState} from 'react';
-import {auth} from '../firebase/firebase.config';
 import {useNavigation} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AvatarsModal from '../components/AvatarsModal';
 import {select_beep} from '../constants/Sounds';

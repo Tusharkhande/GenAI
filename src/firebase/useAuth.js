@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase.config';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
 
 export default function useAuth() {
   const [user, setUser] = useState('');
@@ -20,7 +18,7 @@ export default function useAuth() {
       // }
     });
   }, []);
-  console.log(user);
+  // console.log(user);
   
   return {user};
 }

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -106,10 +106,11 @@ const ImageGenScreen = () => {
           selectedModel,
         );
         updateScrollView();
+        setLoading(false);
       } catch (e) {
         ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
-      } finally {
         setLoading(false);
+      } finally {
       }
     }
   };
@@ -175,7 +176,7 @@ const ImageGenScreen = () => {
               placeholder={param.imageModel.demo}
               multiline={true}
               cursorColor={'blue'}
-              placeholderTextColor={colorScheme=='dark' ? 'rgb(229 231 235)' : 'rgb(107 114 128)'}
+              placeholderTextColor={colorScheme=='dark' ? 'rgb(100 116 139)' : 'rgb(107 114 128)'}
               // numberOfLines={1}
               returnKeyType="send"
               onSubmitEditing={initiate}

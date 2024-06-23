@@ -11,7 +11,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {select_beep} from '../constants/Sounds';
 import { useUser } from '../context/userContext';

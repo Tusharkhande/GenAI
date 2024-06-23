@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -19,11 +19,13 @@ import {select_beep} from '../constants/Sounds';
 import Markdown from 'react-native-markdown-display';
 import {useUser} from '../context/userContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Loader from '../components/Loader';
 
 const Documentation = () => {
   const navigation = useNavigation();
   const [viewImg, setViewImg] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+  const [loading, setLoading] = useState(true);
   const {colorScheme} = useUser();
 
   const handleImagePress = image => {
@@ -42,6 +44,12 @@ const Documentation = () => {
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
     };
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }, []);
 
   const markdownStyles = StyleSheet.create({
@@ -75,7 +83,7 @@ const Documentation = () => {
       </View>
       </View>
 
-      <ScrollView className="space-y-4" showsVerticalScrollIndicator={false}>
+      {!loading ?<ScrollView className="space-y-4" showsVerticalScrollIndicator={false}>
         {/* <View className="flex-row justify-center mt-6">
           <Image
             source={require('../../assets/images/ai2.png')}
@@ -374,14 +382,14 @@ const Documentation = () => {
         <View className="justify-end mb-0 self-center p-10 pt-2">
           <Text className=" text-slate-800 dark:text-slate-400 text-xs">© 2023 @ktushar</Text>
         </View>
-      </ScrollView>
+      </ScrollView> : <Loader/>}
       <Modal
         visible={viewImg}
         animationType="fade"
         transparent
         onRequestClose={() => setViewImg(false)}>
-        <View className="flex h-full bg-black/70 items-center justify-center self-center w-full">
-          <View className="flex absolute flex-row self-start top-0 p-3 pt-1">
+        <View className="flex-1 h-full bg-black/70 items-center justify-center self-center w-full">
+          <View className="flex absolute flex-row self-start top-0 left-2 p-3 pt-1">
             <Button
               image={require('../../assets/images/back.png')}
               onPress={() => setViewImg(false)}

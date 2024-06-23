@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { View, Text, Linking, TouchableOpacity, Image } from 'react-native';
 import { select_beep } from '../constants/Sounds';
 

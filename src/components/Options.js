@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 
 const Options = ({optionsLength, optionsDesc, options, selectedOption, setSelectedOption, colorScheme}) => {

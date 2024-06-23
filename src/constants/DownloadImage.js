@@ -1,4 +1,4 @@
-import {Alert, ToastAndroid} from 'react-native';
+import { ToastAndroid} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {assistantSpeech} from './TextToSpeech';
 import {select_beep} from './Sounds';

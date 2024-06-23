@@ -17,7 +17,6 @@
 // export {auth};
 
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { initializeAuth, getReactNativePersistence, GoogleAuthProvider } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore } from "firebase/firestore";

@@ -1,5 +1,5 @@
 import { PermissionsAndroid, StatusBar } from 'react-native'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import AppNavigation from './src/navigation';
 import { getAuth } from 'firebase/auth';
 import { assistantSpeech } from './src/constants/TextToSpeech';

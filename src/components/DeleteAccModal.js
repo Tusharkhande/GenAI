@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Modal, StyleSheet, BackHandler, TouchableOpacity, Image, Pressable } from 'react-native'
 import Button from './Button';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { select_beep } from '../constants/Sounds';
 
@@ -42,12 +42,6 @@ const DeleteAccModal = ({ setDelModalVisible, delModalVisible, deleteAccount, se
             </TouchableOpacity>
             </View>
           <View className='flex flex-row justify-center self-end gap-x-1'>
-            {/* <Pressable style={{ width: wp(20) }} disabled={password.length < 6 ? true : false}
-              onPress={deleteAccount}
-              className={`${password.length < 6 ? '' : 'bg-red-900'} rounded-3xl flex justify-center text-center`}>
-              {/* <Button title="Confirm" onPress={() => deleteAccount()} /> 
-              <Text className='text-center'>Confirm</Text>
-            </Pressable> */}
             <View style={{ width: wp(20) }}
               className=" rounded-3xl flex justify-center text-center">
               <Button disabled={password.length < 6 ? true : false} style={`${password.length < 6 ? 'bg-red-30' : 'bg-red-900'}`} pressAble={true} title="Confirm" onPress={deleteAccount} />

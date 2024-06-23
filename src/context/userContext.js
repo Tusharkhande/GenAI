@@ -89,7 +89,7 @@ export function Context({children}) {
           setIsLoggedin(true);
           setUser(user);
           setGUserAvatar(user.photoURL);
-          console.log(user);
+          // console.log(user);
         })
         .catch(error => {
           const errorCode = error.code;

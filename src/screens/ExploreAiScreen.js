@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   ScrollView,
   Text,
   TouchableOpacity,
   BackHandler,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import Card from '../components/Card';
 import imageModels from '../constants/ImageGenModels';

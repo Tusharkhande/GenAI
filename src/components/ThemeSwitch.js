@@ -1,6 +1,4 @@
-import React from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { theme } from '../constants/Theme';
+import { View, Text } from 'react-native';
 import Button from './Button';
 
 

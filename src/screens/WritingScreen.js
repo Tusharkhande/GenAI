@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -19,7 +19,6 @@ import {
 } from 'react-native-responsive-screen';
 import {assistantSpeech} from '../constants/TextToSpeech';
 import {select_beep} from '../constants/Sounds';
-import {Alert} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../components/Button';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -193,12 +192,13 @@ const WritingScreen = () => {
               {param.writingModel.textInputDesc}
             </Text>
             <TextInput
-              className="h-24 rounded-xl border-solid border-2 border-indigo-800"
+              className="h-24 rounded-xl border-solid border-2 p-2 border-indigo-800"
               onChangeText={setPrompt}
               placeholder={param.writingModel.demo}
-              placeholderTextColor={colorScheme=='dark' ? 'rgb(229 231 235)' : 'rgb(107 114 128)'}
+              placeholderTextColor={colorScheme=='dark' ? 'rgb(100 116 139)' : 'rgb(107 114 128)'}
               multiline={true}
               // numberOfLines={3}
+              cursorColor={'blue'}
               style={{color: colorScheme=='dark' ? 'white' : 'black' , textAlignVertical: 'top', width: wp(90)}}
             /> 
           </View>

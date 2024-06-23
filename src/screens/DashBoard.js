@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -27,13 +27,9 @@ import Contact from '../components/Contact';
 import DeleteAccModal from '../components/DeleteAccModal';
 import HorizontalLine from '../components/HorizontalLine';
 import ManageAcc from '../components/ManageAcc';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import Tts from 'react-native-tts';
-import {logout_beep, select_beep} from '../constants/Sounds';
+import { select_beep} from '../constants/Sounds';
 import {assistantSpeech} from '../constants/TextToSpeech';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useUser} from '../context/userContext';
-import useAuth from '../firebase/useAuth';
 import Loader from '../components/Loader';
 import Info from '../components/Info';
 import {SafeAreaView} from 'react-native-safe-area-context';

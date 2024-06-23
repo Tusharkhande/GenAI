@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, ToastAndroid } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Button from './Button';

@@ -1,5 +1,5 @@
-import { View, Text, Image, TouchableOpacity, ImageBackground, BackHandler, StyleSheet, Modal } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Image, TouchableOpacity, BackHandler, StyleSheet} from 'react-native'
+import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
