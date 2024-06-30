@@ -4,6 +4,7 @@ import AppNavigation from './src/navigation';
 import { getAuth } from 'firebase/auth';
 import { assistantSpeech } from './src/constants/TextToSpeech';
 import { Context } from './src/context/userContext';
+import SplashScreen from 'react-native-splash-screen';
 
 export default function App() {
   const permission = async () => {
@@ -23,6 +24,7 @@ export default function App() {
 
   assistantSpeech(`{Initializing startup sequence. Loading Custom Components. Fetching user data.}`);
   useEffect(() => {
+    SplashScreen.hide();
     permission();
     getAuth().onAuthStateChanged((user) => {
       if (user) {

@@ -15,8 +15,8 @@ export default function AuthStack() {
     <>
       <StatusBar
         animated={true}
-        translucent={true}
-        backgroundColor={colorScheme === 'dark' ? 'black' : 'white'}
+        // translucent={true}
+        backgroundColor={colorScheme === 'dark' ? 'black' : '#f8fafc'}
         barStyle={colorScheme === 'dark' ? 'dark-content' : 'light-content'}
         showHideTransition="fade"
         // hidden={true}

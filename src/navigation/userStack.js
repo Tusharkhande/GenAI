@@ -24,7 +24,7 @@ export default function UserStack() {
       <StatusBar
         animated={true}
         translucent={true}
-        backgroundColor={colorScheme === 'dark' ? 'black' : 'white'}
+        backgroundColor={colorScheme === 'dark' ? '#020617' : '#f8fafc'}
         barStyle={colorScheme === 'dark' ? 'dark-content' : 'light-content'}
         showHideTransition="fade"
         // hidden={true}
