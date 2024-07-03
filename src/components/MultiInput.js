@@ -102,7 +102,7 @@ const MultiInput = ({
           className="m-2"
         />
       ) : (
-        <KeyboardAvoidingView style={{padding: 10}}>
+        <KeyboardAvoidingView className='p-2'>
           {base64String && (
             <>
               <Image
@@ -139,7 +139,7 @@ const MultiInput = ({
                   // className='flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-gray-700 dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs'
                   className="flex flex-col justify-center">
                   <TextInput
-                    className="m-0 border-slate-400 dark:border-slate-500 border-opacity-5 border-solid border rounded-xl bg-slate-200 dark:bg-slate-800 p-3"
+                    className={`m-0 border-slate-400 dark:border-slate-500 border-opacity-5 border-solid border rounded-xl bg-slate-200 dark:bg-slate-800 p-3 ${(param.selectedModel.name == 'Vision' || param.selectedModel.name == 'GenAI') ? 'pr-20' : 'pr-10'}`}
                     onChangeText={setText}
                     placeholder="Ask me anything..."
                     placeholderTextColor={colorScheme == 'light' ? '#1e293b' : '#Cbd5e1'}

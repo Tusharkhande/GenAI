@@ -53,9 +53,6 @@ react {
 }
 
 
-def enableHermes = true
-
-
 def enableSeparateBuildPerCPUArchitecture = true
 
 /**
@@ -87,7 +84,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "2.1"
     }
     signingConfigs{
          debug {
@@ -112,11 +109,11 @@ android {
         }
         release {
             signingConfig signingConfigs.release
-            ndk {
-                debugSymbolLevel 'none'
-            }
+            // ndk {
+            //     debugSymbolLevel 'none'
+            // }
             minifyEnabled enableProguardInReleaseBuilds
-            shrinkResources true
+            // shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
@@ -125,10 +122,11 @@ android {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+            universalApk true  // If true, also generate a universal APK
+            include  "arm64-v8a"
         }
     }
+
     // signingConfigs {
     //     debug {
     //         storeFile file('debug.keystore')
@@ -165,8 +163,7 @@ dependencies {
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
 
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
-    // if (hermesEnabled.toBoolean()) {
-    if (enableHermes) {
+    if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
