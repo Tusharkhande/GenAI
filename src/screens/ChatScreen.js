@@ -361,7 +361,7 @@ const ChatScreen = () => {
       );
     }
   }, []);
-  console.log(messages)
+  // console.log(messages)
 
   return (
     <KeyboardAvoidingView

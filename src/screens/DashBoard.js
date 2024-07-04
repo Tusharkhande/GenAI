@@ -12,10 +12,11 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {auth} from '../firebase/firebase.config';
 import Button from '../components/Button';
-import {signInWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import {updateProfile} from 'firebase/auth';
 // import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 // import ImagePicker from 'react-native-image-crop-picker';
 import {theme} from '../constants/Theme';
+import Share from 'react-native-share';
 
 import avatar from '../constants/Avatars';
 import {
@@ -67,6 +68,22 @@ const Dashboard = () => {
     navigation.navigate('Home', {selectedAvatar: selectedAvatar});
     return true;
   };
+
+  const shareApp = () => {
+    select_beep();
+    const options = {
+      title: 'Share App',
+      message: 'Dive into the AI world now!',
+      url: 'https://play.google.com/store/apps/details?id=com.tushar.assistant',
+    }
+    Share.open(options)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
@@ -134,10 +151,18 @@ const Dashboard = () => {
             image={require('../../assets/images/back.png')}
             onPress={handleBackPress}
             colorScheme={colorScheme}
-            // size={'w-4 h-4'}
+            // isize={'w-4 h-4'}
           />
         </View>
-       <ThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme} />
+        <View className='self-end flex-row items-center'>
+          <Button
+            image={require('../../assets/images/share.png')}
+            onPress={shareApp}
+            colorScheme={colorScheme}
+            isize={'w-6 h-6 mt-1'}
+          />
+          <ThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme} />
+        </View>
       </View>
       <ScrollView className="p-7 pt-0" showsVerticalScrollIndicator={false}>
         <>

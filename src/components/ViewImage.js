@@ -4,6 +4,9 @@ import Button from './Button';
 import {downloadBase64Image, downloadImage} from '../constants/DownloadImage';
 import {deleteImageFromStorage} from '../firebase/firebase.storage';
 import Markdown from 'react-native-markdown-display';
+import { select_beep } from '../constants/Sounds';
+import Share from 'react-native-share';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const ViewImage = ({
   viewImage,
@@ -25,11 +28,48 @@ const ViewImage = ({
     };
     return date.toLocaleDateString('en-US', options);
   };
-  console.log(image)
 
   if (!image || !image.url || typeof image.url !== 'string') {
     return null; // or some placeholder UI
   }
+
+  const shareImage = (prompt, imageUrl) => {
+    select_beep();
+    let imageBase64 = '';
+
+    if (imageUrl.includes('https://')) {
+      RNFetchBlob.config({ fileCache: true })
+        .fetch('GET', imageUrl)
+        .then((resp) => resp.base64())
+        .then((base64Data) => {
+          imageBase64 = `data:image/png;base64,${base64Data}`;
+          share(prompt, imageBase64);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      imageBase64 = `data:image/png;base64,${imageUrl}`;
+      share(prompt, imageBase64);
+    }
+  };
+
+  const share = (prompt, imageBase64) => {
+    const options = {
+      title: 'Share App',
+      message: 'Prompt: ' + prompt,
+      url: imageBase64,
+      type: 'image/png',
+      
+    };
+    Share.open(options)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+      });
+  };
+
   
   return (
     <Modal
@@ -45,7 +85,13 @@ const ViewImage = ({
           />
         </View>
         <View className="flex absolute flex-row self-end top-0 p-3">
-          <View className="mr-3">
+          <View className="mr-3 flex-row">
+            <Button
+              image={require('../../assets/images/share.png')}
+              onPress={() => shareImage(image.prompt, image.url)}
+              isize={'w-7 h-6'}
+              style={'mr-3'}
+            />
             <Button
               image={require('../../assets/images/dwd.png')}
               onPress={() =>

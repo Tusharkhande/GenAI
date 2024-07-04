@@ -6,7 +6,7 @@ import {uploadImageFromCache} from '../firebase/firebase.storage';
 import base64 from 'base-64';
 
 export default generateImage = async (data, setLoading) => {
-  const models = ['playgroundai/playground-v2-1024px-aesthetic','stabilityai/stable-diffusion-xl-base-1.0','Corcelio/mobius', 'fluently/Fluently-XL-Final', 'runwayml/stable-diffusion-v1-5'];
+  const models = ['mann-e/Mann-E_Dreams','playgroundai/playground-v2-1024px-aesthetic','stabilityai/stable-diffusion-xl-base-1.0','Corcelio/mobius', 'fluently/Fluently-XL-Final', 'runwayml/stable-diffusion-v1-5'];
   for(let model of models){
     console.log(model)
     try {
@@ -29,14 +29,19 @@ export default generateImage = async (data, setLoading) => {
       }
       base64String = await base64.encode(binary);
       if (base64String) {
+        const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/image_${model.replace(/\//g, '_')}.png`;
+        await RNFetchBlob.fs.writeFile(filePath, base64String, 'base64');
+        const imagePath = Platform.OS === 'android' ? `file://${filePath}` : filePath;
+        uploadImageFromCache(imagePath, data);
         setLoading(false);
         const newMessage = {
           role: 'assistant',
-          content: base64String,
+          content: base64String,  
         };
         return newMessage;
       }
     } catch (error) {
+      console.log(error)
       setLoading(false);
     }
   }
