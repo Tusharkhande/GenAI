@@ -16,6 +16,7 @@ import useAuth from '../firebase/useAuth';
 import {select_beep} from '../constants/Sounds';
 import {useUser} from '../context/userContext';
 import AppExit from '../components/AppExit';
+import LottieView from 'lottie-react-native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -119,10 +120,12 @@ export default function HomeScreen() {
         </Text>
       </View>
       <View className="flex items-center justify-center bg-blend-darken">
-        <View
+        {/* <View
           className="absolute bg-slate-600 dark:bg-slate-300 rounded-full -z-10 self-center"
           style={{height: wp(31), width: wp(31)}}
-        />
+        /> */}
+        <LottieView source={require('../../assets/animations/loading.json')} autoPlay loop className="absolute rounded-full -z-10 self-center"
+          style={{height: wp(55), width: wp(55)}} />
         <Image
           // source={require('../../assets/images/bot3.png')}
           // source={selectedModel.image}
@@ -178,6 +181,7 @@ export default function HomeScreen() {
                   className="rounded-full"
                 />
                 {/* <Text className="text-white self-center text-xs ml-5">{item.name}</Text> */}
+              { selectedModel == item && <LottieView source={require('../../assets/animations/loading.json')} autoPlay loop className="absolute rounded-full -z-10 self-center" style={{height: wp(24), width: wp(24)}} />}
               </View>
             </TouchableOpacity>
           ))}

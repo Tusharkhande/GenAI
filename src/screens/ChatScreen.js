@@ -26,7 +26,6 @@ import {assistantSpeech, startTextToSpeech} from '../constants/TextToSpeech';
 import {sweep, select_beep} from '../constants/Sounds';
 import Markdown, {MarkdownIt} from 'react-native-markdown-display';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {downloadBase64Image, downloadImage} from '../constants/DownloadImage';
 import {vision} from '../api/gemini';
 import {geminiChatApiCall} from '../api/gemini';
@@ -322,37 +321,6 @@ const ChatScreen = () => {
     Clipboard.setString(msg);
     clearInterval();
     ToastAndroid.show('Copied to clipboard!', ToastAndroid.SHORT);
-  };
-
-  const camera = async () => {
-    const options = {
-      includeBase64: true,
-      maxWidth: 512,
-      maxHeight: 512,
-    };
-    const result = await launchCamera(options);
-    if (!result.didCancel) {
-      setOpenImagePickerModal(false);
-      setBase64String(result.assets[0].base64);
-    } else {
-      ToastAndroid.show('No image clicked!', ToastAndroid.SHORT);
-    }
-    // vision(base64String)
-    // console.log(result.assets[0].base64);
-  };
-  const gallery = async () => {
-    const options = {
-      includeBase64: true,
-      maxWidth: 512,
-      maxHeight: 512,
-    };
-    const result = await launchImageLibrary(options);
-    if (!result.didCancel) {
-      setOpenImagePickerModal(false);
-      setBase64String(result.assets[0].base64);
-    } else {
-      ToastAndroid.show('No image selected!', ToastAndroid.SHORT);
-    }
   };
 
   useEffect(() => {

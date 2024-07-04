@@ -16,6 +16,7 @@ import Voice from '@react-native-voice/voice';
 import {useUser} from '../context/userContext';
 import { assistantSpeech } from '../constants/TextToSpeech';
 import { theme } from '../constants/Theme';
+import LottieView from 'lottie-react-native';
 
 const MultiInput = ({
   loading,
@@ -96,6 +97,12 @@ const MultiInput = ({
   return (
     <View className="flex bg-slate-50 dark:bg-slate-950 justify-center ">
       {loading ? (
+        // colorScheme === 'light'? <Image
+        //   source={require('../../assets/images/loading2.gif')}
+        //   style={{width: hp(10), height: hp(10)}}
+        //   className="m-2"
+        // /> :
+        // <LottieView source={require('../../assets/animations/loading2.json')} autoPlay loop className="h-28 w-28 " />
         <Image
           source={require('../../assets/images/loading2.gif')}
           style={{width: hp(10), height: hp(10)}}
@@ -187,14 +194,15 @@ const MultiInput = ({
               <TouchableOpacity
                 className=" pl-2 bottom-0 my-auto rounded-md"
                 onPress={stopRecording}>
-                <Image
+                {/* <Image
                   source={
-                    !recording
-                      ? require('../../assets/images/mic.png')
-                      : require('../../assets/images/rec.gif')
+                    // !recording
+                    //   ? require('../../assets/images/mic.png'):
+                     require('../../assets/images/rec.gif')
                   }
                   className="h-24 w-24"
-                />
+                /> */}
+                <LottieView source={require('../../assets/animations/rec.json')} autoPlay loop className="h-20 w-20" />
               </TouchableOpacity>
             )}
           </View>
