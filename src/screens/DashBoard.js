@@ -35,6 +35,7 @@ import Loader from '../components/Loader';
 import Info from '../components/Info';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ThemeSwitch from '../components/ThemeSwitch';
+import LottieView from 'lottie-react-native';
 
 const Dashboard = () => {
   const [displayName, setDisplayName] = useState('');
@@ -74,7 +75,7 @@ const Dashboard = () => {
     const options = {
       title: 'Share App',
       message: 'Dive into the AI world now!',
-      url: 'https://play.google.com/store/apps/details?id=com.tushar.assistant',
+      url: 'https://bit.ly/tk_genai',
     }
     Share.open(options)
       .then(res => {
@@ -166,10 +167,12 @@ const Dashboard = () => {
       </View>
       <ScrollView className="p-7 pt-0" showsVerticalScrollIndicator={false}>
         <>
-          <View
+          {/* <View
             className="absolute top-11 bg-slate-600 rounded-full opacity-80 dark:bg-slate-300 -z-10 self-center"
             style={{height: wp(22), width: wp(22)}}
-          />
+          /> */}
+          <LottieView source={require('../../assets/animations/loading.json')} autoPlay loop className="absolute rounded-full top-3.5 -z-10 self-center"
+          style={{height: wp(37), width: wp(37)}} />
           <TouchableOpacity
             onPress={() => [setModalVisible(true), select_beep()]}
             className="self-center flex justify-center mt-0 mb-8">
@@ -294,6 +297,7 @@ const Dashboard = () => {
           handleProfileImg={handleProfileImg}
           setSelectedAvatar={setSelectedAvatar}
           selectedAvatar={selectedAvatar}
+          guserAvatar={gUserAvatar}
         />
 
         <Loader loading={loading} />

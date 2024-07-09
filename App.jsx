@@ -34,6 +34,9 @@ export default function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        SplashScreen.hide();
+        await Tts.getInitStatus();
+        await assistantSpeech("Initializing startup sequence. Loading Custom Components. Fetching user data.");
         permission();
         
         getAuth().onAuthStateChanged((user) => {
@@ -48,13 +51,12 @@ export default function App() {
           }
         });
   
-        SplashScreen.hide();
+        
       } catch (error) {
         console.error('Error during app initialization:', error);
       }
     };
     
-    assistantSpeech("Initializing startup sequence. Loading Custom Components. Fetching user data.");
     initializeApp();
   },[]);
 

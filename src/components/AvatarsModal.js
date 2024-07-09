@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, ToastAndroid } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Modal } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Button from './Button';
 import { select_beep } from '../constants/Sounds';
 
-const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelectedAvatar,selectedAvatar}) => {
+const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelectedAvatar,selectedAvatar, guserAvatar}) => {
 
   return (
     
@@ -14,7 +14,7 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
             <Image
               // source={require('../../assets/images/loki1.jpg')}
               // source={selectedAvatar ? { uri: selectedAvatar } : require('../../assets/images/user.png')}
-              source={selectedAvatar ? selectedAvatar : require('../../assets/images/avatars/arc.jpg')}
+              source={selectedAvatar ? selectedAvatar : guserAvatar ? guserAvatar : require('../../assets/images/user.png')}
               style={{width: wp(20), height: wp(20)}}
               className="rounded-full w-16 h-16 mx-auto mb-1"
             />
@@ -49,35 +49,4 @@ const AvatarsModal = ({setModalVisible,modalVisible,handleProfileImg,setSelected
   )
 }
 
-
-const styles = StyleSheet.create({
-    modalTitle: {
-      fontSize: 22,
-      textAlign: 'center',
-      fontWeight: 'bold',
-      marginBottom: 16,
-      color: '#000',
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      backgroundColor: '#003249',
-      width: 80,
-      borderRadius: 8,
-      marginLeft: 20,
-      marginRight: 20,
-    },
-    buttonContainer1: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      borderRadius: 8,
-    },
-    profileImage: {
-      width: 60,
-      height: 60,
-      borderRadius: 50, // To make it a circular image
-      marginBottom: 20,
-    },
-  });
-  
 export default AvatarsModal

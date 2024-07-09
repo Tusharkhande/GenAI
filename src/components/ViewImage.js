@@ -1,4 +1,4 @@
-import {Modal, View, Image} from 'react-native';
+import {Modal, View, Image, ActivityIndicator} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import Button from './Button';
 import {downloadBase64Image, downloadImage} from '../constants/DownloadImage';
@@ -7,6 +7,7 @@ import Markdown from 'react-native-markdown-display';
 import { select_beep } from '../constants/Sounds';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
+import { useState } from 'react';
 
 const ViewImage = ({
   viewImage,
@@ -16,6 +17,9 @@ const ViewImage = ({
   setImages,
   message,
 }) => {
+  const [loadingShare, setLoadingShare] = useState(false);
+  const [loadingDownload, setLoadingDownload] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const formatDate = timestamp => {
     const date = new Date(timestamp);
     const options = {
@@ -33,24 +37,23 @@ const ViewImage = ({
     return null; // or some placeholder UI
   }
 
-  const shareImage = (prompt, imageUrl) => {
+  const shareImage = async(prompt, imageUrl) => {
     select_beep();
     let imageBase64 = '';
 
-    if (imageUrl.includes('https://')) {
-      RNFetchBlob.config({ fileCache: true })
-        .fetch('GET', imageUrl)
-        .then((resp) => resp.base64())
-        .then((base64Data) => {
-          imageBase64 = `data:image/png;base64,${base64Data}`;
-          share(prompt, imageBase64);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else {
-      imageBase64 = `data:image/png;base64,${imageUrl}`;
+    try {
+      setLoadingShare(true);
+      if (imageUrl.includes('https://')) {
+        const resp = await RNFetchBlob.config({ fileCache: true }).fetch('GET', imageUrl);
+        const base64Data = await resp.base64();
+        imageBase64 = `data:image/png;base64,${base64Data}`;
+      } else {
+        imageBase64 = `data:image/png;base64,${imageUrl}`;
+      }
       share(prompt, imageBase64);
+      setLoadingShare(false);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -85,32 +88,40 @@ const ViewImage = ({
           />
         </View>
         <View className="flex absolute flex-row self-end top-0 p-3">
+            {loadingShare ? (
+              <ActivityIndicator className="w-6 h-10 mr-3"/>
+            ) : (
+              <Button
+                image={require('../../assets/images/share.png')}
+                onPress={() => shareImage(image.prompt, image.url)}
+                isize={'w-6 h-6'}
+                style={'mr-3'}
+              />
+            )}
           <View className="mr-3 flex-row">
-            <Button
-              image={require('../../assets/images/share.png')}
-              onPress={() => shareImage(image.prompt, image.url)}
-              isize={'w-7 h-6'}
-              style={'mr-3'}
-            />
-            <Button
+            {!loadingDownload ? (<Button
               image={require('../../assets/images/dwd.png')}
-              onPress={() =>
+              onPress={async () =>[
+                setLoadingDownload(true),
                 image?.url?.includes('https://')
-                  ? downloadImage(image.url)
-                  : downloadBase64Image(image.url)
-              }
-              isize={'w-7 h-6'}
-            />
+                  ? await downloadImage(image.url)
+                  : await downloadBase64Image(image.url),
+                setLoadingDownload(false),
+              ]}
+              isize={'w-6 h-6'}
+            />) : (<ActivityIndicator className='w-6 h-10'/>)}
           </View>
           {!message && (
-            <Button
+            !loadingDelete ? (<Button
               image={require('../../assets/images/delete1.png')}
-              onPress={() => [
-                deleteImageFromStorage(image.path, images, setImages),
+              onPress={async () => [
+                setLoadingDelete(true),
+                await deleteImageFromStorage(image.path, images, setImages),
+                setLoadingDelete(false),
                 setViewImage(false),
               ]}
-              isize={'w-7 h-6'}
-            />
+              isize={'w-6 h-5'}
+            />) :( <ActivityIndicator className='w-6 h-10'/>)
           )}
         </View>
         <View

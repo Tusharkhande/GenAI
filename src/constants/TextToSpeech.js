@@ -1,6 +1,6 @@
 import Tts from "react-native-tts";
 
-const assistantSpeech = (msg) => {
+const assistantSpeech = async (msg) => {
         Tts.setDefaultRate(0.6);
         Tts.speak(msg, {
             androidParams: {
