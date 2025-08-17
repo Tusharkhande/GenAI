@@ -15,36 +15,70 @@ import {auth, db, storage} from './firebase.config';
 import {ToastAndroid} from 'react-native';
 import gemini from '../api/gemini';
 
+// export async function fetchUserImages(userId, setImages, setLoading) {
+//   setLoading(true);
+//   const images = [];
+//   const imagesQuery = query(
+//     collection(db, 'user_images'),
+//     where('userId', '==', userId),
+//   );
+//   const querySnapshot = await getDocs(imagesQuery);
+
+//   for (const doc of querySnapshot.docs) {
+//     const data = doc.data();
+//     // console.log(data);
+//     // console.log(storage, data.fullPath);
+//     const imageRef = ref(storage, data.fullPath);
+//     const imageUrl = await getDownloadURL(imageRef);
+//     images.push({
+//       name: data.imageName,
+//       url: imageUrl,
+//       path: data.fullPath,
+//       prompt: data.prompt,
+//       date: data.createdAt,
+//     });
+//   }
+//   const sortedImages = images.sort((a, b) => b.date - a.date);
+//   setImages(sortedImages);
+//   console.log(images);
+//   setLoading(false);
+
+//   // return images;
+// }
+
 export async function fetchUserImages(userId, setImages, setLoading) {
-  setLoading(true);
-  const images = [];
-  const imagesQuery = query(
-    collection(db, 'user_images'),
-    where('userId', '==', userId),
-  );
-  const querySnapshot = await getDocs(imagesQuery);
+  try {
+    setLoading(true);
+    const images = [];
+    const imagesQuery = query(
+      collection(db, 'user_images'),
+      where('userId', '==', userId),
+    );
+    const querySnapshot = await getDocs(imagesQuery);
 
-  for (const doc of querySnapshot.docs) {
-    const data = doc.data();
-    // console.log(data);
-    // console.log(storage, data.fullPath);
-    const imageRef = ref(storage, data.fullPath);
-    const imageUrl = await getDownloadURL(imageRef);
-    images.push({
-      name: data.imageName,
-      url: imageUrl,
-      path: data.fullPath,
-      prompt: data.prompt,
-      date: data.createdAt,
-    });
+    for (const doc of querySnapshot.docs) {
+      const data = doc.data();
+      const imageRef = ref(storage, data.fullPath);
+      const imageUrl = await getDownloadURL(imageRef);
+      images.push({
+        name: data.imageName,
+        url: imageUrl,
+        path: data.fullPath,
+        prompt: data.prompt,
+        date: data.createdAt,
+      });
+    }
+
+    const sortedImages = images.sort((a, b) => b.date - a.date);
+    setImages(sortedImages);
+  } catch (error) {
+    console.error("Error fetching user images:", error);
+    alert("Failed to fetch images. Please check your permissions.");
+  } finally {
+    setLoading(false);
   }
-  const sortedImages = images.sort((a, b) => b.date - a.date);
-  setImages(sortedImages);
-  console.log(images);
-  setLoading(false);
-
-  // return images;
 }
+
 
 async function saveImageMetadata(metadata, userId, prompt) {
   try {
@@ -212,9 +246,9 @@ export async function saveChatSession(
       });
     } else {
       const title = await gemini(
-        'take a look at this ' +
+        'Take a look at this ' +
           messagesString +
-          ' and tell a short title for it',
+          '. Respond ONLY with a short title. Do not add any explanation or extra text.'
       );
       const newSessionRef = await addDoc(collection(db, 'chat_sessions'), {
         userId,

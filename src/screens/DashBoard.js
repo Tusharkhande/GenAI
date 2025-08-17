@@ -8,6 +8,7 @@ import {
   ToastAndroid,
   ScrollView,
   TextInput,
+  ActivityIndicator
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {auth} from '../firebase/firebase.config';
@@ -28,7 +29,7 @@ import Contact from '../components/Contact';
 import DeleteAccModal from '../components/DeleteAccModal';
 import HorizontalLine from '../components/HorizontalLine';
 import ManageAcc from '../components/ManageAcc';
-import { select_beep} from '../constants/Sounds';
+import {select_beep} from '../constants/Sounds';
 import {assistantSpeech} from '../constants/TextToSpeech';
 import {useUser} from '../context/userContext';
 import Loader from '../components/Loader';
@@ -48,6 +49,7 @@ const Dashboard = () => {
   const [newName, setNewName] = useState('');
   const [editName, setEditName] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingShare, setLoadingShare] = useState(false);
   const {
     guser,
     setGUserAvatar,
@@ -71,20 +73,24 @@ const Dashboard = () => {
   };
 
   const shareApp = () => {
+    setLoadingShare(true);
     select_beep();
     const options = {
       title: 'Share App',
       message: 'Dive into the AI world now!',
       url: 'https://bit.ly/tk_genai',
-    }
+    };
     Share.open(options)
       .then(res => {
+        setLoadingShare(false);
         console.log(res);
       })
       .catch(err => {
+        setLoadingShare(false);
+        ToastAndroid.show('Something went wrong', ToastAndroid.SHORT);
         console.log(err);
       });
-  }
+  };
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
@@ -155,24 +161,37 @@ const Dashboard = () => {
             // isize={'w-4 h-4'}
           />
         </View>
-        <View className='self-end flex-row items-center'>
-          <Button
-            image={require('../../assets/images/share.png')}
-            onPress={shareApp}
+        <View className="self-end flex-row items-center">
+          {loadingShare ? (
+            <ActivityIndicator className="w-8 h-10 mt-2" />
+          ) : (
+            <Button
+              image={require('../../assets/images/share.png')}
+              onPress={shareApp}
+              colorScheme={colorScheme}
+              isize={'w-6 h-6 mt-1'}
+            />
+          )}
+
+          <ThemeSwitch
             colorScheme={colorScheme}
-            isize={'w-6 h-6 mt-1'}
+            toggleColorScheme={toggleColorScheme}
           />
-          <ThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme} />
         </View>
       </View>
       <ScrollView className="p-7 pt-0" showsVerticalScrollIndicator={false}>
-        <>
+        <View className="flex items-center justify-center bg-blend-darken">
           {/* <View
             className="absolute top-11 bg-slate-600 rounded-full opacity-80 dark:bg-slate-300 -z-10 self-center"
             style={{height: wp(22), width: wp(22)}}
           /> */}
-          <LottieView source={require('../../assets/animations/loading.json')} autoPlay loop className="absolute rounded-full top-3.5 -z-10 self-center"
-          style={{height: wp(37), width: wp(37)}} />
+          <LottieView
+            source={require('../../assets/animations/loading.json')}
+            autoPlay
+            loop
+            className="absolute rounded-full -z-10 self-center"
+            style={{height: wp(37), width: wp(38)}}
+          />
           <TouchableOpacity
             onPress={() => [setModalVisible(true), select_beep()]}
             className="self-center flex justify-center mt-0 mb-8">
@@ -185,7 +204,7 @@ const Dashboard = () => {
               Change Avatar
             </Text>
           </TouchableOpacity>
-        </>
+        </View>
         <View className="flex self-start">
           <View className="flex flex-row">
             {editName && (

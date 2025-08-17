@@ -390,7 +390,7 @@ const ChatScreen = () => {
 
           {/* features || message history */}
           {messages.length > 0 ? (
-            <View className="space-y-5 flex-1">
+            <View className="space-y-6 flex-1">
               <View className="flex-row justify-between">
                 <Text
                   className="text-slate-900 dark:text-slate-200 font-semibold ml-1"
@@ -413,7 +413,7 @@ const ChatScreen = () => {
               </View>
 
               <View
-                style={{height: hp(76)}}
+                style={{height: hp(80)}}
                 className="bg-slate-200 dark:bg-slate-400 rounded-3xl p-4 pl-1 pr-1">
                 <ScrollView
                   ref={scrollViewRef}

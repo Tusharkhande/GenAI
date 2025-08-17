@@ -2,7 +2,7 @@ import axios from 'axios';
 import {GEMINI_API_KEY} from '@env';
 
 const API_KEY = GEMINI_API_KEY;
-const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`;
 
 export default geminiApi = async (prompt) => {
   // setIsLoading(true);
@@ -101,7 +101,7 @@ export const vision = async (text, imageBase64) => {
       ],
     };
 
-    const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${API_KEY}`;
+    const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`;
 
     const response = await axios.post(API_ENDPOINT, requestData, {
       headers: {
@@ -135,6 +135,7 @@ export const geminiChatApiCall = async (inputText, conversationHistory) => {
       parts: [{text: inputText}]
     }]
   };
+  console.log("requestData", endpoint)
 
   try {
     const response = await axios.post(endpoint, requestData, {

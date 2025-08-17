@@ -5,46 +5,111 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {uploadImageFromCache} from '../firebase/firebase.storage';
 import base64 from 'base-64';
 
+// export default generateImage = async (data, setLoading) => {
+//   const models = ['mann-e/Mann-E_Dreams', 'stabilityai/stable-diffusion-xl-base-1.0','playgroundai/playground-v2-1024px-aesthetic', 'fluently/Fluently-XL-Final','Corcelio/mobius', 'runwayml/stable-diffusion-v1-5'];
+//   console.log(data);
+//   for(let model of models){
+//     console.log(model)
+//     try {
+//       setLoading(true);
+//       const response = await axios.post(
+//         `https://api-inference.huggingface.co/models/${model}`,
+//         data,
+//         {
+//           headers: {
+//             Authorization: 'Bearer ' + HUGGING_API_KEY,
+//           },
+//           responseType: 'arraybuffer', // Use arraybuffer to handle binary data
+//         },
+//       );
+//       console.log(response.data);
+//       let binary = '';
+//       const bytes = new Uint8Array(response.data);
+//       const len = bytes.byteLength;
+//       for (let i = 0; i < len; i++) {
+//         binary += String.fromCharCode(bytes[i]);
+//       }
+//       base64String = await base64.encode(binary);
+//       if (base64String) {
+//         const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/image_${model.replace(/\//g, '_')}.png`;
+//         await RNFetchBlob.fs.writeFile(filePath, base64String, 'base64');
+//         const imagePath = Platform.OS === 'android' ? `file://${filePath}` : filePath;
+//         uploadImageFromCache(imagePath, data);
+//         setLoading(false);
+//         const newMessage = {
+//           role: 'assistant',
+//           content: base64String,  
+//         };
+//         return newMessage;
+//       }
+//     } catch (error) {
+//       if (error.response) {
+//     console.log('Error response:', error.response.data);
+//   }
+//       console.log(error)
+//       setLoading(false);
+//     }
+//   }
+// };
+
 export default generateImage = async (data, setLoading) => {
-  const models = ['mann-e/Mann-E_Dreams','playgroundai/playground-v2-1024px-aesthetic','stabilityai/stable-diffusion-xl-base-1.0','Corcelio/mobius', 'fluently/Fluently-XL-Final', 'runwayml/stable-diffusion-v1-5'];
-  for(let model of models){
-    console.log(model)
+  const models = [
+    'mann-e/Mann-E_Dreams',
+    'stabilityai/stable-diffusion-xl-base-1.0',
+    'playgroundai/playground-v2-1024px-aesthetic',
+    'fluently/Fluently-XL-Final',
+    'Corcelio/mobius',
+    'runwayml/stable-diffusion-v1-5',
+  ];
+  console.log(data);
+  setLoading(true);
+  for (let model of models) {
+    console.log('Trying model:', model);
     try {
-      setLoading(true);
-      const response = await axios.post(
+      const response = await RNFetchBlob.config({
+        fileCache: true,
+      }).fetch(
+        'POST',
         `https://api-inference.huggingface.co/models/${model}`,
-        data,
         {
-          headers: {
-            Authorization: 'Bearer ' + HUGGING_API_KEY,
-          },
-          responseType: 'arraybuffer', // Use arraybuffer to handle binary data
+          Authorization: 'Bearer ' + HUGGING_API_KEY,
+          'Content-Type': 'application/json',
         },
+       JSON.stringify({inputs: data}),
       );
-      let binary = '';
-      const bytes = new Uint8Array(response.data);
-      const len = bytes.byteLength;
-      for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
+
+      const contentType = response.respInfo.headers['Content-Type'] || response.respInfo.headers['content-type'];
+
+      if (!contentType || !contentType.startsWith('image')) {
+        const errorData = await response.json();
+        console.log(`Model ${model} failed:`, errorData);
+        continue;
       }
-      base64String = await base64.encode(binary);
-      if (base64String) {
-        const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/image_${model.replace(/\//g, '_')}.png`;
-        await RNFetchBlob.fs.writeFile(filePath, base64String, 'base64');
-        const imagePath = Platform.OS === 'android' ? `file://${filePath}` : filePath;
-        uploadImageFromCache(imagePath, data);
-        setLoading(false);
-        const newMessage = {
-          role: 'assistant',
-          content: base64String,  
-        };
-        return newMessage;
-      }
-    } catch (error) {
-      console.log(error)
+
+      const imagePath = Platform.OS === 'android' ? `file://${response.path()}` : response.path();
+      const base64String = await response.base64();
+      
+      uploadImageFromCache(imagePath, data.inputs || data);
       setLoading(false);
+
+      const newMessage = {
+        role: 'assistant',
+        content: base64String,
+      };
+      return newMessage; 
+    } catch (error) {
+      console.log(`Error with model ${model}:`, error);
     }
   }
+  
+  // This part will be reached if all models fail
+  setLoading(false);
+  console.log('All models failed to generate an image.');
+  // You might want to return an error message here
+  return {
+      role: 'assistant',
+      content: 'Error: Could not generate image. Please try again later.'
+  };
 };
 
 export const stableDiffusionXL = async (

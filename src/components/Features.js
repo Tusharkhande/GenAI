@@ -12,12 +12,12 @@ export default function Features({ model, provider }) {
     const {colorScheme} = useUser();
     return (
         
-        <View style={{ height: hp(68) }} className="space-y-4 pt-0">
+        <View style={{ height: hp(71) }} className="rounded-md space-y-4">
             <View className='flex-row justify-between'>
             <Text style={{ fontSize: wp(6.5) }} className="font-semibold text-slate-900 dark:text-slate-200">Features</Text>
             <View className="flex flex-row items-center">
                   <Text
-                    className="text-slate-900 dark:text-slate-200 font-thin mr-2"
+                    className="text-slate-900 dark:text-slate-100 font-light mr-2"
                     style={{fontSize: wp(3)}}>
                     {provider}
                   </Text>
